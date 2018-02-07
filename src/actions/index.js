@@ -1,5 +1,6 @@
 import * as ActionTypes from '../constants/ActionTypes'
 
+//Header
 export const onClickAppBar = () => ({
   type: ActionTypes.CLICK_APP_BAR,
   payload: {}
@@ -12,36 +13,29 @@ export const onClickGroup = () => {
   }
 }
 
-export const onCheck = (id = null) => {
-  return {
-    type: ActionTypes.CHECK_ISSUE,
-    payload: {
-      id
-    }
-  }
-}
-
+//Issue
 export const onToggleHide = () => {
-  console.log("onToggleHide");
   return {
     type: ActionTypes.TOGGLE_HIDE,
     payload: {}
   }
 }
 
-export const onToggleIssueHide = () => {
-  console.log("onToggleIssueHide");
+export const onToggleIssueHide = (id, bool) => {
   return {
     type: ActionTypes.TOGGLE_ISSUE_HIDE,
-    payload: {}
+    payload: {
+      id, bool
+    }
   }
 }
 
-export const onClickFunction = (selected_function = 0) => {
+//Register
+export const onClickRegisterSubmit = form => {
   return {
-    type: ActionTypes.CLICK_FUNCTION,
+    type: ActionTypes.REGISTER_ISSUE,
     payload: {
-      selected_function
+      form
     }
   }
 }

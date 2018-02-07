@@ -2,17 +2,13 @@ import React from 'react'
 import {AppBar, Menu, MenuItem, Drawer, Divider, Avatar, Subheader,
 List, ListItem} from 'material-ui'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+import { Link } from 'react-router-dom'
 
 const Header = ({app_bar_open, onClickAppBar,
-                 group_select_open, onClickGroup,
-                 onClickFunction}) => {
+                 group_select_open, onClickGroup}) => {
   //AppBarのスタイル
   const style = {
     // position: 'fixed', top: 100,
-  }
-
-  const _onClickFunction = (event, menuItem) => {
-    onClickFunction(menuItem.key)
   }
 
   return (
@@ -37,17 +33,16 @@ const Header = ({app_bar_open, onClickAppBar,
             </ListItem>
           </List>
           <Divider />
-          <Menu onItemTouchTap={_onClickFunction}>
-              <MenuItem key="1" value="1">案件一覧</MenuItem>
-              <MenuItem key="2" value="2">要員別山積表</MenuItem>
-              <MenuItem key="3" value="3">要員別集計情報</MenuItem>
+          <Menu>
+              <Link to='/issue'><MenuItem key="1" value="1">案件一覧</MenuItem></Link>
+              <Link to='/member'><MenuItem key="2" value="2">要員別山積表</MenuItem></Link>
           </Menu>
         </Drawer>
         <AppBar
           title="Red Muffin"
           iconClassNameRight="muidocs-icon-navigation-expand-more"
           iconElementRight={<Avatar src="food.svg" />}
-          onLeftIconButtonTouchTap={() => onClickAppBar()}
+          onLeftIconButtonClick={() => onClickAppBar()}
           style={style}
         />
       </MuiThemeProvider>
@@ -57,3 +52,6 @@ const Header = ({app_bar_open, onClickAppBar,
 }
 
 export default Header
+
+// onLeftIconButtonTouchTap={() => onClickAppBar()}
+// <Link to='/member'><MenuItem key="3" value="3">要員別集計情報</MenuItem></Link>

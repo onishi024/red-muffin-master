@@ -5,10 +5,8 @@ const initState = {
   group_select_open: false,
   groups: [],
   selected_group_id: '0',
-  selected_function: '0',
   show_hided_issue: false,
   selected_issue: '0',
-  checked_issue_id: null,
   issues: [],
   issue_rows: [
     {id: 1, kind: "開発委託", ankenno: "JK16-00001-ANKO", taskcode: "JKM00001", subcode: "", ankenname: "戦車を探す", estimate: 10, hide: false},
@@ -20,11 +18,17 @@ const initState = {
     {id: 7, kind: "障害対応", ankenno: "JK16-00007-ANKO", taskcode: "JKM00007", subcode: "", ankenname: "エキシビジョン 知波単学園", estimate: 70, hide: false},
     {id: 8, kind: "障害対応", ankenno: "JK16-00008-ANKO", taskcode: "JKM00008", subcode: "", ankenname: "大学選抜戦", estimate: 80, hide: false},
     {id: 9, kind: "障害対応", ankenno: "JK16-00009-ANKO", taskcode: "JKM00009", subcode: "", ankenname: "BC自由学園戦", estimate: 90, hide: true}
-  ]
+  ],
+  register_form: {
+    kind: 0,
+    ankenname: "",
+    estimate: 0,
+  },
 }
 
 const reducer = (state = initState, action) => {
   switch (action.type) {
+    //Header
     case ActionTypes.CLICK_APP_BAR: {
       const app_bar_open = !state.app_bar_open
       return {...state, app_bar_open}
@@ -33,19 +37,32 @@ const reducer = (state = initState, action) => {
       const group_select_open = !state.group_select_open
       return {...state, group_select_open}
     }
-    case ActionTypes.CHECK_ISSUE: {
-      console.log(action.payload.id);
-      const checked_issue_id = action.payload.id
-      return {...state, checked_issue_id}
-    }
+    //Issue
     case ActionTypes.TOGGLE_HIDE: {
       const show_hided_issue = !state.show_hided_issue
       return {...state, show_hided_issue}
     }
-    case ActionTypes.CLICK_FUNCTION: {
-      const selected_function = action.payload.selected_function
-      return {...state, selected_function}
+    case ActionTypes.TOGGLE_ISSUE_HIDE: {
+      const toggled_id = Number(action.payload.id)
+      const toggled_bool = action.payload.bool
+      const issue_rows = state.issue_rows.map(issue_row => {
+        if (issue_row.id === toggled_id) {
+          issue_row.hide = toggled_bool
+        }
+        return issue_row
+      })
+      return {...state, issue_rows}
     }
+    //Register
+    case ActionTypes.REGISTER_ISSUE: {
+      const form = action.payload.form
+      const issue_rows = state.issue_rows
+      issue_rows.push(
+        {id: state.issue_rows.length+1, kind: form.kind, ankenno: "", taskcode: "", subcode: "", ankenname: form.ankenname, estimate: form.estimate, hide: false}
+      )
+      return {...state, issue_rows}
+    }
+    //other
     default:
       return state
   }
