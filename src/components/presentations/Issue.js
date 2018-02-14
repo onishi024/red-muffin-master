@@ -18,7 +18,7 @@ export default class Issue extends Component {
   }
 
   initData = (id, issue_cost_rows, members) => {
-    const id_filtered_rows = issue_cost_rows.filter(row => row.issue_id === Number(id))
+    const id_filtered_rows = issue_cost_rows.filter(row => row.issue_id === id)
     return id_filtered_rows.map(row => {
       return {
         id: row.id,
@@ -70,7 +70,6 @@ export default class Issue extends Component {
   }
 
   dataToRows = (id, issue_cost_rows, data, members) => {
-    console.log(members);
     const id_filtered_rows = data.map(datum => {
       let member_id = null
       for (let i in members) {
@@ -80,7 +79,7 @@ export default class Issue extends Component {
       }
       return {
         id: datum.id,
-        issue_id: Number(id),
+        issue_id: id,
         subname: datum.subname,
         member_id: member_id,
         pc04: datum.pc04,
@@ -97,7 +96,7 @@ export default class Issue extends Component {
         pc03: datum.pc03
       }
     })
-    const id_unfiltered_rows = issue_cost_rows.filter(row => row.issue_id !== Number(id))
+    const id_unfiltered_rows = issue_cost_rows.filter(row => row.issue_id !== id)
     return [...id_filtered_rows, ...id_unfiltered_rows]
   }
 

@@ -91,7 +91,7 @@ const IssueList = ({selected_function, show_hided_issue, issue_rows, onToggleHid
                 <TableRowColumn style={{ width: '20%'}}>{issue_row.ankenname}</TableRowColumn>
                 <TableRowColumn style={{ width: '10%'}}>{issue_row.estimate}</TableRowColumn>
                 <TableRowColumn style={{ width: '10%'}}><Link to={`/issue_edit/${issue_row.id}`}><EditIcon /></Link></TableRowColumn>
-                <TableRowColumn style={{ width: '10%'}}><Toggle defaultToggled={issue_row.hide} onToggle={(event, value) => _onToggleIssueHide(event, value)}/></TableRowColumn>
+                <TableRowColumn style={{ width: '10%'}}><Toggle defaultToggled={issue_row.hide} name={issue_row.id} onToggle={(event, value) => _onToggleIssueHide(event, value)}/></TableRowColumn>
               </TableRow>
             )
           })}
