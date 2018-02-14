@@ -19,11 +19,28 @@ const initState = {
     {id: 8, kind: "障害対応", ankenno: "JK16-00008-ANKO", taskcode: "JKM00008", subcode: "", ankenname: "大学選抜戦", estimate: 80, hide: false},
     {id: 9, kind: "障害対応", ankenno: "JK16-00009-ANKO", taskcode: "JKM00009", subcode: "", ankenname: "BC自由学園戦", estimate: 90, hide: true}
   ],
-  register_form: {
-    kind: 0,
-    ankenname: "",
-    estimate: 0,
-  },
+  issue_cost_rows: [
+    {id:  1, issue_id: 1, subname: "", member_id: 0, pc04: 10, pc05: 20, pc06: 30, pc07: 10, pc08: 20, pc09: 30, pc10: 10, pc11: 20, pc12: 30, pc01: 10, pc02: 20, pc03: 30 },
+    {id:  2, issue_id: 1, subname: "", member_id: 1, pc04: 10, pc05: 20, pc06: 30, pc07: 10, pc08: 20, pc09: 30, pc10: 10, pc11: 20, pc12: 30, pc01: 10, pc02: 20, pc03: 30 },
+    {id:  3, issue_id: 1, subname: "", member_id: 2, pc04: 10, pc05: 20, pc06: 30, pc07: 10, pc08: 20, pc09: 30, pc10: 10, pc11: 20, pc12: 30, pc01: 10, pc02: 20, pc03: 30 },
+    {id:  4, issue_id: 2, subname: "", member_id: 0, pc04: 10, pc05: 20, pc06: 30, pc07: 10, pc08: 20, pc09: 30, pc10: 10, pc11: 20, pc12: 30, pc01: 10, pc02: 20, pc03: 30 },
+    {id:  5, issue_id: 2, subname: "", member_id: 1, pc04: 10, pc05: 20, pc06: 30, pc07: 10, pc08: 20, pc09: 30, pc10: 10, pc11: 20, pc12: 30, pc01: 10, pc02: 20, pc03: 30 },
+    {id:  6, issue_id: 2, subname: "", member_id: 2, pc04: 10, pc05: 20, pc06: 30, pc07: 10, pc08: 20, pc09: 30, pc10: 10, pc11: 20, pc12: 30, pc01: 10, pc02: 20, pc03: 30 },
+    {id:  7, issue_id: 3, subname: "", member_id: 0, pc04: 10, pc05: 20, pc06: 30, pc07: 10, pc08: 20, pc09: 30, pc10: 10, pc11: 20, pc12: 30, pc01: 10, pc02: 20, pc03: 30 },
+    {id:  8, issue_id: 3, subname: "", member_id: 1, pc04: 10, pc05: 20, pc06: 30, pc07: 10, pc08: 20, pc09: 30, pc10: 10, pc11: 20, pc12: 30, pc01: 10, pc02: 20, pc03: 30 },
+    {id:  9, issue_id: 3, subname: "", member_id: 2, pc04: 10, pc05: 20, pc06: 30, pc07: 10, pc08: 20, pc09: 30, pc10: 10, pc11: 20, pc12: 30, pc01: 10, pc02: 20, pc03: 30 },
+    {id: 10, issue_id: 4, subname: "", member_id: 0, pc04: 10, pc05: 20, pc06: 30, pc07: 10, pc08: 20, pc09: 30, pc10: 10, pc11: 20, pc12: 30, pc01: 10, pc02: 20, pc03: 30 },
+    {id: 11, issue_id: 4, subname: "", member_id: 1, pc04: 10, pc05: 20, pc06: 30, pc07: 10, pc08: 20, pc09: 30, pc10: 10, pc11: 20, pc12: 30, pc01: 10, pc02: 20, pc03: 30 },
+    {id: 12, issue_id: 4, subname: "", member_id: 2, pc04: 10, pc05: 20, pc06: 30, pc07: 10, pc08: 20, pc09: 30, pc10: 10, pc11: 20, pc12: 30, pc01: 10, pc02: 20, pc03: 30 },
+  ],
+  members: [
+    {id: 0, name: "未アサイン", grade: "-"}, //id:0は未アサイン固定
+    {id: 1, name: "西住みほ", grade: "G3b"},
+    {id: 2, name: "武部沙織", grade: "G3a"},
+    {id: 3, name: "五十鈴華", grade: "G2b"},
+    {id: 4, name: "秋山優花里", grade: "G2a"},
+    {id: 5, name: "冷泉麻子", grade: "G1"},
+  ]
 }
 
 const reducer = (state = initState, action) => {
@@ -37,7 +54,7 @@ const reducer = (state = initState, action) => {
       const group_select_open = !state.group_select_open
       return {...state, group_select_open}
     }
-    //Issue
+    //IssueList
     case ActionTypes.TOGGLE_HIDE: {
       const show_hided_issue = !state.show_hided_issue
       return {...state, show_hided_issue}
@@ -57,10 +74,16 @@ const reducer = (state = initState, action) => {
     case ActionTypes.REGISTER_ISSUE: {
       const form = action.payload.form
       const issue_rows = state.issue_rows
+      const kindRow = ["開発委託", "作業依頼", "障害対応(無償)", "常駐支援", "その他無償作業"]
       issue_rows.push(
-        {id: state.issue_rows.length+1, kind: form.kind, ankenno: "", taskcode: "", subcode: "", ankenname: form.ankenname, estimate: form.estimate, hide: false}
+        {id: state.issue_rows.length+1, kind: kindRow[form.kind], ankenno: "", taskcode: "", subcode: "", ankenname: form.ankenname, estimate: form.estimate, hide: false}
       )
       return {...state, issue_rows}
+    }
+    //Issue
+    case ActionTypes.CHANGE_ISSUE: {
+      const issue_cost_rows = action.payload.issue_cost_rows
+      return {...state, issue_cost_rows}
     }
     //other
     default:

@@ -40,7 +40,6 @@ const Header = ({app_bar_open, onClickAppBar,
         </Drawer>
         <AppBar
           title="Red Muffin"
-          iconClassNameRight="muidocs-icon-navigation-expand-more"
           iconElementRight={<Avatar src="food.svg" />}
           onLeftIconButtonClick={() => onClickAppBar()}
           style={style}

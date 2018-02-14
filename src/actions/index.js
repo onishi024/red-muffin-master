@@ -13,7 +13,7 @@ export const onClickGroup = () => {
   }
 }
 
-//Issue
+//IssueList
 export const onToggleHide = () => {
   return {
     type: ActionTypes.TOGGLE_HIDE,
@@ -36,6 +36,16 @@ export const onClickRegisterSubmit = form => {
     type: ActionTypes.REGISTER_ISSUE,
     payload: {
       form
+    }
+  }
+}
+
+//Issue
+export const onClickChangeIssueSubmit = issue_cost_rows => {
+  return {
+    type: ActionTypes.CHANGE_ISSUE,
+    payload: {
+      issue_cost_rows
     }
   }
 }

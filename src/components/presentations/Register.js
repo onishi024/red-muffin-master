@@ -17,6 +17,15 @@ export default class Register extends Component {
     }
   }
 
+  styles = {
+    path: {
+      margin: 12,
+      fontSize: 12,
+      color: "#9E9E9E",
+    }
+  }
+
+  //Form入力
   onChange1 = (event, key, payload) => {
     this.setState({
       register_form: {
@@ -44,6 +53,7 @@ export default class Register extends Component {
     })
   }
 
+  //SUBMIT
   onClick1 = event => {
     this.setState({register_processing: true})
   }
@@ -67,7 +77,7 @@ export default class Register extends Component {
 
     return (
       <div>
-        <p>案件情報登録</p>
+        <div style={this.styles.path} ><Link to={`/`}>Home</Link> > <Link to={`/issue`}>案件一覧</Link> > 案件情報登録</div>
         <MuiThemeProvider>
           <SelectField
             floatingLabelText="分類"

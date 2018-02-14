@@ -2,15 +2,15 @@ import { connect } from 'react-redux'
 import * as Actions from '../../actions'
 import Issue from '../presentations/Issue'
 
-const mapStateToProps = state => ({
-  selected_function: state.reducers.selected_function,
-  show_hided_issue: state.reducers.show_hided_issue,
-  issue_rows: state.reducers.issue_rows
+const mapStateToProps = (state, ownProps) => ({
+  id: ownProps.match.params.id,
+  issue_rows: state.reducers.issue_rows,
+  issue_cost_rows: state.reducers.issue_cost_rows,
+  members: state.reducers.members
 })
 
 const mapDispatchToProps = dispatch => ({
-  onToggleHide: () => dispatch(Actions.onToggleHide()),
-  onToggleIssueHide: (id, bool) => dispatch(Actions.onToggleIssueHide(id, bool))
+  onClickChangeIssueSubmit: issue_cost_rows => dispatch(Actions.onClickChangeIssueSubmit(issue_cost_rows))
 })
 
 const IssueContainer = connect(

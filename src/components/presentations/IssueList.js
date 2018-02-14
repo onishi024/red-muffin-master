@@ -2,7 +2,7 @@ import React from 'react'
 import {Table, TableHeader, TableBody, TableRow, TableHeaderColumn, TableRowColumn,
         Toggle, IconButton, FloatingActionButton} from 'material-ui'
 import ContentAdd from 'material-ui/svg-icons/content/add';
-import ActionHome from 'material-ui/svg-icons/editor/mode-edit';
+import ModeEdit from 'material-ui/svg-icons/editor/mode-edit';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import { Link } from 'react-router-dom'
 
@@ -12,6 +12,11 @@ const IssueList = ({selected_function, show_hided_issue, issue_rows, onToggleHid
 
   //非表示toggleのスタイル
   const styles = {
+    path: {
+      margin: 12,
+      fontSize: 12,
+      color: "#9E9E9E",
+    },
     toggle: {
       maxWidth: 50,
       margin: 16,
@@ -19,8 +24,9 @@ const IssueList = ({selected_function, show_hided_issue, issue_rows, onToggleHid
       bottom: 20,
       position: "fixed",
       zIndex: 1,
-      boxShadowHOffset: 10,
-      boxShadowVOffset: 10,
+    },
+    toggle_icon: {
+      boxShadow: '0px 4px 4px 1px rgba(0,0,0,0.15)'
     },
   }
 
@@ -34,15 +40,10 @@ const IssueList = ({selected_function, show_hided_issue, issue_rows, onToggleHid
   }
 
   //SVG Icons
-  const HomeIcon = ({id}) => {
-
-    const _onClick = () => {
-      console.log(id)
-    }
-
+  const EditIcon = () => {
     return (
-      <IconButton tooltip="SVG Icon" onClick={_onClick} >
-        <ActionHome />
+      <IconButton tooltip="SVG Icon" >
+        <ModeEdit />
       </IconButton>
     )
   }
@@ -55,9 +56,11 @@ const IssueList = ({selected_function, show_hided_issue, issue_rows, onToggleHid
   //return
   return (
     <MuiThemeProvider>
-      <p>案件一覧</p>
+      <div style={styles.path} ><Link to={`/`}>Home</Link> > 案件一覧</div>
       <Toggle
         style={styles.toggle}
+        thumbStyle={styles.toggle_icon}
+        trackStyle={styles.toggle_icon}
         onToggle={() => onToggleHide()} />
       <Link to='/register'>
         <FloatingActionButton mini={true} style={button_style}>
@@ -87,8 +90,8 @@ const IssueList = ({selected_function, show_hided_issue, issue_rows, onToggleHid
                 <TableRowColumn style={{ width: '10%'}}>{issue_row.taskcode}</TableRowColumn>
                 <TableRowColumn style={{ width: '20%'}}>{issue_row.ankenname}</TableRowColumn>
                 <TableRowColumn style={{ width: '10%'}}>{issue_row.estimate}</TableRowColumn>
-                <TableRowColumn style={{ width: '10%'}}><Link to={`/issue_edit/${issue_row.id}`}><HomeIcon /></Link></TableRowColumn>
-                <TableRowColumn style={{ width: '10%'}}><Toggle defaultToggled={issue_row.hide} name={issue_row.id} onToggle={(event, value) => _onToggleIssueHide(event, value)}/></TableRowColumn>
+                <TableRowColumn style={{ width: '10%'}}><Link to={`/issue_edit/${issue_row.id}`}><EditIcon /></Link></TableRowColumn>
+                <TableRowColumn style={{ width: '10%'}}><Toggle defaultToggled={issue_row.hide} onToggle={(event, value) => _onToggleIssueHide(event, value)}/></TableRowColumn>
               </TableRow>
             )
           })}
