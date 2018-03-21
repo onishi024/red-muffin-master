@@ -1,5 +1,15 @@
 import * as ActionTypes from '../constants/ActionTypes'
 
+//API
+export const getGroups = () => ({
+  type: ActionTypes.GET_GROUPS
+})
+
+export const setGroups = groups => ({
+  type: ActionTypes.SET_GROUPS,
+  payload: {groups}
+})
+
 //Header
 export const onClickAppBar = () => ({
   type: ActionTypes.CLICK_APP_BAR,

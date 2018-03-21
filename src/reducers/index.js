@@ -4,7 +4,7 @@ const initState = {
   app_bar_open: false,
   group_select_open: false,
   groups: [],
-  selected_group_id: '0',
+  selected_group_id: 12,
   show_hided_issue: false,
   selected_issue: '0',
   issues: [],
@@ -45,6 +45,11 @@ const initState = {
 
 const reducer = (state = initState, action) => {
   switch (action.type) {
+    //API
+    case ActionTypes.SET_GROUPS: {
+      const groups = action.payload.groups
+      return {...state, groups}
+    }
     //Header
     case ActionTypes.CLICK_APP_BAR: {
       const app_bar_open = !state.app_bar_open

@@ -5,7 +5,9 @@ import { Provider } from 'react-redux'
 import createHistory from 'history/createBrowserHistory'
 import { Route } from 'react-router'
 import { ConnectedRouter, routerReducer, routerMiddleware } from 'react-router-redux'
-import reducers from './reducers' // Or wherever you keep your reducers
+import reducers from './reducers'
+import APIMiddleware from './middlewares/APIMiddleware'
+import * as Actions from './actions'
 
 import Home from './components/presentations/Home'
 import HeaderContainer from './components/containers/HeaderContainer'
@@ -20,7 +22,7 @@ import Member from './components/presentations/Member'
 const history = createHistory()
 
 // Build the middleware for intercepting and dispatching navigation actions
-const middleware = routerMiddleware(history)
+const _routerMiddleware = routerMiddleware(history)
 
 // Add the reducer to your store on the `router` key
 // Also apply our middleware for navigating
@@ -29,7 +31,8 @@ const store = createStore(
     reducers,
     router: routerReducer
   }),
-  applyMiddleware(middleware)
+  applyMiddleware(APIMiddleware),
+  applyMiddleware(_routerMiddleware),
 )
 
 render(
@@ -48,3 +51,5 @@ render(
   </Provider>,
   document.getElementById('root')
 )
+
+store.dispatch(Actions.getGroups())
