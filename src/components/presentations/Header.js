@@ -4,8 +4,8 @@ List, ListItem, DropDownMenu} from 'material-ui'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import { Link } from 'react-router-dom'
 
-const Header = ({app_bar_open, groups, selected_group_id, onClickAppBar,
-                 group_select_open, onClickGroup}) => {
+const Header = ({app_bar_open, groups, selected_group_id, years, selected_year,
+                 onClickAppBar, group_select_open, onClickGroup, onClickYear, onClickIssueList}) => {
   //AppBarのスタイル
   const style = {
     // position: 'fixed', top: 100,
@@ -21,12 +21,16 @@ const Header = ({app_bar_open, groups, selected_group_id, onClickAppBar,
           onRequestChange={() => onClickAppBar()}
         >
           <Subheader>Group</Subheader>
-          <DropDownMenu value={selected_group_id} onChange={() => console.log("onChange")}>
+          <DropDownMenu value={selected_group_id} onChange={(event, index, value) => onClickGroup(value)}>
             {groups.map(group => <MenuItem value={group.id} primaryText={group.name} />)}
+          </DropDownMenu>
+          <DropDownMenu value={selected_year} onChange={(event, index, value) => onClickYear(value)}>
+            {years.map(years => <MenuItem value={years} primaryText={years} />)}
           </DropDownMenu>
           <Divider />
           <Menu>
-              <Link to='/issue'><MenuItem key="1" value="1">案件一覧</MenuItem></Link>
+              <Link to='/issue'><MenuItem onClick={(event) =>
+                onClickIssueList(event)} key="1" value="1">案件一覧</MenuItem></Link>
               <Link to='/member'><MenuItem key="2" value="2">要員別山積表</MenuItem></Link>
           </Menu>
         </Drawer>

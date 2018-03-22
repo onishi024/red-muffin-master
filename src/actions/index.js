@@ -10,18 +10,48 @@ export const setGroups = groups => ({
   payload: {groups}
 })
 
+export const getYears = () => ({
+  type: ActionTypes.GET_YEARS
+})
+
+export const setYears = years => ({
+  type: ActionTypes.SET_YEARS,
+  payload: {years}
+})
+
+export const getIssueRows = () => ({
+  type: ActionTypes.GET_ISSUE_ROWS,
+})
+
+export const setIssueRows = issue_rows => ({
+  type: ActionTypes.SET_ISSUE_ROWS,
+  payload: {issue_rows}
+})
+
 //Header
 export const onClickAppBar = () => ({
   type: ActionTypes.CLICK_APP_BAR,
   payload: {}
 })
 
-export const onClickGroup = () => {
+export const onClickGroup = selected_group_id => {
   return {
-    type: ActionTypes.CLICK_GROUP,
-    payload: {}
+    type: ActionTypes.SELECT_GROUP,
+    payload: {selected_group_id}
   }
 }
+
+export const onClickYear = selected_year => {
+  return {
+    type: ActionTypes.SELECT_YEAR,
+    payload: {selected_year}
+  }
+}
+
+export const onClickIssueList = (event) => ({
+  type: ActionTypes.GET_ISSUE_ROWS,
+  payload: {}
+})
 
 //IssueList
 export const onToggleHide = () => {

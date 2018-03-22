@@ -6,8 +6,10 @@ import ModeEdit from 'material-ui/svg-icons/editor/mode-edit';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import { Link } from 'react-router-dom'
 
-const IssueList = ({selected_function, show_hided_issue, issue_rows, onToggleHide, onToggleIssueHide}) => {
+const IssueList = ({selected_function, show_hided_issue, issue_rows, onToggleHide, onToggleIssueHide,
+                    getIssue_rows, selected_group_id, selected_year}) => {
 
+  // const _issue_rows = show_hided_issue ? issue_rows : issue_rows.filter(issue_row => issue_row.hide === false)
   const _issue_rows = show_hided_issue ? issue_rows : issue_rows.filter(issue_row => issue_row.hide === false)
 
   //非表示toggleのスタイル
@@ -101,5 +103,6 @@ const IssueList = ({selected_function, show_hided_issue, issue_rows, onToggleHid
   )
 
 }
+
 
 export default IssueList

@@ -7,11 +7,15 @@ const mapStateToProps = state => ({
   group_select_open: state.reducers.group_select_open,
   groups: state.reducers.groups,
   selected_group_id: state.reducers.selected_group_id,
+  years: state.reducers.years,
+  selected_year: state.reducers.selected_year,
 })
 
 const mapDispatchToProps = dispatch => ({
   onClickAppBar: () => dispatch(Actions.onClickAppBar()),
-  onClickGroup: () => dispatch(Actions.onClickGroup())
+  onClickGroup: value => dispatch(Actions.onClickGroup(value)),
+  onClickYear: value => dispatch(Actions.onClickYear(value)),
+  onClickIssueList: () => dispatch(Actions.onClickIssueList())
 })
 
 const HeaderContainer = connect(

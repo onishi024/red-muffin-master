@@ -53,3 +53,4 @@ render(
 )
 
 store.dispatch(Actions.getGroups())
+store.dispatch(Actions.getYears())

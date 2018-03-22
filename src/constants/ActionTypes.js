@@ -1,6 +1,7 @@
 //User Action
 export const CLICK_APP_BAR = 'CLICK_APP_BAR'
-export const CLICK_GROUP = 'CLICK_GROUP'
+export const SELECT_GROUP = 'SELECT_GROUP'
+export const SELECT_YEAR = 'SELECT_YEAR'
 export const CHECK_ISSUE = 'CHECK_ISSUE'
 export const TOGGLE_HIDE = 'TOGGLE_HIDE'
 export const TOGGLE_ISSUE_HIDE = 'TOGGLE_ISSUE_HIDE'
@@ -10,3 +11,7 @@ export const CHANGE_ISSUE = 'CHANGE_ISSUE'
 //API Action
 export const GET_GROUPS = 'GET_GROUPS'
 export const SET_GROUPS = 'SET_GROUPS'
+export const GET_YEARS = 'GET_YEARS'
+export const SET_YEARS = 'SET_YEARS'
+export const GET_ISSUE_ROWS = 'GET_ISSUE_ROWS'
+export const SET_ISSUE_ROWS = 'SET_ISSUE_ROWS'
