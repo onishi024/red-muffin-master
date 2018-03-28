@@ -52,9 +52,37 @@ render(
   document.getElementById('root')
 )
 
-Promise.all([
-  store.dispatch(Actions.getGroups()),
-  store.dispatch(Actions.getYears())
-]).then(
-  store.dispatch(Actions.getIssueRows())
-)
+Promise.resolve()
+    .then(() => {
+        return Promise.all([
+            store.dispatch(Actions.getGroups()),
+            store.dispatch(Actions.getYears())
+        ])
+    })
+    .then(() => {
+        console.log("src/index.js getProjects");
+        return new Promise(function(fulfilled, rejected){
+            store.dispatch(Actions.getProjects())
+        })
+    })
+// Promise.resolve()
+//     .then(() => {
+//         return Promise.all([
+//             new Promise(function(fulfilled, rejected){
+//               console.log("getGroups")
+//               store.dispatch(Actions.getGroups())
+//             }),
+//             new Promise(function(fulfilled, rejected){
+//               console.log("getYears")
+//               store.dispatch(Actions.getYears())
+//             })
+//         ])
+//     })
+//     .then(() => {
+//         console.log("src/index.js getProjects");
+//         return new Promise(function(fulfilled, rejected){
+//             store.dispatch(Actions.getProjects())
+//         })
+//     })
+// store.dispatch(Actions.getGroups())
+// store.dispatch(Actions.getYears())

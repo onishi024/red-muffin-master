@@ -19,6 +19,15 @@ export const setYears = years => ({
   payload: {years}
 })
 
+export const getProjects = () => ({
+  type: ActionTypes.GET_PROJECTS
+})
+
+export const setProjects = projects => ({
+  type: ActionTypes.SET_PROJECTS,
+  payload: {projects}
+})
+
 export const getIssueRows = () => ({
   type: ActionTypes.GET_ISSUE_ROWS,
 })
