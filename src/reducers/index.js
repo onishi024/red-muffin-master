@@ -56,11 +56,11 @@ const reducer = (state = initState, action) => {
       const years = action.payload.years
       return {...state, years}
     }
-    case ActionTypes.GET_ISSUE_ROWS: {
-      console.log('getissuerows')
-      // const issue_rows = action.payload.issue_rows
-      // return {...state, years}
-    }
+    // case ActionTypes.GET_ISSUE_ROWS: {
+    //   console.log('getissuerows')
+    //   // const issue_rows = action.payload.issue_rows
+    //   // return {...state, years}
+    // }
     case ActionTypes.SET_ISSUE_ROWS: {
       console.log('setissuerows')
       // const issue_rows = action.payload.issue_rows

@@ -52,5 +52,9 @@ render(
   document.getElementById('root')
 )
 
-store.dispatch(Actions.getGroups())
-store.dispatch(Actions.getYears())
+Promise.all([
+  store.dispatch(Actions.getGroups()),
+  store.dispatch(Actions.getYears())
+]).then(
+  store.dispatch(Actions.getIssueRows())
+)

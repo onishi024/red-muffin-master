@@ -2,7 +2,7 @@ import * as ActionTypes from '../constants/ActionTypes'
 import * as RedmineAPI from '../api/RedmineAPI'
 import * as Actions from '../actions'
 
-const APIMiddleware = ({dispatch}) => next => action => {
+const APIMiddleware = ({dispatch, getState}) => next => action => {
 
   if (action.type === ActionTypes.GET_GROUPS) {
     RedmineAPI.getGroups()
@@ -27,6 +27,10 @@ const APIMiddleware = ({dispatch}) => next => action => {
   }
 
   if (action.type === ActionTypes.GET_ISSUE_ROWS) {
+    const selected_group_id = getState().reducers.selected_group_id
+    const selected_year = getState().reducers.selected_year
+    console.log(selected_group_id)
+    console.log(selected_year)
     RedmineAPI.getIssues()
       .then(console.log('setissues'))
       // .then(issue_rows => dispatch(Actions.setIssueRows(issue_rows)))
