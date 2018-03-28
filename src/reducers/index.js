@@ -42,7 +42,8 @@ const initState = {
     {id: "3", name: "五十鈴華", grade: "G2b"},
     {id: "4", name: "秋山優花里", grade: "G2a"},
     {id: "5", name: "冷泉麻子", grade: "G1"},
-  ]
+  ],
+  projects: []
 }
 
 const reducer = (state = initState, action) => {
@@ -55,6 +56,11 @@ const reducer = (state = initState, action) => {
     case ActionTypes.SET_YEARS: {
       const years = action.payload.years
       return {...state, years}
+    }
+    case ActionTypes.SET_PROJECTS: {
+      const projects = action.payload.projects
+      console.log(projects)
+      return {...state, projects}
     }
     case ActionTypes.GET_ISSUE_ROWS: {
       console.log('getissuerows')

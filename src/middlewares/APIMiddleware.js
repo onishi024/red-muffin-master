@@ -7,6 +7,7 @@ const APIMiddleware = ({dispatch}) => next => action => {
   if (action.type === ActionTypes.GET_GROUPS) {
     RedmineAPI.getGroups()
       .then(groups => dispatch(Actions.setGroups(groups)))
+    console.log("g");
   }
 
   if (action.type === ActionTypes.GET_YEARS) {
@@ -19,11 +20,17 @@ const APIMiddleware = ({dispatch}) => next => action => {
             years.push(project.custom_fields[0].value)
           }
         })
-        console.log(years)
         return years
       })
       .then(years => years.sort((a, b) => {return a > b ? 1 : -1}))
       .then(years => dispatch(Actions.setYears(years)))
+    console.log("p");
+  }
+
+  if (action.type === ActionTypes.GET_PROJECTS) {
+    console.log("action");
+    RedmineAPI.getProjects()
+      .then(projects => dispatch(Actions.setProjects(projects)))
   }
 
   if (action.type === ActionTypes.GET_ISSUE_ROWS) {
