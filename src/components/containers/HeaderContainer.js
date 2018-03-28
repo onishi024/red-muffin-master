@@ -13,7 +13,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   onClickAppBar: () => dispatch(Actions.onClickAppBar()),
-  onClickGroup: value => dispatch(Actions.onClickGroup(value)),
+  onClickGroup: value => Promise.all([dispatch(Actions.onClickGroup(value))]).then(dispatch(Actions.getIssueRows())),
   onClickYear: value => dispatch(Actions.onClickYear(value)),
   onClickIssueList: () => dispatch(Actions.onClickIssueList())
 })
