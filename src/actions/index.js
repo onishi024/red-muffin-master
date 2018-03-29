@@ -23,9 +23,9 @@ export const getProjects = () => ({
   type: ActionTypes.GET_PROJECTS
 })
 
-export const setProjects = projects => ({
+export const setProjects = projects_id => ({
   type: ActionTypes.SET_PROJECTS,
-  payload: {projects}
+  payload: {projects_id}
 })
 
 export const getIssueRows = () => ({

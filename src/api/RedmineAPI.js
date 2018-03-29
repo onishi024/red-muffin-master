@@ -1,10 +1,10 @@
-const apikey = 'af294843d18a02b78508156fbab3f526b4ae9974'
+const apikey = 'ff0614e4aad8cd0209502a3012008992d0a5252c'
 
 // const headers = {}
 const headers = {'X-Redmine-API-Key' : apikey,
                  'Content-Type': 'application/json'}
 
-const url = `http://127.0.0.1:8080/redmine/`
+const url = `http://127.0.0.1/redmine/`
 
 //redmine/datakind.json
 export const getGroups = () =>

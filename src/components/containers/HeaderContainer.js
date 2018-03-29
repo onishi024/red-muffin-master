@@ -13,8 +13,23 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   onClickAppBar: () => dispatch(Actions.onClickAppBar()),
-  onClickGroup: value => Promise.all([dispatch(Actions.onClickGroup(value))]).then(dispatch(Actions.getIssueRows())),
-  onClickYear: value => dispatch(Actions.onClickYear(value)),
+  // onClickGroup: value => Promise.all([dispatch(Actions.onClickGroup(value))]).then(dispatch(Actions.getIssueRows())),
+  // onClickYear: value => dispatch(Actions.onClickYear(value)),
+
+  onClickGroup: value =>
+    Promise.resolve()
+      .then(() => {dispatch(Actions.onClickGroup(value))})
+      .then(() => {dispatch(Actions.getProjects())})
+      .then(() => {dispatch(Actions.getIssueRows())}),
+
+  onClickYear: value => Promise.resolve()
+      .then(() => {
+          dispatch(Actions.onClickYear(value))
+      })
+      .then(() => {
+          dispatch(Actions.getIssueRows())
+      }),
+
   onClickIssueList: () => dispatch(Actions.onClickIssueList())
 })
 
