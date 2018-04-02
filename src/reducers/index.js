@@ -65,8 +65,11 @@ const reducer = (state = initState, action) => {
     }
     case ActionTypes.SELECT_GROUP: {
       console.log('selectgroup')
-    //   const selected_group_id = action.payload.selected_group_id
-    //   return {...state, selected_group_id}
+      const selected_group_id = state.selected_group_id
+      const configs = configs
+      const selected_project_id = configs.filter(selected_group_id == configs.value)
+      console.log(selected_project_id)
+      return {...state, selected_project_id}
     }
     case ActionTypes.SELECT_YEAR: {
       const selected_year = action.payload.selected_year

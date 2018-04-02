@@ -15,7 +15,6 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
       .then(_projects => {
         let years = []
         const projects = _projects.map(project => {
-          // console.log(project.custom_fields[0].value)
           if(years.indexOf(project.custom_fields[0].value) == -1){
             years.push(project.custom_fields[0].value)
           }
@@ -42,7 +41,6 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
         return selected_project_id
       })
       .then(projects => dispatch(Actions.setProjects(projects)))
-      // .then(() => dispatch(Actions.getIssueRows()))
   }
 
   if (action.type === ActionTypes.GET_ISSUE_ROWS) {
@@ -63,7 +61,6 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
             }
           })
       })
-      // .then(json => console.log(json))
       .then(issue_rows => dispatch(Actions.setIssueRows(issue_rows)))
   }
 
