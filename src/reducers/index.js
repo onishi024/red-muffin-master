@@ -5,10 +5,11 @@ const initState = {
   app_bar_open: false,
   group_select_open: false,
   groups: [],
-  selected_group_id: 12,
+  selected_group_id: 13,
   years: [],
   selected_year: '2017',
-  selected_project_id: '4',
+  selected_identifier: 'c',
+  selected_project_id: 2,
   show_hided_issue: false,
   selected_issue: '0',
   issues: [],
@@ -50,9 +51,10 @@ const reducer = (state = initState, action) => {
       return {...state, years}
     }
     case ActionTypes.SET_PROJECTS: {
-      const projects_id = action.payload.projects_id
-      console.log(projects_id)
-      return {...state, projects_id}
+      const selected_project_id = action.payload.projects_id
+      console.log("setprojects")
+      console.log(selected_project_id)
+      return {...state, selected_project_id}
     }
     case ActionTypes.SET_ISSUE_ROWS: {
       const issue_rows = action.payload.issue_rows
@@ -65,11 +67,12 @@ const reducer = (state = initState, action) => {
     }
     case ActionTypes.SELECT_GROUP: {
       console.log('selectgroup')
-      const selected_group_id = state.selected_group_id
-      const configs = configs
-      const selected_project_id = configs.filter(selected_group_id == configs.value)
-      console.log(selected_project_id)
-      return {...state, selected_project_id}
+      const selected_group_id = action.payload.selected_group_id
+      const selected_project = configs.filter( function(item) {
+        return item.group_id == selected_group_id
+      })
+      const selected_identifier = selected_project[0].identifier
+      return {...state, selected_identifier ,selected_group_id}
     }
     case ActionTypes.SELECT_YEAR: {
       const selected_year = action.payload.selected_year

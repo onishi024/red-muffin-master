@@ -27,27 +27,29 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
   }
 
   if (action.type === ActionTypes.GET_PROJECTS) {
-    const selected_group_id = getState().reducers.selected_group_id
+    const selected_identifier = getState().reducers.selected_identifier
     const selected_year = getState().reducers.selected_year
-    console.log("action");
+    console.log("getprojects");
     RedmineAPI.getProjects()
       .then(_projects => {
         let selected_project_id = []
         const projects = _projects.map(project => {
-          if(project.identifier == selected_group_id && project.custom_fields[0].value == selected_year){
+          if(project.identifier == selected_identifier && project.custom_fields[0].value == selected_year){
             selected_project_id.push(project.id)
           }
         })
         return selected_project_id
       })
       .then(projects => dispatch(Actions.setProjects(projects)))
+      .then(() => {dispatch(Actions.getIssueRows())})
   }
 
   if (action.type === ActionTypes.GET_ISSUE_ROWS) {
     const selected_project_id = getState().reducers.selected_project_id
+    console.log("getissuerows")
+    console.log(selected_project_id)
     RedmineAPI.getIssues()
       .then(_issues => {
-        console.log(_issues)
         return _issues.filter(issue => (issue.project.id == selected_project_id))
           .map(issue => {
             return {

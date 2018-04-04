@@ -17,8 +17,9 @@ const mapDispatchToProps = dispatch => ({
   onClickGroup: value =>
     Promise.resolve()
       .then(() => {dispatch(Actions.onClickGroup(value))})
-      .then(() => {dispatch(Actions.getProjects())})
-      .then(() => {dispatch(Actions.getIssueRows())}),
+      .then(() => {dispatch(Actions.getProjects())}),
+      // .then(projects => dispatch(Actions.setProjects(projects)))
+      // .then(() => {dispatch(Actions.getIssueRows())}),
 
   onClickYear: value =>
     Promise.resolve()

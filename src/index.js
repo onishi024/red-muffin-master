@@ -65,6 +65,14 @@ Promise.resolve()
             store.dispatch(Actions.getProjects())
         })
     })
+    .then(() => {
+        console.log("src/index.js getProjects2");
+        return new Promise(function(fulfilled, rejected){
+            store.dispatch(Actions.getProjects())
+        })
+    })
+
+
 // Promise.resolve()
 //     .then(() => {
 //         return Promise.all([
