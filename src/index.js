@@ -61,16 +61,23 @@ Promise.resolve()
     })
     .then(() => {
         console.log("src/index.js getProjects");
-        return new Promise(function(fulfilled, rejected){
             store.dispatch(Actions.getProjects())
-        })
     })
     .then(() => {
-        console.log("src/index.js getProjects2");
-        return new Promise(function(fulfilled, rejected){
-            store.dispatch(Actions.getProjects())
-        })
+        console.log("src/index.js getIssueRows");
+            store.dispatch(Actions.getIssueRows())
     })
+    .then(() => {
+        console.log("src/index.js getGroupUsers");
+            store.dispatch(Actions.getGroupUsers())
+    })
+    // .then(() => {
+    //     console.log("src/index.js getProjects");
+    //     return new Promise(function(fulfilled, rejected){
+    //         store.dispatch(Actions.getProjects())
+    //         store.dispatch(Actions.getGroupUsers())
+    //     })
+    // })
 
 
 // Promise.resolve()

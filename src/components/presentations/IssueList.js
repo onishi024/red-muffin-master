@@ -78,7 +78,7 @@ const IssueList = ({selected_function, show_hided_issue, issue_rows, onToggleHid
             <TableHeaderColumn style={{ width: '20%'}}>案件名称</TableHeaderColumn>
             <TableHeaderColumn style={{ width: '15%'}}>主担当</TableHeaderColumn>
             <TableHeaderColumn style={{ width: '5%'}}>見積</TableHeaderColumn>
-            <TableHeaderColumn style={{ width: '10%'}}>編集</TableHeaderColumn>
+            <TableHeaderColumn style={{ width: '10%'}}>詳細</TableHeaderColumn>
             <TableHeaderColumn style={{ width: '10%'}}>非表示</TableHeaderColumn>
           </TableRow>
         </TableHeader>
