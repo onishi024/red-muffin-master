@@ -4,6 +4,7 @@ import Register from '../presentations/Register'
 
 const mapStateToProps = state => ({
   register_form: state.reducers.register_form,
+  group_users: state.reducers.groupUsers,
 })
 
 const mapDispatchToProps = dispatch => ({

@@ -5,6 +5,7 @@ const initState = {
   app_bar_open: false,
   group_select_open: false,
   groups: [],
+  groupUsers: [],
   selected_group_id: 12,
   years: [],
   selected_year: '2017',
@@ -65,11 +66,12 @@ const reducer = (state = initState, action) => {
     }
     case ActionTypes.SELECT_GROUP: {
       console.log('selectgroup')
-      const selected_group_id = state.selected_group_id
-      const configs = configs
-      const selected_project_id = configs.filter(selected_group_id == configs.value)
-      console.log(selected_project_id)
-      return {...state, selected_project_id}
+      const selected_group_id = action.payload.selected_group_id
+      const selected_project = configs.filter( function(item) {
+        return item.group_id == selected_group_id
+      })
+      const selected_identifier = selected_project[0].identifier
+      return {...state, selected_identifier ,selected_group_id}
     }
     case ActionTypes.SELECT_YEAR: {
       const selected_year = action.payload.selected_year
@@ -89,16 +91,6 @@ const reducer = (state = initState, action) => {
         }
         return issue_row
       })
-      return {...state, issue_rows}
-    }
-    //Register
-    case ActionTypes.REGISTER_ISSUE: {
-      const form = action.payload.form
-      const issue_rows = state.issue_rows
-      const kindRow = ["開発委託", "作業依頼", "障害対応(無償)", "常駐支援", "その他無償作業"]
-      issue_rows.push(
-        {id: state.issue_rows.length+1, kind: kindRow[form.kind], ankenno: "", taskcode: "", subcode: "", ankenname: form.ankenname, estimate: form.estimate, hide: false}
-      )
       return {...state, issue_rows}
     }
     //Issue
