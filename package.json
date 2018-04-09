@@ -1,7 +1,7 @@
 {
   "name": "red-muffin",
   "version": "0.1.0",
-  "homepage": "https://onishi024.github.io/red-muffin/",
+  "homepage": "https://github.com/imim10042/red-muffin-master",
   "private": true,
   "dependencies": {
     "react": "^16.2.0",
@@ -13,17 +13,13 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "deploy": "npm run build && gh-pages -d build"
   },
   "devDependencies": {
-    "admin-on-rest": "^1.3.3",
-    "gh-pages": "^1.1.0",
     "history": "^4.7.2",
     "material-ui": "^0.20.0",
     "react-handsontable": "^0.3.1",
     "react-redux": "^5.0.6",
     "react-router-redux": "^5.0.0-alpha.9",
-    "react-tabs": "^2.1.1",
     "redux": "^3.7.2",
     "redux-devtools-extension": "^2.13.2"
   }
