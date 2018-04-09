@@ -79,7 +79,7 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
         subject: form.title,
         assigned_to_id: form.assigned,
         custom_fields: [
-          {"id": 2, "value": form.ankeno}, //案件番号
+          {"id": 2, "value": form.ankenno}, //案件番号
           {"id": 3, "value": form.naibukanrino},　//内部管理番号
           {"id": 4, "value": ""},  //見積04月
           {"id": 5, "value": ""},  //見積05月
@@ -110,6 +110,7 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
         ]
       }
     }
+    console.log(issue);
     Promise.resolve()
       .then(RedmineAPI.postIssue(issue))
       .then(dispatch(Actions.getIssueRows()))

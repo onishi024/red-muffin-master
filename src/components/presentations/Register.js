@@ -31,7 +31,7 @@ export default class Register extends Component {
     this.setState({
       register_form: {
         ...this.state.register_form,
-        ankeno: value
+        ankenno: value
       }
     })
   }
@@ -52,10 +52,11 @@ export default class Register extends Component {
     })
   }
   onChange4 = (event, key, payload) => {
+    const id = this.props.group_users[key].id
     this.setState({
       register_form: {
         ...this.state.register_form,
-        assigned: key
+        assigned: id
       }
     })
   }
