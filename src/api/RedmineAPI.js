@@ -1,6 +1,5 @@
 const apikey = 'af294843d18a02b78508156fbab3f526b4ae9974'
 
-// const headers = {}
 const headers = {'X-Redmine-API-Key' : apikey,
                  'Content-Type': 'application/json'}
 
@@ -13,6 +12,13 @@ export const getGroups = () =>
      headers: headers})
   .then(response => response.json())
   .then(json => json.groups)
+
+export const getGroupUsers = (id) =>
+  fetch(url + `groups/` + id + `.json?include=users`,
+    {method: 'GET',
+     headers: headers})
+  .then(response => response.json())
+  .then(json => json.group.users)
 
 export const getProjects = () =>
   fetch(url + `projects.json`,

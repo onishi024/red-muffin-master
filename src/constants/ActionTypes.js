@@ -11,6 +11,8 @@ export const CHANGE_ISSUE = 'CHANGE_ISSUE'
 //API Action
 export const GET_GROUPS = 'GET_GROUPS'
 export const SET_GROUPS = 'SET_GROUPS'
+export const GET_GROUP_USERS = 'GET_GROUP_USERS'
+export const SET_GROUP_USERS = 'SET_GROUP_USERS'
 export const GET_YEARS = 'GET_YEARS'
 export const SET_YEARS = 'SET_YEARS'
 export const GET_PROJECTS = 'GET_PROJECTS'

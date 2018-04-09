@@ -6,10 +6,11 @@ const initState = {
   group_select_open: false,
   groups: [],
   groupUsers: [],
-  selected_group_id: 12,
+  selected_group_id: 13,
   years: [],
   selected_year: '2017',
-  selected_project_id: '4',
+  selected_identifier: 'c',
+  selected_project_id: 2,
   show_hided_issue: false,
   selected_issue: '0',
   issues: [],
@@ -46,14 +47,18 @@ const reducer = (state = initState, action) => {
       const groups = action.payload.groups
       return {...state, groups}
     }
+    case ActionTypes.SET_GROUP_USERS: {
+      const groupUsers = action.payload.groupUsers
+      console.log(groupUsers);
+      return {...state, groupUsers}
+    }
     case ActionTypes.SET_YEARS: {
       const years = action.payload.years
       return {...state, years}
     }
     case ActionTypes.SET_PROJECTS: {
-      const projects_id = action.payload.projects_id
-      console.log(projects_id)
-      return {...state, projects_id}
+      const selected_project_id = action.payload.projects_id
+      return {...state, selected_project_id}
     }
     case ActionTypes.SET_ISSUE_ROWS: {
       const issue_rows = action.payload.issue_rows
