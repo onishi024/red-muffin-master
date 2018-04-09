@@ -19,7 +19,7 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
     RedmineAPI.getProjects()
       .then(_projects => {
         let years = []
-        const projects = _projects.map(project => {
+        _projects.map(project => {
           if(years.indexOf(project.custom_fields[0].value) == -1){
             years.push(project.custom_fields[0].value)
           }
