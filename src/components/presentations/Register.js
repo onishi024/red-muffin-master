@@ -9,9 +9,10 @@ export default class Register extends Component {
     super(props)
     this.state = {
       register_form: {
-        kind: 0,
-        ankenname: "",
-        estimate: 0,
+        ankenno: "",
+        naibukanrino: "",
+        title: "",
+        assigned: "",
         register_processing: false
       }
     }
@@ -26,29 +27,35 @@ export default class Register extends Component {
   }
 
   //Form入力
-  onChange1 = (event, key, payload) => {
+  onChange1 = (event, value) => {
     this.setState({
       register_form: {
         ...this.state.register_form,
-        kind: key
+        ankeno: value
       }
     })
   }
-
   onChange2 = (event, value) => {
     this.setState({
       register_form: {
         ...this.state.register_form,
-        ankenname: value
+        naibukanrino: value
       }
     })
   }
-
   onChange3 = (event, value) => {
     this.setState({
       register_form: {
         ...this.state.register_form,
-        estimate: value
+        title: value
+      }
+    })
+  }
+  onChange4 = (event, key, payload) => {
+    this.setState({
+      register_form: {
+        ...this.state.register_form,
+        assigned: key
       }
     })
   }
@@ -79,25 +86,25 @@ export default class Register extends Component {
       <div>
         <div style={this.styles.path} ><Link to={`/`}>Home</Link> > <Link to={`/issue`}>案件一覧</Link> > 案件情報登録</div>
         <MuiThemeProvider>
-          <SelectField
-            floatingLabelText="分類"
-            onChange={this.onChange1}
-            value={this.state.register_form.kind}
-          >
-            <MenuItem value={0} primaryText="開発委託" />
-            <MenuItem value={1} primaryText="作業依頼" />
-            <MenuItem value={2} primaryText="障害対応(無償)" />
-            <MenuItem value={3} primaryText="常駐支援" />
-            <MenuItem value={4} primaryText="その他無償作業" />
-          </SelectField><br />
           <TextField
-            floatingLabelText="案件名称"
+            floatingLabelText="管理番号"
+            onChange={this.onChange1}
+          /><br />
+          <TextField
+            floatingLabelText="内部管理番号"
             onChange={this.onChange2}
           /><br />
           <TextField
-            floatingLabelText="見積工数"
+            floatingLabelText="案件名称"
             onChange={this.onChange3}
           /><br />
+          <SelectField
+            floatingLabelText="主担当"
+            value={this.state.register_form.assigned}
+            onChange={this.onChange4}
+          >
+            {this.props.group_users.map(group_user => <MenuItem value={group_user.id} primaryText={group_user.name} />)}
+          </SelectField><br />
           <Link to='/issue'>
             <FlatButton
               label="Cancel"

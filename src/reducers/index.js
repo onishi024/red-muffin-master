@@ -98,16 +98,6 @@ const reducer = (state = initState, action) => {
       })
       return {...state, issue_rows}
     }
-    //Register
-    case ActionTypes.REGISTER_ISSUE: {
-      const form = action.payload.form
-      const issue_rows = state.issue_rows
-      const kindRow = ["開発委託", "作業依頼", "障害対応(無償)", "常駐支援", "その他無償作業"]
-      issue_rows.push(
-        {id: state.issue_rows.length+1, kind: kindRow[form.kind], ankenno: "", taskcode: "", subcode: "", ankenname: form.ankenname, estimate: form.estimate, hide: false}
-      )
-      return {...state, issue_rows}
-    }
     //Issue
     case ActionTypes.CHANGE_ISSUE: {
       const issue_cost_rows = action.payload.issue_cost_rows

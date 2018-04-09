@@ -1,9 +1,9 @@
-const apikey = 'ff0614e4aad8cd0209502a3012008992d0a5252c'
+const apikey = 'af294843d18a02b78508156fbab3f526b4ae9974'
 
 const headers = {'X-Redmine-API-Key' : apikey,
                  'Content-Type': 'application/json'}
 
-const url = `http://127.0.0.1/redmine/`
+const url = `http://localhost:8080/redmine/`
 
 //redmine/datakind.json
 export const getGroups = () =>
@@ -33,3 +33,10 @@ export const getIssues = () =>
      headers: headers})
   .then(response => response.json())
   .then(json => json.issues)
+
+export const postIssue = issue => {
+  fetch(url + `issues.json`,
+    {method: 'POST',
+     headers: headers,
+     body: JSON.stringify(issue)})
+   }
