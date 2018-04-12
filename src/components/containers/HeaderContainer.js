@@ -17,6 +17,7 @@ const mapDispatchToProps = dispatch => ({
   onClickGroup: value =>
     Promise.resolve()
       .then(() => {dispatch(Actions.onClickGroup(value))})
+      .then(() => {dispatch(Actions.getGroupUsers())})
       .then(() => {dispatch(Actions.getProjects())}),
       // .then(projects => dispatch(Actions.setProjects(projects)))
       // .then(() => {dispatch(Actions.getIssueRows())}),
@@ -24,10 +25,10 @@ const mapDispatchToProps = dispatch => ({
   onClickYear: value =>
     Promise.resolve()
       .then(() => {dispatch(Actions.onClickYear(value))})
-      .then(() => {dispatch(Actions.getProjects())})
-      .then(() => {dispatch(Actions.getIssueRows())}),
+      .then(() => {dispatch(Actions.getProjects())})//,
+      // .then(() => {dispatch(Actions.getIssueRows())}),
 
-  onClickIssueList: () => dispatch(Actions.onClickIssueList())
+  // onClickIssueList: () => dispatch(Actions.onClickIssueList())
 })
 
 const HeaderContainer = connect(

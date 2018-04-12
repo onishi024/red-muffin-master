@@ -44,7 +44,7 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
         return selected_project_id
       })
       .then(projects => dispatch(Actions.setProjects(projects)))
-      .then(() => {dispatch(Actions.getIssueRows())})
+      .then(() => dispatch(Actions.getIssueRows()))
   }
 
   if (action.type === ActionTypes.GET_ISSUE_ROWS) {
@@ -54,13 +54,13 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
         return _issues.filter(issue => (issue.project.id == selected_project_id))
           .map(issue => {
             return {
-              id: issue.id,
+              id: String(issue.id),
               ankenno: issue.custom_fields[0].value,
               naibukanrino: issue.custom_fields[1].value,
               title: issue.subject,
               assigned: issue.assigned_to.name,
               estimate: 10,
-              hide: issue.custom_fields[26].value
+              hide: issue.custom_fields[26].value == 1 ? true : false
             }
           })
       })

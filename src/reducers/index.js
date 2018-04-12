@@ -9,9 +9,9 @@ const initState = {
   selected_group_id: 13,
   years: [],
   selected_year: '2017',
-  selected_identifier: 'c',
-  selected_project_id: 2,
-  show_hided_issue: false,
+  selected_identifier: 'd',
+  selected_project_id: 4,
+  show_hided_issue: true,
   selected_issue: '0',
   issues: [],
   issue_rows: [],
@@ -49,7 +49,6 @@ const reducer = (state = initState, action) => {
     }
     case ActionTypes.SET_GROUP_USERS: {
       const groupUsers = action.payload.groupUsers
-      console.log(groupUsers);
       return {...state, groupUsers}
     }
     case ActionTypes.SET_YEARS: {
@@ -61,7 +60,9 @@ const reducer = (state = initState, action) => {
       return {...state, selected_project_id}
     }
     case ActionTypes.SET_ISSUE_ROWS: {
+      console.log('src/reducer/index.js setIssueRows')
       const issue_rows = action.payload.issue_rows
+      console.log(issue_rows)
       return {...state, issue_rows}
     }
     //Header
@@ -70,7 +71,6 @@ const reducer = (state = initState, action) => {
       return {...state, app_bar_open}
     }
     case ActionTypes.SELECT_GROUP: {
-      console.log('selectgroup')
       const selected_group_id = action.payload.selected_group_id
       const selected_project = configs.filter( function(item) {
         return item.group_id == selected_group_id

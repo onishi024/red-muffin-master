@@ -66,7 +66,7 @@ export const onClickYear = selected_year => {
   }
 }
 
-export const onClickIssueList = (event) => ({
+export const onClickIssueList = () => ({
   type: ActionTypes.GET_ISSUE_ROWS,
   payload: {}
 })

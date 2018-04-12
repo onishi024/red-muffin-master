@@ -10,7 +10,8 @@ const IssueList = ({selected_function, show_hided_issue, issue_rows, onToggleHid
                     getIssue_rows, selected_group_id, selected_year}) => {
 
   // const _issue_rows = show_hided_issue ? issue_rows : issue_rows.filter(issue_row => issue_row.hide === false)
-  const _issue_rows = show_hided_issue ? issue_rows : issue_rows.filter(issue_row => issue_row.hide == false)
+  // const _issue_rows = show_hided_issue ? issue_rows : issue_rows.filter(issue_row => issue_row.hide == false)
+  const _issue_rows = show_hided_issue ? issue_rows.filter(issue_row => issue_row.hide == true) : issue_rows
 
   //非表示toggleのスタイル
   const styles = {
@@ -58,47 +59,52 @@ const IssueList = ({selected_function, show_hided_issue, issue_rows, onToggleHid
   //return
   return (
     <MuiThemeProvider>
-      <div style={styles.path} ><Link to={`/`}>Home</Link> > 案件一覧</div>
-      <Toggle
-        style={styles.toggle}
-        thumbStyle={styles.toggle_icon}
-        trackStyle={styles.toggle_icon}
-        onToggle={() => onToggleHide()} />
-      <Link to='/register'>
-        <FloatingActionButton mini={true} style={button_style}>
-          <ContentAdd />
-        </FloatingActionButton>
-      </Link>
-      <Table fixedHeader={true} >
-        <TableHeader displaySelectAll={false} adjustForCheckbox={false} >
-          <TableRow>
-            <TableHeaderColumn style={{ width: '5%'}}>ID</TableHeaderColumn>
-            <TableHeaderColumn style={{ width: '15%'}}>案件管理番号</TableHeaderColumn>
-            <TableHeaderColumn style={{ width: '20%'}}>内部管理番号</TableHeaderColumn>
-            <TableHeaderColumn style={{ width: '20%'}}>案件名称</TableHeaderColumn>
-            <TableHeaderColumn style={{ width: '15%'}}>主担当</TableHeaderColumn>
-            <TableHeaderColumn style={{ width: '5%'}}>見積</TableHeaderColumn>
-            <TableHeaderColumn style={{ width: '10%'}}>詳細</TableHeaderColumn>
-            <TableHeaderColumn style={{ width: '10%'}}>非表示</TableHeaderColumn>
-          </TableRow>
-        </TableHeader>
-        <TableBody stripedRows={true} displayRowCheckbox={false} >
-          {_issue_rows.map(issue_row => {
-            return (
-              <TableRow key={issue_row.id} >
-                <TableRowColumn style={{ width: '5%'}}>{issue_row.id}</TableRowColumn>
-                <TableRowColumn style={{ width: '15%'}}>{issue_row.ankenno}</TableRowColumn>
-                <TableRowColumn style={{ width: '20%'}}>{issue_row.naibukanrino}</TableRowColumn>
-                <TableRowColumn style={{ width: '20%'}}>{issue_row.title}</TableRowColumn>
-                <TableRowColumn style={{ width: '15%'}}>{issue_row.assigned}</TableRowColumn>
-                <TableRowColumn style={{ width: '5%'}}>{issue_row.estimate}</TableRowColumn>
-                <TableRowColumn style={{ width: '10%'}}><Link to={`/issue_edit/${issue_row.id}`}><EditIcon /></Link></TableRowColumn>
-                <TableRowColumn style={{ width: '10%'}}><Toggle defaultToggled={issue_row.hide} name={issue_row.id} onToggle={(event, value) => _onToggleIssueHide(event, value)}/></TableRowColumn>
-              </TableRow>
-            )
-          })}
-        </TableBody>
-      </Table>
+      <div>
+        <div style={styles.path} ><Link to={`/`}>Home</Link> > 案件一覧</div>
+        <Toggle
+          style={styles.toggle}
+          thumbStyle={styles.toggle_icon}
+          trackStyle={styles.toggle_icon}
+          toggled={show_hided_issue}
+          onToggle={() => onToggleHide()} />
+        <Link to='/register'>
+          <FloatingActionButton mini={true} style={button_style}>
+            <ContentAdd />
+          </FloatingActionButton>
+        </Link>
+        <Table fixedHeader={true} >
+          <TableHeader displaySelectAll={false} adjustForCheckbox={false} >
+            <TableRow>
+              <TableHeaderColumn style={{ width: '5%'}}>ID</TableHeaderColumn>
+              <TableHeaderColumn style={{ width: '15%'}}>案件管理番号</TableHeaderColumn>
+              <TableHeaderColumn style={{ width: '20%'}}>内部管理番号</TableHeaderColumn>
+              <TableHeaderColumn style={{ width: '20%'}}>案件名称</TableHeaderColumn>
+              <TableHeaderColumn style={{ width: '15%'}}>主担当</TableHeaderColumn>
+              <TableHeaderColumn style={{ width: '5%'}}>見積</TableHeaderColumn>
+              <TableHeaderColumn style={{ width: '10%'}}>詳細</TableHeaderColumn>
+              <TableHeaderColumn style={{ width: '10%'}}>表示</TableHeaderColumn>
+            </TableRow>
+          </TableHeader>
+          <TableBody stripedRows={true} displayRowCheckbox={false} >
+            {_issue_rows.map(issue_row => {
+              return (
+                <TableRow key={issue_row.id} >
+                  <TableRowColumn style={{ width: '5%'}}>{issue_row.id}</TableRowColumn>
+                  <TableRowColumn style={{ width: '15%'}}>{issue_row.ankenno}</TableRowColumn>
+                  <TableRowColumn style={{ width: '20%'}}>{issue_row.naibukanrino}</TableRowColumn>
+                  <TableRowColumn style={{ width: '20%'}}>{issue_row.title}</TableRowColumn>
+                  <TableRowColumn style={{ width: '15%'}}>{issue_row.assigned}</TableRowColumn>
+                  <TableRowColumn style={{ width: '5%'}}>{issue_row.estimate}</TableRowColumn>
+                  <TableRowColumn style={{ width: '10%'}}><Link to={`/issue_edit/${issue_row.id}`}><EditIcon /></Link></TableRowColumn>
+                  <TableRowColumn boolean='true' style={{ width: '10%'}}>
+                    <Toggle toggled={issue_row.hide} name={issue_row.id} onToggle={(event, value) => _onToggleIssueHide(event, value)}/>
+                  </TableRowColumn>
+                </TableRow>
+              )
+            })}
+          </TableBody>
+        </Table>
+      </div>
     </MuiThemeProvider>
   )
 

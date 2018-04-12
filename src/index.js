@@ -63,10 +63,10 @@ Promise.resolve()
         console.log("src/index.js getProjects");
             store.dispatch(Actions.getProjects())
     })
-    .then(() => {
-        console.log("src/index.js getIssueRows");
-            store.dispatch(Actions.getIssueRows())
-    })
+    // .then(() => {
+    //     console.log("src/index.js getIssueRows");
+    //         store.dispatch(Actions.getIssueRows())
+    // })
     .then(() => {
         console.log("src/index.js getGroupUsers");
             store.dispatch(Actions.getGroupUsers())
