@@ -63,21 +63,10 @@ Promise.resolve()
         console.log("src/index.js getProjects");
             store.dispatch(Actions.getProjects())
     })
-    // .then(() => {
-    //     console.log("src/index.js getIssueRows");
-    //         store.dispatch(Actions.getIssueRows())
-    // })
     .then(() => {
         console.log("src/index.js getGroupUsers");
             store.dispatch(Actions.getGroupUsers())
     })
-    // .then(() => {
-    //     console.log("src/index.js getProjects");
-    //     return new Promise(function(fulfilled, rejected){
-    //         store.dispatch(Actions.getProjects())
-    //         store.dispatch(Actions.getGroupUsers())
-    //     })
-    // })
 
 
 // Promise.resolve()

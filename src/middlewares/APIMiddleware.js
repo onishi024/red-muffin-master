@@ -59,8 +59,21 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
               naibukanrino: issue.custom_fields[1].value,
               title: issue.subject,
               assigned: issue.assigned_to.name,
-              estimate: 10,
-              hide: issue.custom_fields[26].value == 1 ? true : false
+              parent: issue.parent ? String(issue.parent.id) : String(issue.id),
+              es04: issue.custom_fields[3].value  ? parseFloat(issue.custom_fields[3].value)  : 0,
+              es05: issue.custom_fields[4].value  ? parseFloat(issue.custom_fields[4].value)  : 0,
+              es06: issue.custom_fields[5].value  ? parseFloat(issue.custom_fields[5].value)  : 0,
+              es07: issue.custom_fields[6].value  ? parseFloat(issue.custom_fields[6].value)  : 0,
+              es08: issue.custom_fields[7].value  ? parseFloat(issue.custom_fields[7].value)  : 0,
+              es09: issue.custom_fields[8].value  ? parseFloat(issue.custom_fields[8].value)  : 0,
+              es10: issue.custom_fields[9].value  ? parseFloat(issue.custom_fields[9].value)  : 0,
+              es11: issue.custom_fields[10].value ? parseFloat(issue.custom_fields[10].value) : 0,
+              es12: issue.custom_fields[11].value ? parseFloat(issue.custom_fields[11].value) : 0,
+              es01: issue.custom_fields[12].value ? parseFloat(issue.custom_fields[12].value) : 0,
+              es02: issue.custom_fields[13].value ? parseFloat(issue.custom_fields[13].value) : 0,
+              es03: issue.custom_fields[14].value ? parseFloat(issue.custom_fields[14].value) : 0,
+              hide: issue.custom_fields[26].value == 1 ? true : false,
+              note: issue.custom_fields[27].value
             }
           })
       })

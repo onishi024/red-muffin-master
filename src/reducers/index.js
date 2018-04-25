@@ -37,7 +37,9 @@ const initState = {
     {id: "4", name: "秋山優花里", grade: "G2a"},
     {id: "5", name: "冷泉麻子", grade: "G1"},
   ],
-  projects: []
+  projects: [],
+  snackbar_open: false,
+  current_id: 0,
 }
 
 const reducer = (state = initState, action) => {
@@ -60,9 +62,7 @@ const reducer = (state = initState, action) => {
       return {...state, selected_project_id}
     }
     case ActionTypes.SET_ISSUE_ROWS: {
-      console.log('src/reducer/index.js setIssueRows')
       const issue_rows = action.payload.issue_rows
-      console.log(issue_rows)
       return {...state, issue_rows}
     }
     //Header
@@ -88,15 +88,17 @@ const reducer = (state = initState, action) => {
       return {...state, show_hided_issue}
     }
     case ActionTypes.TOGGLE_ISSUE_HIDE: {
-      const toggled_id = action.payload.id
+      const current_id = action.payload.id
       const toggled_bool = action.payload.bool
       const issue_rows = state.issue_rows.map(issue_row => {
-        if (issue_row.id === toggled_id) {
+        if (issue_row.id === current_id) {
           issue_row.hide = toggled_bool
         }
         return issue_row
       })
-      return {...state, issue_rows}
+      const snackbar_open = true
+      console.log(current_id)
+      return {...state, issue_rows, snackbar_open, current_id}
     }
     //Issue
     case ActionTypes.CHANGE_ISSUE: {
