@@ -19,6 +19,15 @@ export const setGroupUsers = groupUsers => ({
   payload: {groupUsers}
 })
 
+export const getUsers = () => ({
+  type: ActionTypes.GET_USERS
+})
+
+export const setUsers = users => ({
+  type: ActionTypes.SET_USERS,
+  payload: {users}
+})
+
 export const getYears = () => ({
   type: ActionTypes.GET_YEARS
 })

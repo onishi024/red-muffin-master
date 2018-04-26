@@ -24,6 +24,14 @@ export const getGroupUsers = (id) =>
   .then(response => response.json())
   .then(json => json.group.users)
 
+export const getUsers = (id) =>
+  fetch(url + `users/` + id + `.json`,
+    {method: 'GET',
+     headers: headers})
+  // .then(response => console.log(response.json()))
+  .then(response => response.json())
+  .then(json => json.user)
+
 export const getProjects = () =>
   fetch(url + `projects.json`,
     {method: 'GET',

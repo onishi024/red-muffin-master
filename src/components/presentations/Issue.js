@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
-import {FlatButton, Dialog, CircularProgress,
+import {FlatButton, Dialog, CircularProgress, FloatingActionButton, SelectField, MenuItem,
         Subheader, Divider ,Paper, List, ListItem, TextField} from 'material-ui'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+import ContentAdd from 'material-ui/svg-icons/content/add'
 import HotTable from 'react-handsontable'
 import { Link } from 'react-router-dom'
 
@@ -11,26 +12,28 @@ export default class Issue extends Component {
   constructor(props) {
     super(props)
     const id = props.match.params.id
-    console.log('issue.js constructor')
-    console.log(props)
     this.state = {
       id: id,
       info: this.initInfo(id, props.issue_rows),
       data: this.initData(id, props.issue_rows, props.groupUsers),
       register_processing: false,
+      addMemberForm: {
+        assigned: "",
+        addMemberOpen: false,
+      }
     }
   }
 
-  initData = (id, issue_rows, members) => {
+  initData = (id, issue_rows, group_users) => {
     const id_filtered_rows = issue_rows.filter(row => row.parent === id)
-    console.log(id)
-    console.log(issue_rows)
-    console.log(id_filtered_rows)
     const row_data = id_filtered_rows.map(row => {
+      const grade = group_users.filter(group_users => group_users.id === row.assigned_id)[0].grade
+      const category = grade.substring(0,1) === 'G' || grade.substring(0,1) === 'M' ? 'プロパー' : 'BP'
       return {
         id: row.id,
-        subname: "",
-        assigned: row.assigned,
+        category: category,
+        grade: grade,
+        assigned_name: row.assigned_name,
         es04: row.es04,
         es05: row.es05,
         es06: row.es06,
@@ -60,8 +63,8 @@ export default class Issue extends Component {
       result.es03 += current.es03
       return {
         id: '合計',
-        subname: "",
-        assigned: "",
+        grade: "",
+        assigned_name: "",
         es04: result.es04,
         es05: result.es05,
         es06: result.es06,
@@ -110,10 +113,7 @@ export default class Issue extends Component {
     listItem: {
       height: 2,
       fontSize: 12,
-      // margin: 0,
-    //   paddingTop: 10,
-    //   paddingLeft: 20,
-    //   verticalAlign: 'top',
+
     },
     textField: {
       margin: 12,
@@ -129,6 +129,13 @@ export default class Issue extends Component {
       verticalAlign: 'middle',
       color: '#000000',
       backgroundColor: '#B2EBF2',
+    },
+    addMemberButton:{
+      marginLeft: 20,
+      right: 30,
+      bottom: 30,
+      position: "fixed",
+      zIndex: 1
     }
   }
 
@@ -139,23 +146,55 @@ export default class Issue extends Component {
 
   onClick2 = event => {
     this.setState({register_processing: false})
-    const issue_cost_rows = this.dataToRows(this.state.id, this.props.issue_cost_rows, this.state.data, this.props.members)
+    const issue_cost_rows = this.dataToRows(this.state.id, this.props.issue_cost_rows, this.state.data, this.props.groupUsers)
     this.props.onClickChangeIssueSubmit(issue_cost_rows)
   }
 
-  dataToRows = (id, issue_cost_rows, data, members) => {
-    const id_filtered_rows = data.map(datum => {
-      let member_id = null
-      for (let i in members) {
-        if (members[i].name === datum.member) {
-          member_id = members[i].id
-        }
+  onClick3 = event => {
+    this.setState({
+      addMemberForm: {
+        addMemberOpen: true
       }
+    })
+  }
+
+  onClick4 = event => {
+    this.setState({
+      addMemberForm: {
+        addMemberOpen: false
+      }
+    })
+    // const issue_cost_rows = this.dataToRows(this.state.id, this.props.issue_cost_rows, this.state.data, this.props.groupUsers)
+    // this.props.onClickChangeIssueSubmit(issue_cost_rows)
+  }
+
+  onClick5 = event => {
+    this.setState({
+      addMemberForm: {
+        addMemberOpen: false,
+        assigned: ""
+      }
+    })
+  }
+
+  onChange4 = (event, key, payload) => {
+    const id = this.props.groupUsers[key].id
+    this.setState({
+      addMemberForm: {
+        ...this.state.addMemberForm,
+        assigned: id
+      }
+    })
+  }
+
+  dataToRows = (id, issue_cost_rows, data, group_users) => {
+    const id_filtered_rows = data.map(datum => {
       return {
         id: datum.id,
         issue_id: id,
-        subname: datum.subname,
-        assigned: datum.assigned,
+        category: datum.category,
+        grade: datum.grade,
+        assigned_name: datum.assigned_name,
         es04: datum.es04,
         es05: datum.es05,
         es06: datum.es06,
@@ -170,8 +209,9 @@ export default class Issue extends Component {
         es03: datum.es03
       }
     })
-    const id_unfiltered_rows = issue_cost_rows.filter(row => row.issue_id !== id)
-    return [...id_filtered_rows, ...id_unfiltered_rows]
+    return [...id_filtered_rows]
+    // const id_unfiltered_rows = issue_cost_rows.filter(row => row.issue_id !== id)
+    // return [...id_filtered_rows, ...id_unfiltered_rows]
   }
 
   //カラムヘッダー定義
@@ -182,9 +222,9 @@ export default class Issue extends Component {
   //カラムデータ定義
   columns = [
     { data: 'id', editor: false },
-    { data: ''},
-    { data: ''},
-    { data: 'assigned', editor: false },
+    { data: 'category', editor: false },
+    { data: 'grade', editor: false },
+    { data: 'assigned_name', editor: false },
     { data: 'es04', type: 'numeric', allowInvalid: false, format: '0.00' },
     { data: 'es05', type: 'numeric', allowInvalid: false, format: '0.00' },
     { data: 'es06', type: 'numeric', allowInvalid: false, format: '0.00' },
@@ -200,13 +240,29 @@ export default class Issue extends Component {
   ]
 
   render() {
-    const actions = [
+    const actions1 = [
       <Link to='/issue'>
         <FlatButton
           label="Submit"
           primary={true}
           keyboardFocused={true}
           onClick={this.onClick2}
+        />
+      </Link>,
+    ]
+
+    const actions2 = [
+      <FlatButton
+        label="Cancel"
+        secondary={true}
+        onClick={this.onClick5}
+      />,
+      <Link to={`/issue_edit/${this.state.id}`}>
+        <FlatButton
+          label="Submit"
+          primary={true}
+          keyboardFocused={true}
+          onClick={this.onClick4}
         />
       </Link>,
     ]
@@ -221,7 +277,7 @@ export default class Issue extends Component {
                     <ListItem style={this.styles.listItem} disabled={true} primaryText='案件名' secondaryText={<span style={{fontSize: 12}}>{this.state.info[0].title}</span>} />
                     <ListItem style={this.styles.listItem} disabled={true} primaryText='案件番号' secondaryText={<span style={{fontSize: 12}}>{this.state.info[0].ankenno}</span>} />
                     <ListItem style={this.styles.listItem} disabled={true} primaryText='内部管理番号' secondaryText={<span style={{fontSize: 12}}>{this.state.info[0].naibukanrino}</span>} />
-                    <ListItem style={this.styles.listItem} disabled={true} primaryText='主担当' secondaryText={<span style={{fontSize: 12}}>{this.state.info[0].assigned}</span>} />
+                    <ListItem style={this.styles.listItem} disabled={true} primaryText='主担当' secondaryText={<span style={{fontSize: 12}}>{this.state.info[0].assigned_name}</span>} />
                 </List>
             </Paper>
             <br />
@@ -256,9 +312,30 @@ export default class Issue extends Component {
               keyboardFocused={true}
               onClick={this.onClick1}
             />
+            <FloatingActionButton
+              mini={true}
+              style={this.styles.addMemberButton}
+              onClick={this.onClick3}
+            >
+              <ContentAdd />
+            </FloatingActionButton>
+            <Dialog
+              title="addMember"
+              actions={actions2}
+              modal={true}
+              open={this.state.addMemberForm.addMemberOpen}
+            >
+              <SelectField
+              floatingLabelText="担当"
+              value={this.state.addMemberForm.assigned}
+              onChange={this.onChange4}
+              >
+                {this.props.groupUsers.map(group_user => <MenuItem value={group_user.id} primaryText={group_user.name} />)}
+              </SelectField><br />
+            </Dialog>
             <Dialog
               title="Loading..."
-              actions={actions}
+              actions={actions1}
               modal={true}
               open={this.state.register_processing}
             >

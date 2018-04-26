@@ -15,20 +15,20 @@ const initState = {
   selected_issue: '0',
   issues: [],
   issue_rows: [],
-  issue_cost_rows: [
-    {id:  "1", issue_id: "1", subname: "", member_id: "0", pc04: 10, pc05: 20, pc06: 30, pc07: 10, pc08: 20, pc09: 30, pc10: 10, pc11: 20, pc12: 30, pc01: 10, pc02: 20, pc03: 30 },
-    {id:  "2", issue_id: "1", subname: "", member_id: "1", pc04: 10, pc05: 20, pc06: 30, pc07: 10, pc08: 20, pc09: 30, pc10: 10, pc11: 20, pc12: 30, pc01: 10, pc02: 20, pc03: 30 },
-    {id:  "3", issue_id: "1", subname: "", member_id: "2", pc04: 10, pc05: 20, pc06: 30, pc07: 10, pc08: 20, pc09: 30, pc10: 10, pc11: 20, pc12: 30, pc01: 10, pc02: 20, pc03: 30 },
-    {id:  "4", issue_id: "2", subname: "", member_id: "0", pc04: 10, pc05: 20, pc06: 30, pc07: 10, pc08: 20, pc09: 30, pc10: 10, pc11: 20, pc12: 30, pc01: 10, pc02: 20, pc03: 30 },
-    {id:  "5", issue_id: "2", subname: "", member_id: "1", pc04: 10, pc05: 20, pc06: 30, pc07: 10, pc08: 20, pc09: 30, pc10: 10, pc11: 20, pc12: 30, pc01: 10, pc02: 20, pc03: 30 },
-    {id:  "6", issue_id: "2", subname: "", member_id: "2", pc04: 10, pc05: 20, pc06: 30, pc07: 10, pc08: 20, pc09: 30, pc10: 10, pc11: 20, pc12: 30, pc01: 10, pc02: 20, pc03: 30 },
-    {id:  "7", issue_id: "3", subname: "", member_id: "0", pc04: 10, pc05: 20, pc06: 30, pc07: 10, pc08: 20, pc09: 30, pc10: 10, pc11: 20, pc12: 30, pc01: 10, pc02: 20, pc03: 30 },
-    {id:  "8", issue_id: "3", subname: "", member_id: "1", pc04: 10, pc05: 20, pc06: 30, pc07: 10, pc08: 20, pc09: 30, pc10: 10, pc11: 20, pc12: 30, pc01: 10, pc02: 20, pc03: 30 },
-    {id:  "9", issue_id: "3", subname: "", member_id: "2", pc04: 10, pc05: 20, pc06: 30, pc07: 10, pc08: 20, pc09: 30, pc10: 10, pc11: 20, pc12: 30, pc01: 10, pc02: 20, pc03: 30 },
-    {id: "10", issue_id: "4", subname: "", member_id: "0", pc04: 10, pc05: 20, pc06: 30, pc07: 10, pc08: 20, pc09: 30, pc10: 10, pc11: 20, pc12: 30, pc01: 10, pc02: 20, pc03: 30 },
-    {id: "11", issue_id: "4", subname: "", member_id: "1", pc04: 10, pc05: 20, pc06: 30, pc07: 10, pc08: 20, pc09: 30, pc10: 10, pc11: 20, pc12: 30, pc01: 10, pc02: 20, pc03: 30 },
-    {id: "12", issue_id: "4", subname: "", member_id: "2", pc04: 10, pc05: 20, pc06: 30, pc07: 10, pc08: 20, pc09: 30, pc10: 10, pc11: 20, pc12: 30, pc01: 10, pc02: 20, pc03: 30 },
-  ],
+  // issue_cost_rows: [
+  //   {id:  "1", issue_id: "1", subname: "", member_id: "0", pc04: 10, pc05: 20, pc06: 30, pc07: 10, pc08: 20, pc09: 30, pc10: 10, pc11: 20, pc12: 30, pc01: 10, pc02: 20, pc03: 30 },
+  //   {id:  "2", issue_id: "1", subname: "", member_id: "1", pc04: 10, pc05: 20, pc06: 30, pc07: 10, pc08: 20, pc09: 30, pc10: 10, pc11: 20, pc12: 30, pc01: 10, pc02: 20, pc03: 30 },
+  //   {id:  "3", issue_id: "1", subname: "", member_id: "2", pc04: 10, pc05: 20, pc06: 30, pc07: 10, pc08: 20, pc09: 30, pc10: 10, pc11: 20, pc12: 30, pc01: 10, pc02: 20, pc03: 30 },
+  //   {id:  "4", issue_id: "2", subname: "", member_id: "0", pc04: 10, pc05: 20, pc06: 30, pc07: 10, pc08: 20, pc09: 30, pc10: 10, pc11: 20, pc12: 30, pc01: 10, pc02: 20, pc03: 30 },
+  //   {id:  "5", issue_id: "2", subname: "", member_id: "1", pc04: 10, pc05: 20, pc06: 30, pc07: 10, pc08: 20, pc09: 30, pc10: 10, pc11: 20, pc12: 30, pc01: 10, pc02: 20, pc03: 30 },
+  //   {id:  "6", issue_id: "2", subname: "", member_id: "2", pc04: 10, pc05: 20, pc06: 30, pc07: 10, pc08: 20, pc09: 30, pc10: 10, pc11: 20, pc12: 30, pc01: 10, pc02: 20, pc03: 30 },
+  //   {id:  "7", issue_id: "3", subname: "", member_id: "0", pc04: 10, pc05: 20, pc06: 30, pc07: 10, pc08: 20, pc09: 30, pc10: 10, pc11: 20, pc12: 30, pc01: 10, pc02: 20, pc03: 30 },
+  //   {id:  "8", issue_id: "3", subname: "", member_id: "1", pc04: 10, pc05: 20, pc06: 30, pc07: 10, pc08: 20, pc09: 30, pc10: 10, pc11: 20, pc12: 30, pc01: 10, pc02: 20, pc03: 30 },
+  //   {id:  "9", issue_id: "3", subname: "", member_id: "2", pc04: 10, pc05: 20, pc06: 30, pc07: 10, pc08: 20, pc09: 30, pc10: 10, pc11: 20, pc12: 30, pc01: 10, pc02: 20, pc03: 30 },
+  //   {id: "10", issue_id: "4", subname: "", member_id: "0", pc04: 10, pc05: 20, pc06: 30, pc07: 10, pc08: 20, pc09: 30, pc10: 10, pc11: 20, pc12: 30, pc01: 10, pc02: 20, pc03: 30 },
+  //   {id: "11", issue_id: "4", subname: "", member_id: "1", pc04: 10, pc05: 20, pc06: 30, pc07: 10, pc08: 20, pc09: 30, pc10: 10, pc11: 20, pc12: 30, pc01: 10, pc02: 20, pc03: 30 },
+  //   {id: "12", issue_id: "4", subname: "", member_id: "2", pc04: 10, pc05: 20, pc06: 30, pc07: 10, pc08: 20, pc09: 30, pc10: 10, pc11: 20, pc12: 30, pc01: 10, pc02: 20, pc03: 30 },
+  // ],
   members: [
     {id: "0", name: "未アサイン", grade: "-"}, //id:0は未アサイン固定
     {id: "1", name: "西住みほ", grade: "G3b"},
@@ -51,6 +51,7 @@ const reducer = (state = initState, action) => {
     }
     case ActionTypes.SET_GROUP_USERS: {
       const groupUsers = action.payload.groupUsers
+      console.log(groupUsers)
       return {...state, groupUsers}
     }
     case ActionTypes.SET_YEARS: {

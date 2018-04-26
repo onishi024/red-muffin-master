@@ -96,7 +96,7 @@ const IssueList = ({selected_function, show_hided_issue, issue_rows, onToggleHid
                   <TableRowColumn style={{ width: '15%'}}>{issue_row.ankenno}</TableRowColumn>
                   <TableRowColumn style={{ width: '15%'}}>{issue_row.naibukanrino}</TableRowColumn>
                   <TableRowColumn style={{ width: '30%'}}>{issue_row.title}</TableRowColumn>
-                  <TableRowColumn style={{ width: '10%'}}>{issue_row.assigned}</TableRowColumn>
+                  <TableRowColumn style={{ width: '10%'}}>{issue_row.assigned_name}</TableRowColumn>
                   <TableRowColumn style={{ width: '10%'}}>{Math.round(
                                 ( issue_row.es04 + issue_row.es05 + issue_row.es06 + issue_row.es07 + issue_row.es08 + issue_row.es09
                                 + issue_row.es10 + issue_row.es11 + issue_row.es12 + issue_row.es01 + issue_row.es02 + issue_row.es03

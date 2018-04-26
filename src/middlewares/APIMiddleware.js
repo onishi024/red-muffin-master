@@ -12,7 +12,24 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
   if (action.type === ActionTypes.GET_GROUP_USERS) {
     Promise.resolve()
       .then(() => RedmineAPI.getGroupUsers(getState().reducers.selected_group_id))
+      .then(_groupUsers => {
+        let groupUsers = []
+        _groupUsers.map(_groupUsers => {
+          RedmineAPI.getUsers(_groupUsers.id)
+            .then(user => groupUsers.push({
+              id: _groupUsers.id,
+              name: _groupUsers.name,
+              grade: user.custom_fields[0].value})
+            )
+        })
+        return groupUsers
+      })
       .then(groupUsers => dispatch(Actions.setGroupUsers(groupUsers)))
+  }
+
+  if (action.type === ActionTypes.GET_USERS) {
+    RedmineAPI.getUsers()
+      .then(users => dispatch(Actions.setUsers(users)))
   }
 
   if (action.type === ActionTypes.GET_YEARS) {
@@ -58,7 +75,8 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
               ankenno: issue.custom_fields[0].value,
               naibukanrino: issue.custom_fields[1].value,
               title: issue.subject,
-              assigned: issue.assigned_to.name,
+              assigned_id: issue.assigned_to.id,
+              assigned_name: issue.assigned_to.name,
               parent: issue.parent ? String(issue.parent.id) : String(issue.id),
               es04: issue.custom_fields[3].value  ? parseFloat(issue.custom_fields[3].value)  : 0,
               es05: issue.custom_fields[4].value  ? parseFloat(issue.custom_fields[4].value)  : 0,
