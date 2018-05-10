@@ -116,3 +116,12 @@ export const onClickChangeIssueSubmit = issue_cost_rows => {
     }
   }
 }
+
+export const onClickAddMemberSubmit = (parent_row, assigned) => {
+  return {
+    type: ActionTypes.ISSUE_ADD_MEMBER,
+    payload: {
+      parent_row, assigned
+    }
+  }
+}

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import {FlatButton, Dialog, CircularProgress, FloatingActionButton, SelectField, MenuItem,
-        Subheader, Divider ,Paper, List, ListItem, TextField} from 'material-ui'
+        Paper, List, ListItem, TextField} from 'material-ui'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import ContentAdd from 'material-ui/svg-icons/content/add'
 import HotTable from 'react-handsontable'
@@ -159,13 +159,14 @@ export default class Issue extends Component {
   }
 
   onClick4 = event => {
+    const id_filtered_rows = this.props.issue_rows.filter(row => row.id === this.state.id)
+    this.props.onClickAddMemberSubmit(id_filtered_rows[0], this.state.addMemberForm.assigned)
     this.setState({
       addMemberForm: {
-        addMemberOpen: false
+        addMemberOpen: false,
+        assigned: ""
       }
     })
-    // const issue_cost_rows = this.dataToRows(this.state.id, this.props.issue_cost_rows, this.state.data, this.props.groupUsers)
-    // this.props.onClickChangeIssueSubmit(issue_cost_rows)
   }
 
   onClick5 = event => {

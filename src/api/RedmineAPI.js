@@ -52,3 +52,10 @@ export const postIssue = issue => {
      headers: headers,
      body: JSON.stringify(issue)})
    }
+
+ export const postIssueMember = issue => {
+   fetch(url + `issues.json`,
+     {method: 'POST',
+      headers: headers,
+      body: JSON.stringify(issue)})
+    }
