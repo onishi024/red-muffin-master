@@ -61,6 +61,17 @@ export default class Register extends Component {
     })
   }
 
+  //required check
+  required = value => value === "" ? "This field is required." : ""
+  allRequired = form => {
+    return (
+      form.ankenno      === "" ||
+      form.naibukanrino === "" ||
+      form.title        === "" ||
+      form.assigned     === ""
+    )
+  }
+
   //SUBMIT
   onClick1 = event => {
     this.setState({register_processing: true})
@@ -90,26 +101,30 @@ export default class Register extends Component {
           <TextField
             floatingLabelText="管理番号"
             onChange={this.onChange1}
+            errorText={this.required(this.state.register_form.ankenno)}
           /><br />
           <TextField
             floatingLabelText="内部管理番号"
             onChange={this.onChange2}
+            errorText={this.required(this.state.register_form.naibukanrino)}
           /><br />
           <TextField
             floatingLabelText="案件名称"
             onChange={this.onChange3}
+            errorText={this.required(this.state.register_form.title)}
           /><br />
           <SelectField
             floatingLabelText="主担当"
             value={this.state.register_form.assigned}
             onChange={this.onChange4}
+            errorText={this.required(this.state.register_form.assigned)}
           >
             {this.props.group_users.map(group_user => <MenuItem value={group_user.id} primaryText={group_user.name} />)}
           </SelectField><br />
           <Link to='/issue'>
             <FlatButton
               label="Cancel"
-              primary={true}
+              primary={false}
             />
           </Link>
             <FlatButton
@@ -117,6 +132,7 @@ export default class Register extends Component {
               primary={true}
               keyboardFocused={true}
               onClick={this.onClick1}
+              disabled={this.allRequired(this.state.register_form)}
             />
             <Dialog
               title="Loading..."

@@ -21,13 +21,15 @@ const Header = ({app_bar_open, groups, selected_group_id, years, selected_year,
             onRequestChange={() => onClickAppBar()}
           >
             <Subheader>Group</Subheader>
-                <DropDownMenu value={selected_group_id} onChange={(event, index, value) => onClickGroup(value)}>
+            <DropDownMenu value={selected_group_id} onChange={(event, index, value) => onClickGroup(value)}>
               {groups.map(group => <MenuItem value={group.id} primaryText={group.name} />)}
             </DropDownMenu>
+            <Subheader>Business Year</Subheader>
             <DropDownMenu value={selected_year} onChange={(event, index, value) => onClickYear(value)}>
               {years.map(years => <MenuItem value={years} primaryText={years} />)}
             </DropDownMenu>
             <Divider />
+            <Subheader>Menu</Subheader>
             <Menu>
                 <Link to='/issue'><MenuItem key="1" value="1">案件一覧</MenuItem></Link>
                 <Link to='/member'><MenuItem key="2" value="2">要員別山積表</MenuItem></Link>
