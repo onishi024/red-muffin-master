@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom'
 const IssueList = ({selected_function, show_hided_issue, issue_rows, onToggleHide, onToggleIssueHide,
                     getIssue_rows, selected_group_id, selected_year, snackbar_open, current_id}) => {
 
-  const _issue_rows = show_hided_issue ? issue_rows.filter(issue_row => issue_row.hide == true) : issue_rows
+  const _issue_rows = show_hided_issue ? issue_rows.filter(issue_row => issue_row.hide === true) : issue_rows
 
   //非表示toggleのスタイル
   const styles = {

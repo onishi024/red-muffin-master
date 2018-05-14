@@ -1,6 +1,4 @@
 import React from 'react'
-import {Card, CardMedia, CardTitle} from 'material-ui'
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 
 const Home = () => {
   const styles = {
@@ -83,7 +81,7 @@ const Home = () => {
             <img src="laptop.jpg" alt="Student with a laptop" style={styles.laptopImage} />
           </div>
         </div>
-        
+
     </div>
   )
 }

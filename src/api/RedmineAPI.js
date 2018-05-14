@@ -44,14 +44,25 @@ export const getIssues = () =>
     {method: 'GET',
      headers: headers})
   .then(response => response.json())
-  .then(json => json.issues)
+  .then(json => {
+    console.log("GET ISSUES DONE");
+    return json.issues
+  })
 
-export const postIssue = issue => {
+export const postIssue = issue =>
   fetch(url + `issues.json`,
     {method: 'POST',
      headers: headers,
      body: JSON.stringify(issue)})
-   }
+  .then((res, err) => {
+    if (!err) {
+      console.log("REGISTER_ISSUE DONE")
+      return res
+    } else {
+      console.log("REGISTER_ISSUE ERROR OCCURED")
+      return err
+    }
+  })
 
  export const postIssueMember = issue => {
    fetch(url + `issues.json`,

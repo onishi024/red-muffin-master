@@ -40,6 +40,7 @@ const initState = {
   projects: [],
   snackbar_open: false,
   current_id: 0,
+  isLoading: false
 }
 
 const reducer = (state = initState, action) => {
@@ -74,7 +75,7 @@ const reducer = (state = initState, action) => {
     case ActionTypes.SELECT_GROUP: {
       const selected_group_id = action.payload.selected_group_id
       const selected_project = configs.filter( function(item) {
-        return item.group_id == selected_group_id
+        return item.group_id === selected_group_id
       })
       const selected_identifier = selected_project[0].identifier
       return {...state, selected_identifier ,selected_group_id}
