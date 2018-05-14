@@ -125,3 +125,11 @@ export const onClickAddMemberSubmit = (parent_row, assigned) => {
     }
   }
 }
+
+//Loading
+export const setLoading = (isLoading = true) => ({
+  type: ActionTypes.SET_LOADING,
+  payload: {
+    isLoading
+  }
+})

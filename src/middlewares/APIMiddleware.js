@@ -14,14 +14,16 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
       .then(() => RedmineAPI.getGroupUsers(getState().reducers.selected_group_id))
       .then(_groupUsers => {
         let groupUsers = []
-        _groupUsers.map(_groupUsers => {
-          RedmineAPI.getUsers(_groupUsers.id)
-            .then(user => groupUsers.push({
-              id: _groupUsers.id,
-              name: _groupUsers.name,
-              grade: user.custom_fields[0].value})
-            )
-        })
+        for (let i in _groupUsers) {
+          RedmineAPI.getUsers(_groupUsers[i].id)
+          .then(user => groupUsers.push(
+            {
+              id: _groupUsers[i].id,
+              name: _groupUsers[i].name,
+              grade: user.custom_fields[0].value
+            }
+          ))
+        }
         return groupUsers
       })
       .then(groupUsers => dispatch(Actions.setGroupUsers(groupUsers)))
@@ -36,11 +38,11 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
     RedmineAPI.getProjects()
       .then(_projects => {
         let years = []
-        _projects.map(project => {
-          if(years.indexOf(project.custom_fields[0].value) == -1){
-            years.push(project.custom_fields[0].value)
+        for (let i in _projects) {
+          if(years.indexOf(_projects[i].custom_fields[0].value) === -1){
+            years.push(_projects[i].custom_fields[0].value)
           }
-        })
+        }
         return years
       })
       .then(years => years.sort((a, b) => {return a > b ? 1 : -1}))
@@ -52,12 +54,12 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
     const selected_year = getState().reducers.selected_year
     RedmineAPI.getProjects()
       .then(_projects => {
-        let selected_project_id = []
-        const projects = _projects.map(project => {
-          if(project.identifier == selected_identifier && project.custom_fields[0].value == selected_year){
-            selected_project_id.push(project.id)
+        let selected_project_id
+        for (let i in _projects) {
+          if(_projects[i].identifier === selected_identifier && _projects[i].custom_fields[0].value === selected_year){
+            selected_project_id = _projects[i].id
           }
-        })
+        }
         return selected_project_id
       })
       .then(projects => dispatch(Actions.setProjects(projects)))
@@ -65,10 +67,11 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
   }
 
   if (action.type === ActionTypes.GET_ISSUE_ROWS) {
+    console.log("GET_ISSUE_ROWS START");
     const selected_project_id = getState().reducers.selected_project_id
     RedmineAPI.getIssues()
       .then(_issues => {
-        return _issues.filter(issue => (issue.project.id == selected_project_id))
+        return _issues.filter(issue => (issue.project.id === selected_project_id))
           .map(issue => {
             return {
               id: String(issue.id),
@@ -90,15 +93,18 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
               es01: issue.custom_fields[12].value ? parseFloat(issue.custom_fields[12].value) : 0,
               es02: issue.custom_fields[13].value ? parseFloat(issue.custom_fields[13].value) : 0,
               es03: issue.custom_fields[14].value ? parseFloat(issue.custom_fields[14].value) : 0,
-              hide: issue.custom_fields[26].value == 1 ? true : false,
+              hide: issue.custom_fields[26].value === "1" ? true : false,
               note: issue.custom_fields[27].value
             }
           })
       })
-      .then(issue_rows => dispatch(Actions.setIssueRows(issue_rows)))
+      .then(issue_rows => {
+        return dispatch(Actions.setIssueRows(issue_rows))
+      })
   }
 
   if (action.type === ActionTypes.REGISTER_ISSUE) {
+    console.log("REGISTER_ISSUE START");
     const form = action.payload.form
     const selected_project_id = Number(getState().reducers.selected_project_id)
     const issue = {
@@ -141,11 +147,11 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
         ]
       }
     }
-    console.log(issue);
-    console.log(getState().reducers.selected_project_id)
-    Promise.resolve()
-      .then(RedmineAPI.postIssue(issue))
-      .then(dispatch(Actions.getIssueRows()))
+    RedmineAPI.postIssue(issue)
+    .then(result => {
+      console.log(result)
+      dispatch(Actions.getIssueRows())
+    })
   }
 
   if (action.type === ActionTypes.ISSUE_ADD_MEMBER) {
@@ -197,6 +203,12 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
       .then(RedmineAPI.postIssueMember(issue))
       .then(dispatch(Actions.getIssueRows()))
   }
+
+  //Loadingを有効化
+  // if ([ActionTypes.REGISTER_ISSUE]
+  //     .includes(action.type)) {
+  //   dispatch(Actions.setLoading(true))
+  // }
 
   next(action)
 }

@@ -9,9 +9,7 @@ import { Link } from 'react-router-dom'
 const IssueList = ({selected_function, show_hided_issue, issue_rows, onToggleHide, onToggleIssueHide,
                     getIssue_rows, selected_group_id, selected_year, snackbar_open, current_id}) => {
 
-  // const _issue_rows = show_hided_issue ? issue_rows : issue_rows.filter(issue_row => issue_row.hide === false)
-  // const _issue_rows = show_hided_issue ? issue_rows : issue_rows.filter(issue_row => issue_row.hide == false)
-  const _issue_rows = show_hided_issue ? issue_rows.filter(issue_row => issue_row.hide == true) : issue_rows
+  const _issue_rows = show_hided_issue ? issue_rows.filter(issue_row => issue_row.hide === true) : issue_rows
 
   //非表示toggleのスタイル
   const styles = {
@@ -24,6 +22,7 @@ const IssueList = ({selected_function, show_hided_issue, issue_rows, onToggleHid
       maxWidth: 50,
       margin: 16,
       right: 80,
+      // top: 72,
       bottom: 20,
       position: "fixed",
       zIndex: 1,
@@ -40,6 +39,7 @@ const IssueList = ({selected_function, show_hided_issue, issue_rows, onToggleHid
   const button_style = {
     marginLeft: 20,
     right: 30,
+    // top: 78,
     bottom: 30,
     position: "fixed",
     zIndex: 1
@@ -69,9 +69,10 @@ const IssueList = ({selected_function, show_hided_issue, issue_rows, onToggleHid
           thumbStyle={styles.toggle_icon}
           trackStyle={styles.toggle_icon}
           toggled={show_hided_issue}
-          onToggle={() => onToggleHide()} />
+          onToggle={() => onToggleHide()}
+          title="非表示案件を表示/非表示切り替え" />
         <Link to='/register'>
-          <FloatingActionButton mini={true} style={button_style}>
+          <FloatingActionButton mini={true} style={button_style} title='案件追加'>
             <ContentAdd />
           </FloatingActionButton>
         </Link>
