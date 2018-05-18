@@ -108,11 +108,11 @@ export const onClickRegisterSubmit = form => {
 }
 
 //Issue
-export const onClickChangeIssueSubmit = issue_cost_rows => {
+export const onClickChangeIssueSubmit = change_data => {
   return {
     type: ActionTypes.CHANGE_ISSUE,
     payload: {
-      issue_cost_rows
+      change_data
     }
   }
 }

@@ -10,7 +10,7 @@ const mapStateToProps = (state, ownProps) => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  onClickChangeIssueSubmit: issue_cost_rows => dispatch(Actions.onClickChangeIssueSubmit(issue_cost_rows)),
+  onClickChangeIssueSubmit: change_data => dispatch(Actions.onClickChangeIssueSubmit(change_data)),
   onClickAddMemberSubmit: (parent_row, assigned) => dispatch(Actions.onClickAddMemberSubmit(parent_row,assigned))
 })
 

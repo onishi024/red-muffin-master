@@ -15,16 +15,20 @@ export default class Issue extends Component {
     this.state = {
       id: id,
       info: this.initInfo(id, props.issue_rows),
-      data: this.initData(id, props.issue_rows, props.groupUsers),
       register_processing: false,
       addMemberForm: {
         assigned: "",
         addMemberOpen: false,
+      },
+      change_data: {
+        id: [],
+        key: [],
+        value: []
       }
     }
   }
 
-  initData = (id, issue_rows, group_users) => {
+  rowData = (id, issue_rows, group_users) => {
     const id_filtered_rows = issue_rows.filter(row => row.parent === id)
     const row_data = id_filtered_rows.map(row => {
       const grade = group_users.filter(group_users => group_users.id === row.assigned_id)[0].grade
@@ -146,8 +150,7 @@ export default class Issue extends Component {
 
   onClick2 = event => {
     this.setState({register_processing: false})
-    const issue_cost_rows = this.dataToRows(this.state.id, this.props.issue_cost_rows, this.state.data, this.props.groupUsers)
-    this.props.onClickChangeIssueSubmit(issue_cost_rows)
+    this.props.onClickChangeIssueSubmit(this.state.change_data)
   }
 
   onClick3 = event => {
@@ -178,7 +181,7 @@ export default class Issue extends Component {
     })
   }
 
-  onChange4 = (event, key, payload) => {
+  onChange1 = (event, key, payload) => {
     const id = this.props.groupUsers[key].id
     this.setState({
       addMemberForm: {
@@ -186,6 +189,64 @@ export default class Issue extends Component {
         assigned: id
       }
     })
+  }
+
+  onChange2 = (changes, source) => {
+    if(source === 'edit' || source === 'CopyPaste.paste'){
+      // 変更された要素をlocalState.change_dataに保存
+      // 画面で同一項目が複数回更新され場合はlocalState.change_dataを上書き
+      for (let i in changes) {
+        const change_row = changes[i][0]
+        const change_key = changes[i][1]
+        const change_value = changes[i][3]
+        const row_data = this.rowData(this.state.id, this.props.issue_rows, this.props.groupUsers)
+        // localState.change_dataが空の場合は無条件で要素を追加
+        if(this.state.change_data.id.length === 0){
+          this.state.change_data.id.push(row_data[change_row]["id"])
+          this.state.change_data.key.push(change_key)
+          this.state.change_data.value.push(change_value)
+        } else {
+          for(let j=0; j<this.state.change_data.id.length; j++){
+            // idとkeyが既にlocalState.change_dataにあるか判定し、存在する場合はvalueを更新
+            if(this.state.change_data.id[j] === row_data[change_row]["id"] &&
+               this.state.change_data.key[j] === change_key){
+                 this.state.change_data.value[j] = change_value
+                 break
+               }
+            // localState.change_dataを全て検査し、idとkeyが重複しない場合のみ要素を追加する
+            else if(j === this.state.change_data.key.length -1) {
+              this.state.change_data.id.push(row_data[change_row]["id"])
+              this.state.change_data.key.push(change_key)
+              this.state.change_data.value.push(change_value)
+            }
+          }
+        }
+      }
+    }
+  }
+
+  onChange3 = (event, newValue) => {
+    console.log('call onChange3')
+    if(this.state.change_data.id.length === 0){
+      this.state.change_data.id.push(this.state.id)
+      this.state.change_data.key.push("note")
+      this.state.change_data.value.push(newValue)
+    } else {
+      for(let i=0; i<this.state.change_data.id.length; i++){
+        // idとkeyが既にlocalState.change_dataにあるか判定し、存在する場合はvalueを更新
+        if(this.state.change_data.id[i] === this.state.id &&
+           this.state.change_data.key[i] === "note"){
+             this.state.change_data.value[i] = newValue
+             break
+           }
+        // localState.change_dataを全て検査し、idとkeyが重複しない場合のみ要素を追加する
+        else if(i === this.state.change_data.key.length -1) {
+          this.state.change_data.id.push(this.state.id)
+          this.state.change_data.key.push("note")
+          this.state.change_data.value.push(newValue)
+        }
+      }
+    }
   }
 
   dataToRows = (id, issue_cost_rows, data, group_users) => {
@@ -286,19 +347,23 @@ export default class Issue extends Component {
               floatingLabelFixed={true}
               floatingLabelText={<span style={{fontSize: 16}}>備考</span>}
               defaultValue={this.state.info[0].note}
-              hintText="The hint text can be as long as you want, it will wrap."/><br />
+              hintText="The hint text can be as long as you want, it will wrap."
+              onChange={this.onChange3}
+              />
+            <br />
             <div style={this.styles.hot}>
               <HotTable
                 floatingLabelText={<span style={{fontSize: 16}}>要員計画</span>}
                 root="hot"
-                data={this.state.data}
+                data={this.rowData(this.state.id, this.props.issue_rows, this.props.groupUsers)}
                 colHeaders={this.colHeaders}
                 columns={this.columns}
-                columnSorting={false}
+                columnSorting={true}
                 width="1000"
                 stretchH="all"
                 fixedColumnsLeft="3"
                 manualColumnResize={true}
+                afterChange={this.onChange2}
                 />
             </div>
             <Link to='/issue'>
@@ -329,7 +394,7 @@ export default class Issue extends Component {
               <SelectField
               floatingLabelText="担当"
               value={this.state.addMemberForm.assigned}
-              onChange={this.onChange4}
+              onChange={this.onChange1}
               >
                 {this.props.groupUsers.map(group_user => <MenuItem value={group_user.id} primaryText={group_user.name} />)}
               </SelectField><br />
