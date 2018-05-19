@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {TextField, FlatButton, SelectField, MenuItem, Dialog, CircularProgress} from 'material-ui';
+import {TextField, FlatButton, SelectField, MenuItem, Dialog, CircularProgress, List, ListItem} from 'material-ui';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import { Link } from 'react-router-dom'
 
@@ -13,8 +13,9 @@ export default class Register extends Component {
         naibukanrino: "",
         title: "",
         assigned: "",
-        register_processing: false
-      }
+        assigned_name: "",
+      },
+      status: "inputing"
     }
   }
 
@@ -23,7 +24,7 @@ export default class Register extends Component {
       margin: 12,
       fontSize: 12,
       color: "#9E9E9E",
-    }
+    },
   }
 
   //Form入力
@@ -53,16 +54,18 @@ export default class Register extends Component {
   }
   onChange4 = (event, key, payload) => {
     const id = this.props.group_users[key].id
+    const name = this.props.group_users[key].name
     this.setState({
       register_form: {
         ...this.state.register_form,
-        assigned: id
+        assigned: id,
+        assigned_name: name,
       }
     })
   }
 
   //required check
-  required = value => value === "" ? "This field is required." : ""
+  required = value => value === "" ? "この項目は必須入力項目です。" : ""
   allRequired = form => {
     return (
       form.ankenno      === "" ||
@@ -72,32 +75,51 @@ export default class Register extends Component {
     )
   }
 
-  //SUBMIT
-  onClick1 = event => {
-    this.setState({register_processing: true})
+  //BOTTUN
+  onClickSubmit = event => {
+    this.setState({status: "confirming"})
   }
-
-  onClick2 = event => {
-    this.setState({register_processing: false})
-    this.props.onClickRegisterSubmit(this.state.register_form)
+  onClickCancel = event => {
+    this.setState({status: "inputting"})
+  }
+  onClickConfirm = event => {
+    this.setState({status: "processing"})
+    this.props.onClickRegisterConfirm(this.state.register_form)
+  }
+  onClickOK = event => {
+    this.setState({status: "inputting"})
   }
 
   render() {
-    const actions = [
+    const actionConfirm = [
+      <FlatButton
+        label="Cancel"
+        primary={false}
+        keyboardFocused={true}
+        onClick={this.onClickCancel}
+      />,
+      <FlatButton
+        label="Confirm"
+        primary={true}
+        keyboardFocused={true}
+        onClick={this.onClickConfirm}
+      />,
+    ]
+    const actionOK = [
       <Link to='/issue'>
         <FlatButton
-          label="Submit"
+          label="OK"
           primary={true}
           keyboardFocused={true}
-          onClick={this.onClick2}
+          onClick={this.onClickOK}
         />
       </Link>,
     ]
 
     return (
-      <div>
-        <div style={this.styles.path} ><Link to={`/`}>Home</Link> > <Link to={`/issue`}>案件一覧</Link> > 案件情報登録</div>
-        <MuiThemeProvider>
+      <MuiThemeProvider>
+        <div>
+          <div style={this.styles.path} ><Link to={`/`}>Home</Link> > <Link to={`/issue`}>案件一覧</Link> > 案件情報登録</div>
           <TextField
             floatingLabelText="管理番号"
             onChange={this.onChange1}
@@ -119,7 +141,7 @@ export default class Register extends Component {
             onChange={this.onChange4}
             errorText={this.required(this.state.register_form.assigned)}
           >
-            {this.props.group_users.map(group_user => <MenuItem value={group_user.id} primaryText={group_user.name} />)}
+            {this.props.group_users.map(group_user => <MenuItem key={group_user.id} value={group_user.id} primaryText={group_user.name} />)}
           </SelectField><br />
           <Link to='/issue'>
             <FlatButton
@@ -127,25 +149,46 @@ export default class Register extends Component {
               primary={false}
             />
           </Link>
-            <FlatButton
-              label="Submit"
-              primary={true}
-              keyboardFocused={true}
-              onClick={this.onClick1}
-              disabled={this.allRequired(this.state.register_form)}
-            />
-            <Dialog
-              title="Loading..."
-              actions={actions}
-              modal={true}
-              open={this.state.register_processing}
+          <FlatButton
+            label="Submit"
+            primary={true}
+            keyboardFocused={true}
+            onClick={this.onClickSubmit}
+            disabled={this.allRequired(this.state.register_form)}
+          />
+          <Dialog
+            title="以下の内容で登録して良いですか?"
+            actions={actionConfirm}
+            modal={true}
+            open={this.state.status==="confirming"}
+          >
+            <List>
+              <ListItem style={this.styles.listItem} disabled={true} primaryText='管理番号'
+                secondaryText={this.state.register_form.ankenno} />
+              <ListItem style={this.styles.listItem} disabled={true} primaryText='内部管理番号'
+                secondaryText={this.state.register_form.naibukanrino} />
+              <ListItem style={this.styles.listItem} disabled={true} primaryText='案件名称'
+                secondaryText={this.state.register_form.title} />
+              <ListItem style={this.styles.listItem} disabled={true} primaryText='主担当'
+                secondaryText={this.state.register_form.assigned_name} />
+            </List>
+          </Dialog>
+          <Dialog
+            title="更新処理実行中..."
+            modal={true}
+            open={this.state.status==="processing" && this.props.isLoading}
+          >
+            <CircularProgress size={80} thickness={7} />
+          </Dialog>
+          <Dialog
+            title="更新処理が完了しました。"
+            actions={actionOK}
+            modal={true}
+            open={this.state.status==="processing" && !this.props.isLoading}
             >
-              <p>This is a mock indicator. Please push SUBMIT to close windows.</p>
-              <CircularProgress size={80} thickness={7} />
-            </Dialog>
-        </MuiThemeProvider>
-      </div>
+          </Dialog>
+        </div>
+      </MuiThemeProvider>
     )
   }
-
 }

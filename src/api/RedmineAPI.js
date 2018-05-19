@@ -1,11 +1,7 @@
 import env from '../configs/env'
 
-// const url = `http://localhost:8080/redmine/`
-// const apikey = 'af294843d18a02b78508156fbab3f526b4ae9974'
-
 const url = env.url
 const apikey = env.apikey
-
 const headers = {'X-Redmine-API-Key' : apikey,
                  'Content-Type': 'application/json'}
 
@@ -40,7 +36,7 @@ export const getProjects = () =>
   .then(json => json.projects)
 
 export const getIssues = () =>
-  fetch(url + `issues.json`,
+  fetch(url + `issues.json?limit=1000`,
     {method: 'GET',
      headers: headers})
   .then(response => response.json())

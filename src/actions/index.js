@@ -55,6 +55,11 @@ export const setIssueRows = issue_rows => ({
   payload: {issue_rows}
 })
 
+export const setIsLoading = bool => ({
+  type: ActionTypes.SET_ISLOADING,
+  payload: {bool}
+})
+
 //Header
 export const onClickAppBar = () => ({
   type: ActionTypes.CLICK_APP_BAR,
@@ -97,8 +102,15 @@ export const onToggleIssueHide = (id, bool) => {
   }
 }
 
+export const onoffSnackBar = () => {
+  return {
+    type: ActionTypes.ONOFF_SNACKBAR,
+    payload: {}
+  }
+}
+
 //Register
-export const onClickRegisterSubmit = form => {
+export const onClickRegisterConfirm = form => {
   return {
     type: ActionTypes.REGISTER_ISSUE,
     payload: {
@@ -125,11 +137,3 @@ export const onClickAddMemberSubmit = (parent_row, assigned) => {
     }
   }
 }
-
-//Loading
-export const setLoading = (isLoading = true) => ({
-  type: ActionTypes.SET_LOADING,
-  payload: {
-    isLoading
-  }
-})
