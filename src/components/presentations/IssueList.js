@@ -6,7 +6,7 @@ import ModeEdit from 'material-ui/svg-icons/editor/mode-edit';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import { Link } from 'react-router-dom'
 
-const IssueList = ({selected_function, show_hided_issue, issue_rows, onToggleHide, onToggleIssueHide,
+const IssueList = ({selected_function, show_hided_issue, issue_rows, onToggleHide, onToggleIssueHide, onoffSnackBar,
                     getIssue_rows, selected_group_id, selected_year, snackbar_open, current_id}) => {
 
   const _issue_rows = show_hided_issue ? issue_rows.filter(issue_row => issue_row.hide === true) : issue_rows
@@ -56,7 +56,9 @@ const IssueList = ({selected_function, show_hided_issue, issue_rows, onToggleHid
 
   //Methods
   const _onToggleIssueHide = (event, value) => {
+    onoffSnackBar()
     onToggleIssueHide(event.target.name, value)
+    setTimeout(() => {onoffSnackBar()}, 2000)
   }
 
   //return
@@ -82,10 +84,10 @@ const IssueList = ({selected_function, show_hided_issue, issue_rows, onToggleHid
               <TableHeaderColumn style={{ width: '5%'}}>ID</TableHeaderColumn>
               <TableHeaderColumn style={{ width: '15%'}}>案件管理番号</TableHeaderColumn>
               <TableHeaderColumn style={{ width: '15%'}}>内部管理番号</TableHeaderColumn>
-              <TableHeaderColumn style={{ width: '30%'}}>案件名称</TableHeaderColumn>
+              <TableHeaderColumn style={{ width: '25%'}}>案件名称</TableHeaderColumn>
               <TableHeaderColumn style={{ width: '10%'}}>主担当</TableHeaderColumn>
               <TableHeaderColumn style={{ width: '10%'}}>見積</TableHeaderColumn>
-              <TableHeaderColumn style={{ width: '5%'}}>詳細</TableHeaderColumn>
+              <TableHeaderColumn style={{ width: '10%'}}>詳細</TableHeaderColumn>
               <TableHeaderColumn style={{ width: '10%'}}>表示</TableHeaderColumn>
             </TableRow>
           </TableHeader>
@@ -96,14 +98,16 @@ const IssueList = ({selected_function, show_hided_issue, issue_rows, onToggleHid
                   <TableRowColumn style={{ width: '5%'}}>{issue_row.id}</TableRowColumn>
                   <TableRowColumn style={{ width: '15%'}}>{issue_row.ankenno}</TableRowColumn>
                   <TableRowColumn style={{ width: '15%'}}>{issue_row.naibukanrino}</TableRowColumn>
-                  <TableRowColumn style={{ width: '30%'}}>{issue_row.title}</TableRowColumn>
+                  <TableRowColumn style={{ width: '25%'}}>{issue_row.title}</TableRowColumn>
                   <TableRowColumn style={{ width: '10%'}}>{issue_row.assigned_name}</TableRowColumn>
-                  <TableRowColumn style={{ width: '10%'}}>{Math.round(
-                                ( issue_row.es04 + issue_row.es05 + issue_row.es06 + issue_row.es07 + issue_row.es08 + issue_row.es09
-                                + issue_row.es10 + issue_row.es11 + issue_row.es12 + issue_row.es01 + issue_row.es02 + issue_row.es03
-                                ) * 100) / 100}
+                  <TableRowColumn style={{ width: '10%'}}>
+                    {
+                      ( issue_row.es04 + issue_row.es05 + issue_row.es06 + issue_row.es07 + issue_row.es08 + issue_row.es09
+                        + issue_row.es10 + issue_row.es11 + issue_row.es12 + issue_row.es01 + issue_row.es02 + issue_row.es03
+                      ).toFixed(2)
+                    }
                   </TableRowColumn>
-                  <TableRowColumn style={{ width: '5%'}}><Link to={`/issue_edit/${issue_row.id}`}><EditIcon /></Link></TableRowColumn>
+                  <TableRowColumn style={{ width: '10%'}}><Link to={`/issue_edit/${issue_row.id}`}><EditIcon /></Link></TableRowColumn>
                   <TableRowColumn boolean='true' style={{ width: '10%'}}>
                     <Toggle toggled={issue_row.hide} name={issue_row.id} onToggle={(event, value) => _onToggleIssueHide(event, value)}/>
                   </TableRowColumn>
@@ -116,7 +120,7 @@ const IssueList = ({selected_function, show_hided_issue, issue_rows, onToggleHid
           style={styles.snackbar}
           open={snackbar_open}
           message={'#' + current_id + 'の表示／非表示を切り替えました'}
-          autoHideDuration={4000}
+          autoHideDuration={2000}
         />
       </div>
     </MuiThemeProvider>

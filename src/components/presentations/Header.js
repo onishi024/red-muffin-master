@@ -22,11 +22,11 @@ const Header = ({app_bar_open, groups, selected_group_id, years, selected_year,
           >
             <Subheader>Group</Subheader>
             <DropDownMenu value={selected_group_id} onChange={(event, index, value) => onClickGroup(value)}>
-              {groups.map(group => <MenuItem value={group.id} primaryText={group.name} />)}
+              {groups.map(group => <MenuItem key={group.id} value={group.id} primaryText={group.name} />)}
             </DropDownMenu>
             <Subheader>Business Year</Subheader>
             <DropDownMenu value={selected_year} onChange={(event, index, value) => onClickYear(value)}>
-              {years.map(years => <MenuItem value={years} primaryText={years} />)}
+              {years.map(year => <MenuItem key={year} value={year} primaryText={year+"年"} />)}
             </DropDownMenu>
             <Divider />
             <Subheader>Menu</Subheader>

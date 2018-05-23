@@ -103,7 +103,8 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
   }
 
   if (action.type === ActionTypes.REGISTER_ISSUE) {
-    console.log("REGISTER_ISSUE START");
+    console.log("REGISTER_ISSUE START")
+    dispatch(Actions.setIsLoading(true))
     const form = action.payload.form
     const selected_project_id = Number(getState().reducers.selected_project_id)
     const issue = {
@@ -148,8 +149,10 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
     }
     RedmineAPI.postIssue(issue)
     .then(result => {
-      console.log(result)
       dispatch(Actions.getIssueRows())
+    })
+    .then(result => {
+      dispatch(Actions.setIsLoading(false))
     })
   }
 
@@ -271,13 +274,6 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
       })
       .then(() => dispatch(Actions.getIssueRows()))
   }
-
-
-  //Loadingを有効化
-  // if ([ActionTypes.REGISTER_ISSUE]
-  //     .includes(action.type)) {
-  //   dispatch(Actions.setLoading(true))
-  // }
 
   next(action)
 }

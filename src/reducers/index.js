@@ -68,6 +68,10 @@ const reducer = (state = initState, action) => {
       console.log(issue_rows)
       return {...state, issue_rows}
     }
+    case ActionTypes.SET_ISLOADING: {
+      const isLoading = action.payload.bool
+      return {...state, isLoading}
+    }
     //Header
     case ActionTypes.CLICK_APP_BAR: {
       const app_bar_open = !state.app_bar_open
@@ -99,9 +103,13 @@ const reducer = (state = initState, action) => {
         }
         return issue_row
       })
-      const snackbar_open = true
-      return {...state, issue_rows, snackbar_open, current_id}
+      return {...state, issue_rows, current_id}
     }
+    case ActionTypes.ONOFF_SNACKBAR: {
+      const snackbar_open = !state.snackbar_open
+      return {...state, snackbar_open}
+    }
+
     //Issue
     case ActionTypes.CHANGE_ISSUE: {
       const issue_cost_rows = action.payload.issue_cost_rows

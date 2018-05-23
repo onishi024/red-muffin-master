@@ -15,7 +15,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   getIssueRows: (event) => dispatch(Actions.getIssueRows(event)),
   onToggleHide: () => dispatch(Actions.onToggleHide()),
-  onToggleIssueHide: (id, bool) => dispatch(Actions.onToggleIssueHide(id, bool))
+  onToggleIssueHide: (id, bool) => dispatch(Actions.onToggleIssueHide(id, bool)),
+  onoffSnackBar: () => dispatch(Actions.onoffSnackBar()),
 })
 
 const IssueListContainer = connect(

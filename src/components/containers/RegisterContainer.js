@@ -9,7 +9,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  onClickRegisterSubmit: form => dispatch(Actions.onClickRegisterSubmit(form))
+  onClickRegisterConfirm: form => dispatch(Actions.onClickRegisterConfirm(form)),
 })
 
 const RegisterContainer = connect(
