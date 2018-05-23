@@ -72,30 +72,30 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
     RedmineAPI.getIssues(selected_project_id)
       .then(_issues => {
         return _issues.map(issue => {
-            return {
-              id: String(issue.id),
-              ankenno: issue.custom_fields[0].value,
-              naibukanrino: issue.custom_fields[1].value,
-              title: issue.subject,
-              assigned_id: issue.assigned_to.id,
-              assigned_name: issue.assigned_to.name,
-              parent: issue.parent ? String(issue.parent.id) : String(issue.id),
-              es04: issue.custom_fields[2].value  ? parseFloat(issue.custom_fields[2].value)  : 0,
-              es05: issue.custom_fields[3].value  ? parseFloat(issue.custom_fields[3].value)  : 0,
-              es06: issue.custom_fields[4].value  ? parseFloat(issue.custom_fields[4].value)  : 0,
-              es07: issue.custom_fields[5].value  ? parseFloat(issue.custom_fields[5].value)  : 0,
-              es08: issue.custom_fields[6].value  ? parseFloat(issue.custom_fields[6].value)  : 0,
-              es09: issue.custom_fields[7].value  ? parseFloat(issue.custom_fields[7].value)  : 0,
-              es10: issue.custom_fields[8].value  ? parseFloat(issue.custom_fields[8].value)  : 0,
-              es11: issue.custom_fields[9].value  ? parseFloat(issue.custom_fields[9].value)  : 0,
-              es12: issue.custom_fields[10].value ? parseFloat(issue.custom_fields[10].value) : 0,
-              es01: issue.custom_fields[11].value ? parseFloat(issue.custom_fields[11].value) : 0,
-              es02: issue.custom_fields[12].value ? parseFloat(issue.custom_fields[12].value) : 0,
-              es03: issue.custom_fields[13].value ? parseFloat(issue.custom_fields[13].value) : 0,
-              hide: issue.custom_fields[26].value === "1" ? true : false,
-              note: issue.custom_fields[27].value
-            }
-          })
+          return {
+            id: String(issue.id),
+            ankenno: issue.custom_fields[0].value,
+            naibukanrino: issue.custom_fields[1].value,
+            title: issue.subject,
+            assigned_id: issue.assigned_to ? issue.assigned_to.id : "",
+            assigned_name: issue.assigned_to ? issue.assigned_to.name : "",
+            parent: issue.parent ? String(issue.parent.id) : String(issue.id),
+            es04: issue.custom_fields[2].value  ? parseFloat(issue.custom_fields[2].value)  : 0,
+            es05: issue.custom_fields[3].value  ? parseFloat(issue.custom_fields[3].value)  : 0,
+            es06: issue.custom_fields[4].value  ? parseFloat(issue.custom_fields[4].value)  : 0,
+            es07: issue.custom_fields[5].value  ? parseFloat(issue.custom_fields[5].value)  : 0,
+            es08: issue.custom_fields[6].value  ? parseFloat(issue.custom_fields[6].value)  : 0,
+            es09: issue.custom_fields[7].value  ? parseFloat(issue.custom_fields[7].value)  : 0,
+            es10: issue.custom_fields[8].value  ? parseFloat(issue.custom_fields[8].value)  : 0,
+            es11: issue.custom_fields[9].value  ? parseFloat(issue.custom_fields[9].value)  : 0,
+            es12: issue.custom_fields[10].value ? parseFloat(issue.custom_fields[10].value) : 0,
+            es01: issue.custom_fields[11].value ? parseFloat(issue.custom_fields[11].value) : 0,
+            es02: issue.custom_fields[12].value ? parseFloat(issue.custom_fields[12].value) : 0,
+            es03: issue.custom_fields[13].value ? parseFloat(issue.custom_fields[13].value) : 0,
+            hide: issue.custom_fields[26].value === "1" ? true : false,
+            note: issue.custom_fields[27].value
+          }
+        })
       })
       .then(issue_rows => {
         return dispatch(Actions.setIssueRows(issue_rows))
@@ -202,7 +202,6 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
     }
     RedmineAPI.postIssueMember(issue)
     .then(result => {
-      console.log(result)
       dispatch(Actions.getIssueRows())
     })
   }
@@ -211,7 +210,6 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
     console.log("CHANGE_ISSUE START");
     const change_data = action.payload.change_data
     const change_rows = []
-    console.log(change_data)
     for(let i=0; i<change_data.id.length; i++){
       if(change_rows.length === 0){
         change_rows.push({
@@ -232,8 +230,6 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
         }
       }
     }
-    console.log('promiseの前');
-    console.log(change_rows)
     Promise.resolve()
       .then(() => {
         for(let i in change_rows){

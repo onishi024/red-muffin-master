@@ -14,7 +14,7 @@ import HeaderContainer from './components/containers/HeaderContainer'
 import IssueListContainer from './components/containers/IssueListContainer'
 import IssueContainer from './components/containers/IssueContainer'
 import RegisterContainer from './components/containers/RegisterContainer'
-import MemberList from './components/presentations/MemberList'
+import MemberListContainer from './components/containers/MemberListContainer'
 import Member from './components/presentations/Member'
 // import { composeWithDevTools } from 'redux-devtools-extension'
 
@@ -44,7 +44,7 @@ render(
         <Route path='/issue' component={IssueListContainer} />
         <Route path='/issue_edit/:id' component={IssueContainer} />
         <Route path='/register' component={RegisterContainer} />
-        <Route path='/member' component={MemberList} />
+        <Route path='/member' component={MemberListContainer} />
         <Route path='/member/:id' component={Member} />
       </div>
     </ConnectedRouter>
