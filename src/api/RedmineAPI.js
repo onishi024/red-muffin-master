@@ -35,8 +35,8 @@ export const getProjects = () =>
   .then(response => response.json())
   .then(json => json.projects)
 
-export const getIssues = () =>
-  fetch(url + `issues.json?limit=1000`,
+export const getIssues = (selected_project_id) =>
+  fetch(url + `issues.json?project_id=` + selected_project_id + `&offset=0&limit=100`,
     {method: 'GET',
      headers: headers})
   .then(response => response.json())
@@ -60,9 +60,32 @@ export const postIssue = issue =>
     }
   })
 
- export const postIssueMember = issue => {
+ export const postIssueMember = issue =>
    fetch(url + `issues.json`,
      {method: 'POST',
       headers: headers,
       body: JSON.stringify(issue)})
-    }
+   .then((res, err) => {
+     if (!err) {
+       console.log("ADD_ISSUE_MEMBER DONE")
+       return res
+     } else {
+       console.log("ADD_ISSUE_MEMBER ERROR OCCURED")
+       return err
+     }
+   })
+
+ export const putIssue = (id,issue) =>
+   fetch(url + `issues/` + id + `.json`,
+     {method: 'PUT',
+      headers: headers,
+      body: JSON.stringify(issue)})
+   .then((res, err) => {
+     if (!err) {
+       console.log("CHANGE_ISSUE DONE")
+       return res
+     } else {
+       console.log("CHANGE_ISSUE ERROR OCCURED")
+       return err
+     }
+   })

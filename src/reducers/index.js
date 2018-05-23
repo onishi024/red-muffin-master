@@ -52,7 +52,6 @@ const reducer = (state = initState, action) => {
     }
     case ActionTypes.SET_GROUP_USERS: {
       const groupUsers = action.payload.groupUsers
-      console.log(groupUsers)
       return {...state, groupUsers}
     }
     case ActionTypes.SET_YEARS: {
@@ -64,7 +63,9 @@ const reducer = (state = initState, action) => {
       return {...state, selected_project_id}
     }
     case ActionTypes.SET_ISSUE_ROWS: {
+      console.log('set issue rows dispatch')
       const issue_rows = action.payload.issue_rows
+      console.log(issue_rows)
       return {...state, issue_rows}
     }
     case ActionTypes.SET_ISLOADING: {
