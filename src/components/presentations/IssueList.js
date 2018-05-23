@@ -9,7 +9,11 @@ import { Link } from 'react-router-dom'
 const IssueList = ({selected_function, show_hided_issue, issue_rows, onToggleHide, onToggleIssueHide, onoffSnackBar,
                     getIssue_rows, selected_group_id, selected_year, snackbar_open, current_id}) => {
 
-  const _issue_rows = show_hided_issue ? issue_rows.filter(issue_row => issue_row.hide === true) : issue_rows
+
+  //親チケットの絞込み
+  const __issue_rows = issue_rows.filter(issue_row => issue_row.parent === issue_row.id)
+  //表示対象の絞込み
+  const _issue_rows = show_hided_issue ? __issue_rows.filter(issue_row => issue_row.hide === true) : __issue_rows
 
   //非表示toggleのスタイル
   const styles = {
