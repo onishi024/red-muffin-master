@@ -67,18 +67,30 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
   }
 
   if (action.type === ActionTypes.GET_ISSUE_ROWS) {
-    console.log("GET_ISSUE_ROWS START");
+    let selected_offset = 0
     const selected_project_id = getState().reducers.selected_project_id
-    RedmineAPI.getIssues(selected_project_id)
+    let get = RedmineAPI.getIssues(selected_project_id,selected_offset)
+    let issue_rows = new Array()
+    let return_count = get.length
+    function kurikaeshi_calc(){
+    if (return_count === 0) {
+      //レコードが0件だった場合、データを返す
+      return dispatch(Actions.setIssueRows(issue_rows))
+    }else{
+      //レコードが１件以上ある場合、レコードを配列に格納
+      console.log("GET_ISSUE_ROWS START");
+      RedmineAPI.getIssues(selected_project_id,selected_offset)
       .then(_issues => {
-        return _issues.map(issue => {
-          return {
+        selected_offset = selected_offset + _issues.length
+        return_count = _issues.length
+        _issues.map(issue => {
+          issue_rows.push({
             id: String(issue.id),
             ankenno: issue.custom_fields[0].value,
             naibukanrino: issue.custom_fields[1].value,
             title: issue.subject,
-            assigned_id: issue.assigned_to ? issue.assigned_to.id : "",
-            assigned_name: issue.assigned_to ? issue.assigned_to.name : "",
+            assigned_id: issue.assigned_to.id,
+            assigned_name: issue.assigned_to.name,
             parent: issue.parent ? String(issue.parent.id) : String(issue.id),
             es04: issue.custom_fields[2].value  ? parseFloat(issue.custom_fields[2].value)  : 0,
             es05: issue.custom_fields[3].value  ? parseFloat(issue.custom_fields[3].value)  : 0,
@@ -94,17 +106,18 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
             es03: issue.custom_fields[13].value ? parseFloat(issue.custom_fields[13].value) : 0,
             hide: issue.custom_fields[26].value === "1" ? true : false,
             note: issue.custom_fields[27].value
-          }
+          })
         })
       })
-      .then(issue_rows => {
-        return dispatch(Actions.setIssueRows(issue_rows))
-      })
+      //繰り返し処理を行う
+      .then (() => kurikaeshi_calc())
+    }
+  }
+    kurikaeshi_calc()
   }
 
   if (action.type === ActionTypes.REGISTER_ISSUE) {
-    console.log("REGISTER_ISSUE START")
-    dispatch(Actions.setIsLoading(true))
+    console.log("REGISTER_ISSUE START");
     const form = action.payload.form
     const selected_project_id = Number(getState().reducers.selected_project_id)
     const issue = {
@@ -149,10 +162,8 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
     }
     RedmineAPI.postIssue(issue)
     .then(result => {
+      console.log(result)
       dispatch(Actions.getIssueRows())
-    })
-    .then(result => {
-      dispatch(Actions.setIsLoading(false))
     })
   }
 
@@ -202,6 +213,7 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
     }
     RedmineAPI.postIssueMember(issue)
     .then(result => {
+      console.log(result)
       dispatch(Actions.getIssueRows())
     })
   }
@@ -210,6 +222,7 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
     console.log("CHANGE_ISSUE START");
     const change_data = action.payload.change_data
     const change_rows = []
+    console.log(change_data)
     for(let i=0; i<change_data.id.length; i++){
       if(change_rows.length === 0){
         change_rows.push({
@@ -230,6 +243,8 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
         }
       }
     }
+    console.log('promiseの前');
+    console.log(change_rows)
     Promise.resolve()
       .then(() => {
         for(let i in change_rows){
@@ -270,6 +285,13 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
       })
       .then(() => dispatch(Actions.getIssueRows()))
   }
+
+
+  //Loadingを有効化
+  // if ([ActionTypes.REGISTER_ISSUE]
+  //     .includes(action.type)) {
+  //   dispatch(Actions.setLoading(true))
+  // }
 
   next(action)
 }
