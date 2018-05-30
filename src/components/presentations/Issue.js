@@ -23,14 +23,160 @@ export default class Issue extends Component {
       change_data: {
         id: [],
         key: [],
-        value: []
-      }
+        value: [],
+      },
+      details: {
+        id:"",
+        grade: "",
+        assigned_name: "",
+        es04: 0.0,
+        es05: 0.0,
+        es06: 0.0,
+        es07: 0.0,
+        es08: 0.0,
+        es09: 0.0,
+        es10: 0.0,
+        es11: 0.0,
+        es12: 0.0,
+        es01: 0.0,
+        es02: 0.0,
+        es03: 0.0
+      },
+      summary: {
+        id:"",
+        grade: "",
+        assigned_name: "",
+        es04: 0.0,
+        es05: 0.0,
+        es06: 0.0,
+        es07: 0.0,
+        es08: 0.0,
+        es09: 0.0,
+        es10: 0.0,
+        es11: 0.0,
+        es12: 0.0,
+        es01: 0.0,
+        es02: 0.0,
+        es03: 0.0
+      },
+      copyFlag: true
     }
   }
 
-  rowData = (id, issue_rows, group_users) => {
-    const id_filtered_rows = issue_rows.filter(row => row.parent === id)
-    const row_data = id_filtered_rows.map(row => {
+  summaryData = (Details_Data) => {
+    if(Details_Data.length === 0) {
+      // console.log("0行の場合")
+      this.setState({summary: {
+        id: '合計',
+        grade: "",
+        assigned_name: "",
+        es04: 0.0,
+        es05: 0.0,
+        es06: 0.0,
+        es07: 0.0,
+        es08: 0.0,
+        es09: 0.0,
+        es10: 0.0,
+        es11: 0.0,
+        es12: 0.0,
+        es01: 0.0,
+        es02: 0.0,
+        es03: 0.0
+      }})
+      return this.state.summary
+    }
+    else if(Details_Data.length === 1) {
+      // console.log("1行の場合")
+      this.setState({summary: {
+        id: '合計',
+        grade: "",
+        assigned_name: "",
+        es04: Details_Data[0].es04,
+        es05: Details_Data[0].es05,
+        es06: Details_Data[0].es06,
+        es07: Details_Data[0].es07,
+        es08: Details_Data[0].es08,
+        es09: Details_Data[0].es09,
+        es10: Details_Data[0].es10,
+        es11: Details_Data[0].es11,
+        es12: Details_Data[0].es12,
+        es01: Details_Data[0].es01,
+        es02: Details_Data[0].es02,
+        es03: Details_Data[0].es03
+      }})
+      return this.state.summary
+    }
+    else {
+      // console.log("2行以上の場合")
+      let tmp_result_es04
+      let tmp_result_es05
+      let tmp_result_es06
+      let tmp_result_es07
+      let tmp_result_es08
+      let tmp_result_es09
+      let tmp_result_es10
+      let tmp_result_es11
+      let tmp_result_es12
+      let tmp_result_es01
+      let tmp_result_es02
+      let tmp_result_es03
+      const tmp = Details_Data.reduce((result, current) => {
+        tmp_result_es04 = result.es04 + current.es04
+        tmp_result_es05 = result.es05 + current.es05
+        tmp_result_es06 = result.es06 + current.es06
+        tmp_result_es07 = result.es07 + current.es07
+        tmp_result_es08 = result.es08 + current.es08
+        tmp_result_es09 = result.es09 + current.es09
+        tmp_result_es10 = result.es10 + current.es10
+        tmp_result_es11 = result.es11 + current.es11
+        tmp_result_es12 = result.es12 + current.es12
+        tmp_result_es01 = result.es01 + current.es01
+        tmp_result_es02 = result.es02 + current.es02
+        tmp_result_es03 = result.es03 + current.es03
+      })
+      this.setState({summary: {
+        id: '合計',
+        grade: "",
+        assigned_name: "",
+        es04: tmp_result_es04,
+        es05: tmp_result_es05,
+        es06: tmp_result_es06,
+        es07: tmp_result_es07,
+        es08: tmp_result_es08,
+        es09: tmp_result_es09,
+        es10: tmp_result_es10,
+        es11: tmp_result_es11,
+        es12: tmp_result_es12,
+        es01: tmp_result_es01,
+        es02: tmp_result_es02,
+        es03: tmp_result_es03
+      }})
+      return this.state.summary
+    }
+  }
+
+  rowData = (id, issue_rows, group_users, changes) => {
+    //オブジェクトの値渡し
+    console.log("Flag:", this.state.copyFlag);
+    if(this.state.copyFlag === true) {
+      this.state.details = JSON.parse(JSON.stringify(issue_rows.filter(row => row.parent === id && row.id !== id)))
+      console.log("コピー元：",issue_rows.filter(row => row.parent === id && row.id !== id));
+      console.log("コピー完了");
+    }
+    //編集が行われた場合にローカルステート更新
+
+    console.log("this.state : ", this.state.details);
+
+    if(changes !== undefined && changes !== null) {
+      eval("this.state.details[" + changes[0][0] + "]." + changes[0][1] + "=" + changes[0][3])
+    }
+    //編集後の値で明細表示
+
+    let details_data
+    let summary_data
+
+    if(this.state.copyFlag === true || changes !== null) {
+      const details_data = this.state.details.map(row => {
       const grade = group_users.filter(group_users => group_users.id === row.assigned_id)[0].grade
       const category = grade.substring(0,1) === 'G' || grade.substring(0,1) === 'M' ? 'プロパー' : 'BP'
       return {
@@ -52,39 +198,18 @@ export default class Issue extends Component {
         es03: row.es03
       }
     })
-    const sum_data = id_filtered_rows.length === 0 ? null : id_filtered_rows.reduce((result, current) => {
-      result.es04 += current.es04
-      result.es05 += current.es05
-      result.es06 += current.es06
-      result.es07 += current.es07
-      result.es08 += current.es08
-      result.es09 += current.es09
-      result.es10 += current.es10
-      result.es11 += current.es11
-      result.es12 += current.es12
-      result.es01 += current.es01
-      result.es02 += current.es02
-      result.es03 += current.es03
-      return {
-        id: '合計',
-        grade: "",
-        assigned_name: "",
-        es04: result.es04,
-        es05: result.es05,
-        es06: result.es06,
-        es07: result.es07,
-        es08: result.es08,
-        es09: result.es09,
-        es10: result.es10,
-        es11: result.es11,
-        es12: result.es12,
-        es01: result.es01,
-        es02: result.es02,
-        es03: result.es03
-      }
-    })
-    const data = row_data.concat(sum_data)
+
+    const summary_data = this.summaryData(details_data)
+    const data = details_data.concat(summary_data)
+    this.state.copyFlag = false
     return data
+  }
+  else {
+    return this.state.details.concat(this.state.summary)
+  }
+
+
+
   }
 
   initInfo = (id,issue_rows) => {
@@ -149,6 +274,7 @@ export default class Issue extends Component {
   }
 
   onClick2 = event => {
+    this.setState({copyFlag : true})
     this.setState({register_processing: false})
     this.props.onClickChangeIssueSubmit(this.state.change_data)
   }
@@ -162,6 +288,7 @@ export default class Issue extends Component {
   }
 
   onClick4 = event => {
+    this.setState({copyFlag : true})
     const id_filtered_rows = this.props.issue_rows.filter(row => row.id === this.state.id)
     this.props.onClickAddMemberSubmit(id_filtered_rows[0], this.state.addMemberForm.assigned)
     this.setState({
@@ -173,6 +300,7 @@ export default class Issue extends Component {
   }
 
   onClick5 = event => {
+    this.setState({copyFlag : true})
     this.setState({
       addMemberForm: {
         addMemberOpen: false,
@@ -195,11 +323,16 @@ export default class Issue extends Component {
     if(source === 'edit' || source === 'CopyPaste.paste'){
       // 変更された要素をlocalState.change_dataに保存
       // 画面で同一項目が複数回更新され場合はlocalState.change_dataを上書き
+      // console.log("onChange2が呼び出しされた")
+      // console.log("changesとは：",changes)
       for (let i in changes) {
         const change_row = changes[i][0]
         const change_key = changes[i][1]
         const change_value = changes[i][3]
-        const row_data = this.rowData(this.state.id, this.props.issue_rows, this.props.groupUsers)
+        //issue_rows全体から案件登録画面に表示されている案件の子チケットのみを絞り込む
+
+        const row_data = this.rowData(this.state.id, this.props.issue_rows, this.props.groupUsers, changes)
+        // console.log("this.state.summary:",this.state.summary);
         // localState.change_dataが空の場合は無条件で要素を追加
         if(this.state.change_data.id.length === 0){
           this.state.change_data.id.push(row_data[change_row]["id"])
@@ -226,7 +359,6 @@ export default class Issue extends Component {
   }
 
   onChange3 = (event, newValue) => {
-    console.log('call onChange3')
     if(this.state.change_data.id.length === 0){
       this.state.change_data.id.push(this.state.id)
       this.state.change_data.key.push("note")
@@ -355,7 +487,7 @@ export default class Issue extends Component {
               <HotTable
                 floatingLabelText={<span style={{fontSize: 16}}>要員計画</span>}
                 root="hot"
-                data={this.rowData(this.state.id, this.props.issue_rows, this.props.groupUsers)}
+                data={this.rowData(this.state.id, this.props.issue_rows, this.props.groupUsers, null)}
                 colHeaders={this.colHeaders}
                 columns={this.columns}
                 columnSorting={true}
