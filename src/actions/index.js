@@ -109,6 +109,7 @@ export const onoffSnackBar = () => {
   }
 }
 
+
 //Register
 export const onClickRegisterConfirm = form => {
   return {
@@ -135,5 +136,20 @@ export const onClickAddMemberSubmit = (parent_row, assigned) => {
     payload: {
       parent_row, assigned
     }
+  }
+}
+
+//MemberList
+export const onoffAssignedProjectList = () => {
+  return {
+    type: ActionTypes.ONOFF_ASSIGNEDPROJECTLIST,
+    payload: {}
+  }
+}
+
+export const setSelectedMember = (assigned_id) => {
+  return {
+    type: ActionTypes.SELECT_MEMBER,
+    payload: {assigned_id}
   }
 }

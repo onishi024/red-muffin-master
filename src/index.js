@@ -15,7 +15,7 @@ import IssueListContainer from './components/containers/IssueListContainer'
 import IssueContainer from './components/containers/IssueContainer'
 import RegisterContainer from './components/containers/RegisterContainer'
 import MemberListContainer from './components/containers/MemberListContainer'
-import Member from './components/presentations/Member'
+import MemberContainer from './components/containers/MemberContainer'
 // import { composeWithDevTools } from 'redux-devtools-extension'
 
 // Create a history of your choosing (we're using a browser history in this case)
@@ -45,7 +45,7 @@ render(
         <Route path='/issue_edit/:id' component={IssueContainer} />
         <Route path='/register' component={RegisterContainer} />
         <Route path='/member' component={MemberListContainer} />
-        <Route path='/member/:id' component={Member} />
+        <Route path='/member/:id' component={MemberContainer} />
       </div>
     </ConnectedRouter>
   </Provider>,

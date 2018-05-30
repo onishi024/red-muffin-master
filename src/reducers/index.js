@@ -40,7 +40,9 @@ const initState = {
   projects: [],
   snackbar_open: false,
   current_id: 0,
-  isLoading: false
+  isLoading: false,
+  assigned_projectlist_open: false,
+  selected_member: null
 }
 
 const reducer = (state = initState, action) => {
@@ -115,6 +117,17 @@ const reducer = (state = initState, action) => {
       const issue_cost_rows = action.payload.issue_cost_rows
       return {...state, issue_cost_rows}
     }
+
+    //MemberList
+    case ActionTypes.ONOFF_ASSIGNEDPROJECTLIST: {
+      const assigned_projectlist_open = !state.assigned_projectlist_open
+      return {...state, assigned_projectlist_open}
+    }
+    case ActionTypes.SELECT_MEMBER: {
+      const selected_member = action.payload.assigned_id
+      return {...state, selected_member}
+    }
+
     //other
     default:
       return state
