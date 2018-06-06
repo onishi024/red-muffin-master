@@ -19,8 +19,10 @@ export default class Issue extends Component {
       register_processing: false,
       addMemberForm: {
         assigned: "",
+        assigned_name: "",
         addMemberOpen: false,
       },
+      status: "none",
       change_data: {
         id: [],
         key: [],
@@ -254,15 +256,15 @@ export default class Issue extends Component {
   rowData = (id, issue_rows, group_users, changes) => {
     console.log("rowDataだよ");
     //オブジェクトの値渡し
-    console.log("Flag:", this.state.copyFlag);
+    // console.log("Flag:", this.state.copyFlag);
     if(this.state.copyFlag === true) {
       this.state.details = JSON.parse(JSON.stringify(issue_rows.filter(row => row.parent === id && row.id !== id)))
-      console.log("コピー元：",issue_rows.filter(row => row.parent === id && row.id !== id));
-      console.log("コピー完了");
+      // console.log("コピー元：",issue_rows.filter(row => row.parent === id && row.id !== id));
+      // console.log("コピー完了");
     }
     //編集が行われた場合にローカルステート更新
 
-    console.log("this.state : ", this.state.details);
+    // console.log("this.state : ", this.state.details);
 
     //編集された場合にローカルステートを更新する
     if(changes !== undefined && changes !== null) {
@@ -399,53 +401,66 @@ export default class Issue extends Component {
 
   //SUBMIT
   onClick1 = event => {
-    this.setState({register_processing: true})
+    this.setState({status: "postIssueConfirming"})
   }
 
   onClick2 = event => {
     this.setState({
       register_processing: false,
-      copyFlag : true
+      copyFlag : true,
+      status: "processing"
     })
     this.props.onClickChangeIssueSubmit(this.state.change_data)
   }
 
   onClick3 = event => {
-    this.setState({
-      addMemberForm: {
-        addMemberOpen: true
-      }
-    })
+    this.setState({status: "inputing"})
   }
 
-  onClick4 = event => {
-    this.setState({copyFlag : true})
+  onClickConfirm = event => {
     const id_filtered_rows = this.props.issue_rows.filter(row => row.id === this.state.id)
     this.props.onClickAddMemberSubmit(id_filtered_rows[0], this.state.addMemberForm.assigned)
     this.setState({
+      copyFlag : true,
       addMemberForm: {
-        addMemberOpen: false,
-        assigned: ""
-      }
+        assigned: "",
+        assigned_name: ""
+      },
+      status: "processing"
     })
   }
 
-  onClick5 = event => {
-    this.setState({copyFlag : true})
+  onClickSubmit = event => {
+    this.setState({status: "confirming"})
+  }
+
+  onClickCancel = event => {
     this.setState({
       addMemberForm: {
-        addMemberOpen: false,
-        assigned: ""
-      }
+        assigned: "",
+        assigned_name: ""
+      },
+      status: "none",
+      copyFlag : true
     })
+  }
+
+  onClickPostIssueCancel = event => {
+    this.setState({status: "none"})
+  }
+
+  onClickOK = event => {
+    this.setState({status: "inputting"})
   }
 
   onChange1 = (event, key, payload) => {
     const id = this.props.groupUsers[key].id
+    const name = this.props.groupUsers[key].name
     this.setState({
       addMemberForm: {
         ...this.state.addMemberForm,
-        assigned: id
+        assigned: id,
+        assigned_name: name
       }
     })
   }
@@ -539,7 +554,15 @@ export default class Issue extends Component {
     // return [...id_filtered_rows, ...id_unfiltered_rows]
   }
 
-  //カラムヘッダー定義(要員計画)
+  //required check
+  required = value => value === "" ? "この項目は必須入力項目です。" : ""
+  allRequired = form => {
+    return (
+      form.assigned     === ""
+    )
+  }
+
+  //カラムヘッダー定義
   colHeaders = ["#", "種別", "所属", "氏名",
     '4月' , '5月','6月', '7月', '8月', '9月',
     '10月', '11月', '12月', '1月', '2月', '3月']
@@ -586,7 +609,7 @@ export default class Issue extends Component {
   ]
 
   render() {
-    const actions1 = [
+    const actionPostIssueSubmit = [
       <Link to='/issue'>
         <FlatButton
           label="Submit"
@@ -597,18 +620,58 @@ export default class Issue extends Component {
       </Link>,
     ]
 
-    const actions2 = [
+    const actionPostIssueConfirm = [
+      <FlatButton
+        label="Cancel"
+        primary={false}
+        keyboardFocused={true}
+        onClick={this.onClickPostIssueCancel}
+      />,
+      <FlatButton
+        label="Confirm"
+        primary={true}
+        keyboardFocused={true}
+        onClick={this.onClick2}
+      />,
+    ]
+
+    const actionSubmit = [
       <FlatButton
         label="Cancel"
         secondary={true}
-        onClick={this.onClick5}
+        onClick={this.onClickCancel}
       />,
+      <FlatButton
+        label="Submit"
+        primary={true}
+        keyboardFocused={true}
+        onClick={this.onClickSubmit}
+        disabled={this.allRequired(this.state.addMemberForm)}
+      />,
+    ]
+
+    const actionConfirm = [
+      <FlatButton
+        label="Cancel"
+        primary={false}
+        keyboardFocused={true}
+        onClick={this.onClickCancel}
+      />,
+      <FlatButton
+        label="Confirm"
+        primary={true}
+        keyboardFocused={true}
+        onClick={this.onClickConfirm}
+      />,
+    ]
+
+    const actionOK = [
       <Link to={`/issue_edit/${this.state.id}`}>
         <FlatButton
-          label="Submit"
+          label="OK"
           primary={true}
           keyboardFocused={true}
-          onClick={this.onClick4}
+          onClick={this.onClickOK}
         />
       </Link>,
     ]
@@ -691,27 +754,51 @@ export default class Issue extends Component {
               <ContentAdd />
             </FloatingActionButton>
             <Dialog
-              title="addMember"
-              actions={actions2}
+              title="現在の入力内容を確定しますか?"
+              actions={actionPostIssueConfirm}
               modal={true}
-              open={this.state.addMemberForm.addMemberOpen}
+              open={this.state.status==="postIssueConfirming"}
+            >
+            </Dialog>
+            <Dialog
+              title="addMember"
+              actions={actionSubmit}
+              modal={true}
+              open={this.state.status === "inputing"}
             >
               <SelectField
               floatingLabelText="担当"
               value={this.state.addMemberForm.assigned}
               onChange={this.onChange1}
+              errorText={this.required(this.state.addMemberForm.assigned)}
               >
-                {this.props.groupUsers.map(group_user => <MenuItem value={group_user.id} primaryText={group_user.name} />)}
+                {this.props.groupUsers.map(group_user => <MenuItem key={group_user.id} value={group_user.id} primaryText={group_user.name} />)}
               </SelectField><br />
             </Dialog>
             <Dialog
-              title="Loading..."
-              actions={actions1}
+              title="以下の内容で登録して良いですか?"
+              actions={actionConfirm}
               modal={true}
-              open={this.state.register_processing}
+              open={this.state.status==="confirming"}
             >
-              <p>This is a mock indicator. Please push SUBMIT to close windows.</p>
+              <List>
+                <ListItem style={this.styles.listItem} disabled={true} primaryText='担当'
+                  secondaryText={this.state.addMemberForm.assigned_name} />
+              </List>
+            </Dialog>
+            <Dialog
+              title="更新処理実行中..."
+              modal={true}
+              open={this.state.status === "processing" && this.props.isLoading}
+            >
               <CircularProgress size={80} thickness={7} />
+            </Dialog>
+            <Dialog
+              title="更新処理が完了しました。"
+              actions={actionOK}
+              modal={true}
+              open={this.state.status==="processing" && !this.props.isLoading}
+              >
             </Dialog>
           </div>
         </MuiThemeProvider>
