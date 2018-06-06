@@ -10,6 +10,7 @@ export default class Issue extends Component {
 
   //constructor
   constructor(props) {
+    console.log("コンストラクター疎通！！！");
     super(props)
     const id = props.match.params.id
     this.state = {
@@ -18,73 +19,331 @@ export default class Issue extends Component {
       register_processing: false,
       addMemberForm: {
         assigned: "",
+        assigned_name: "",
         addMemberOpen: false,
       },
+      status: "none",
       change_data: {
         id: [],
         key: [],
-        value: []
+        value: [],
+      },
+      details: {
+        id:"",
+        grade: "",
+        assigned_name: "",
+        assigned_id: "",
+        es04: 0.0,
+        es05: 0.0,
+        es06: 0.0,
+        es07: 0.0,
+        es08: 0.0,
+        es09: 0.0,
+        es10: 0.0,
+        es11: 0.0,
+        es12: 0.0,
+        es01: 0.0,
+        es02: 0.0,
+        es03: 0.0
+      },
+      summary: {
+        id:"",
+        grade: "",
+        assigned_name: "",
+        es04: 0.0,
+        es05: 0.0,
+        es06: 0.0,
+        es07: 0.0,
+        es08: 0.0,
+        es09: 0.0,
+        es10: 0.0,
+        es11: 0.0,
+        es12: 0.0,
+        es01: 0.0,
+        es02: 0.0,
+        es03: 0.0
+      },
+      copyFlag: true,
+    }
+  }
+
+  summaryData = (Details_Data) => {
+    // console.log("Flagだよ : ", this.state.copyFlag);
+    if(this.state.copyFlag === false) {
+      if(Details_Data.length === 0) {
+        // console.log("0行の場合")
+        this.setState({summary: {
+          id: '合計',
+          grade: "",
+          assigned_name: "",
+          es04: 0.0,
+          es05: 0.0,
+          es06: 0.0,
+          es07: 0.0,
+          es08: 0.0,
+          es09: 0.0,
+          es10: 0.0,
+          es11: 0.0,
+          es12: 0.0,
+          es01: 0.0,
+          es02: 0.0,
+          es03: 0.0
+        }})
+        return this.state.summary
+      }
+      else if(Details_Data.length === 1) {
+          // console.log("1行の場合")
+          this.setState({summary: {
+            id: '合計',
+            grade: "",
+            assigned_name: "",
+            es04: Details_Data[0].es04,
+            es05: Details_Data[0].es05,
+            es06: Details_Data[0].es06,
+            es07: Details_Data[0].es07,
+            es08: Details_Data[0].es08,
+            es09: Details_Data[0].es09,
+            es10: Details_Data[0].es10,
+            es11: Details_Data[0].es11,
+            es12: Details_Data[0].es12,
+            es01: Details_Data[0].es01,
+            es02: Details_Data[0].es02,
+            es03: Details_Data[0].es03
+          }})
+          return this.state.summary
+      }
+      else {
+        // console.log("2行以上の場合")
+        let tmp_result_es04
+        let tmp_result_es05
+        let tmp_result_es06
+        let tmp_result_es07
+        let tmp_result_es08
+        let tmp_result_es09
+        let tmp_result_es10
+        let tmp_result_es11
+        let tmp_result_es12
+        let tmp_result_es01
+        let tmp_result_es02
+        let tmp_result_es03
+        const tmp = Details_Data.reduce((result, current) => {
+          tmp_result_es04 = result.es04 + current.es04
+          tmp_result_es05 = result.es05 + current.es05
+          tmp_result_es06 = result.es06 + current.es06
+          tmp_result_es07 = result.es07 + current.es07
+          tmp_result_es08 = result.es08 + current.es08
+          tmp_result_es09 = result.es09 + current.es09
+          tmp_result_es10 = result.es10 + current.es10
+          tmp_result_es11 = result.es11 + current.es11
+          tmp_result_es12 = result.es12 + current.es12
+          tmp_result_es01 = result.es01 + current.es01
+          tmp_result_es02 = result.es02 + current.es02
+          tmp_result_es03 = result.es03 + current.es03
+        })
+        this.setState({summary: {
+          id: '合計',
+          grade: "",
+          assigned_name: "",
+          es04: tmp_result_es04,
+          es05: tmp_result_es05,
+          es06: tmp_result_es06,
+          es07: tmp_result_es07,
+          es08: tmp_result_es08,
+          es09: tmp_result_es09,
+          es10: tmp_result_es10,
+          es11: tmp_result_es11,
+          es12: tmp_result_es12,
+          es01: tmp_result_es01,
+          es02: tmp_result_es02,
+          es03: tmp_result_es03
+        }})
+        return this.state.summary
+      }
+    }
+    else {
+      if(Details_Data.length === 0) {
+        // console.log("0行の場合")
+        this.state.summary = {
+          id: '合計',
+          grade: "",
+          assigned_name: "",
+          es04: 0.0,
+          es05: 0.0,
+          es06: 0.0,
+          es07: 0.0,
+          es08: 0.0,
+          es09: 0.0,
+          es10: 0.0,
+          es11: 0.0,
+          es12: 0.0,
+          es01: 0.0,
+          es02: 0.0,
+          es03: 0.0
+        }
+        return this.state.summary
+      }
+      else if(Details_Data.length === 1) {
+        // console.log("1行の場合")
+        this.state.summary = {
+          id: '合計',
+          grade: "",
+          assigned_name: "",
+          es04: Details_Data[0].es04,
+          es05: Details_Data[0].es05,
+          es06: Details_Data[0].es06,
+          es07: Details_Data[0].es07,
+          es08: Details_Data[0].es08,
+          es09: Details_Data[0].es09,
+          es10: Details_Data[0].es10,
+          es11: Details_Data[0].es11,
+          es12: Details_Data[0].es12,
+          es01: Details_Data[0].es01,
+          es02: Details_Data[0].es02,
+          es03: Details_Data[0].es03
+        }
+        return this.state.summary
+      }
+      else {
+        // console.log("2行以上の場合")
+        let tmp_result_es04
+        let tmp_result_es05
+        let tmp_result_es06
+        let tmp_result_es07
+        let tmp_result_es08
+        let tmp_result_es09
+        let tmp_result_es10
+        let tmp_result_es11
+        let tmp_result_es12
+        let tmp_result_es01
+        let tmp_result_es02
+        let tmp_result_es03
+        const tmp = Details_Data.reduce((result, current) => {
+          tmp_result_es04 = result.es04 + current.es04
+          tmp_result_es05 = result.es05 + current.es05
+          tmp_result_es06 = result.es06 + current.es06
+          tmp_result_es07 = result.es07 + current.es07
+          tmp_result_es08 = result.es08 + current.es08
+          tmp_result_es09 = result.es09 + current.es09
+          tmp_result_es10 = result.es10 + current.es10
+          tmp_result_es11 = result.es11 + current.es11
+          tmp_result_es12 = result.es12 + current.es12
+          tmp_result_es01 = result.es01 + current.es01
+          tmp_result_es02 = result.es02 + current.es02
+          tmp_result_es03 = result.es03 + current.es03
+        })
+        this.state.summary = {
+          id: '合計',
+          grade: "",
+          assigned_name: "",
+          es04: tmp_result_es04,
+          es05: tmp_result_es05,
+          es06: tmp_result_es06,
+          es07: tmp_result_es07,
+          es08: tmp_result_es08,
+          es09: tmp_result_es09,
+          es10: tmp_result_es10,
+          es11: tmp_result_es11,
+          es12: tmp_result_es12,
+          es01: tmp_result_es01,
+          es02: tmp_result_es02,
+          es03: tmp_result_es03
+        }
+        return this.state.summary
       }
     }
   }
 
-  rowData = (id, issue_rows, group_users) => {
-    const id_filtered_rows = issue_rows.filter(row => row.parent === id)
-    const row_data = id_filtered_rows.map(row => {
-      const grade = group_users.filter(group_users => group_users.id === row.assigned_id)[0].grade
-      const category = grade.substring(0,1) === 'G' || grade.substring(0,1) === 'M' ? 'プロパー' : 'BP'
-      return {
-        id: row.id,
-        category: category,
-        grade: grade,
-        assigned_name: row.assigned_name,
-        es04: row.es04,
-        es05: row.es05,
-        es06: row.es06,
-        es07: row.es07,
-        es08: row.es08,
-        es09: row.es09,
-        es10: row.es10,
-        es11: row.es11,
-        es12: row.es12,
-        es01: row.es01,
-        es02: row.es02,
-        es03: row.es03
-      }
-    })
-    const sum_data = id_filtered_rows.length === 0 ? null : id_filtered_rows.reduce((result, current) => {
-      result.es04 += current.es04
-      result.es05 += current.es05
-      result.es06 += current.es06
-      result.es07 += current.es07
-      result.es08 += current.es08
-      result.es09 += current.es09
-      result.es10 += current.es10
-      result.es11 += current.es11
-      result.es12 += current.es12
-      result.es01 += current.es01
-      result.es02 += current.es02
-      result.es03 += current.es03
-      return {
-        id: '合計',
-        grade: "",
-        assigned_name: "",
-        es04: result.es04,
-        es05: result.es05,
-        es06: result.es06,
-        es07: result.es07,
-        es08: result.es08,
-        es09: result.es09,
-        es10: result.es10,
-        es11: result.es11,
-        es12: result.es12,
-        es01: result.es01,
-        es02: result.es02,
-        es03: result.es03
-      }
-    })
-    const data = row_data.concat(sum_data)
-    return data
+  rowData = (id, issue_rows, group_users, changes) => {
+    console.log("rowDataだよ");
+    console.log("issue_rows : ",issue_rows);
+    console.log("this.state.copyFlag : ",this.state.copyFlag);
+    //オブジェクトの値渡し
+    // console.log("Flag:", this.state.copyFlag);
+    if(this.state.copyFlag === true) {
+      this.state.details = JSON.parse(JSON.stringify(issue_rows.filter(row => row.parent === id && row.id !== id)))
+      // console.log("コピー元：",issue_rows.filter(row => row.parent === id && row.id !== id));
+      // console.log("コピー完了");
+    }
+    //編集が行われた場合にローカルステート更新
+
+    // console.log("this.state : ", this.state.details);
+
+    //編集された場合にローカルステートを更新する
+    if(changes !== undefined && changes !== null) {
+      eval("this.state.details[" + changes[0][0] + "]." + changes[0][1] + "=" + changes[0][3])
+    }
+    //編集後の値で明細表示
+    // let details_data
+    // let summary_data
+    // console.log("copyFlagだ : ", this.state.copyFlag);
+    // console.log("changes : ", changes);
+
+
+    if(this.state.copyFlag === true || changes !== null) {
+      const details_data = this.state.details.map(row => {
+        const grade = group_users.filter(group_users => group_users.id === row.assigned_id)[0].grade
+        const category = grade.substring(0,1) === 'G' || grade.substring(0,1) === 'M' ? 'プロパー' : 'BP'
+
+        // console.log("row : ", row);
+        // console.log("grade : ", grade);
+        // console.log("category : ", category);
+
+        return {
+          id: row.id,
+          category: category,
+          grade: grade,
+          assigned_name: row.assigned_name,
+          assigned_id: row.assigned_id,
+          es04: row.es04,
+          es05: row.es05,
+          es06: row.es06,
+          es07: row.es07,
+          es08: row.es08,
+          es09: row.es09,
+          es10: row.es10,
+          es11: row.es11,
+          es12: row.es12,
+          es01: row.es01,
+          es02: row.es02,
+          es03: row.es03
+        }
+      })
+
+      this.setState({
+        details: [
+          ...details_data,
+        ]
+      })
+
+      const summary_data = this.summaryData(details_data)
+      const data = details_data.concat(summary_data)
+      this.state.copyFlag = false
+      // console.log("this.state.details : ",this.state.details)
+      return data
+    }
+    else {
+      // console.log("details : ", this.state.details);
+      return this.state.details.concat(this.state.summary)
+    }
+  }
+
+  rowData0 = (id, issue_rows) => {
+    const guide = JSON.parse(JSON.stringify(issue_rows.filter(row => row.parent === id && row.id === id)))
+    return {
+      category: "山積工数",
+      es04: guide[0].es04,
+      es05: guide[0].es05,
+      es06: guide[0].es06,
+      es07: guide[0].es07,
+      es08: guide[0].es08,
+      es09: guide[0].es09,
+      es10: guide[0].es10,
+      es11: guide[0].es11,
+      es12: guide[0].es12,
+      es01: guide[0].es01,
+      es02: guide[0].es02,
+      es03: guide[0].es03
+    }
   }
 
   initInfo = (id,issue_rows) => {
@@ -112,7 +371,7 @@ export default class Issue extends Component {
       margin: 12,
       width: 600,
       height: 200,
-      display: 'inline-block',
+      display: 'inline-wblock',
     },
     listItem: {
       height: 2,
@@ -145,48 +404,67 @@ export default class Issue extends Component {
 
   //SUBMIT
   onClick1 = event => {
-    this.setState({register_processing: true})
+    this.setState({status: "postIssueConfirming"})
   }
 
   onClick2 = event => {
-    this.setState({register_processing: false})
+    this.setState({
+      register_processing: false,
+      status: "processing"
+    })
     this.props.onClickChangeIssueSubmit(this.state.change_data)
   }
 
   onClick3 = event => {
-    this.setState({
-      addMemberForm: {
-        addMemberOpen: true
-      }
-    })
+    this.setState({status: "inputing"})
   }
 
-  onClick4 = event => {
+  onClickConfirm = event => {
     const id_filtered_rows = this.props.issue_rows.filter(row => row.id === this.state.id)
     this.props.onClickAddMemberSubmit(id_filtered_rows[0], this.state.addMemberForm.assigned)
     this.setState({
       addMemberForm: {
-        addMemberOpen: false,
-        assigned: ""
-      }
+        assigned: "",
+        assigned_name: ""
+      },
+      status: "processing",
     })
   }
 
-  onClick5 = event => {
+  onClickSubmit = event => {
+    this.setState({status: "confirming"})
+  }
+
+  onClickCancel = event => {
     this.setState({
       addMemberForm: {
-        addMemberOpen: false,
-        assigned: ""
-      }
+        assigned: "",
+        assigned_name: ""
+      },
+      status: "none",
     })
+  }
+
+  onClickPostIssueCancel = event => {
+    this.setState({status: "none"})
+  }
+
+  onClickOK = event => {
+    this.setState({
+      status: "none",
+      copyFlag : true
+    })
+    this.rowData(this.state.id, this.props.issue_rows, this.props.group_users, null)
   }
 
   onChange1 = (event, key, payload) => {
     const id = this.props.groupUsers[key].id
+    const name = this.props.groupUsers[key].name
     this.setState({
       addMemberForm: {
         ...this.state.addMemberForm,
-        assigned: id
+        assigned: id,
+        assigned_name: name
       }
     })
   }
@@ -195,11 +473,16 @@ export default class Issue extends Component {
     if(source === 'edit' || source === 'CopyPaste.paste'){
       // 変更された要素をlocalState.change_dataに保存
       // 画面で同一項目が複数回更新され場合はlocalState.change_dataを上書き
+      // console.log("onChange2が呼び出しされた")
+      // console.log("changesとは：",changes)
       for (let i in changes) {
         const change_row = changes[i][0]
         const change_key = changes[i][1]
         const change_value = changes[i][3]
-        const row_data = this.rowData(this.state.id, this.props.issue_rows, this.props.groupUsers)
+        //issue_rows全体から案件登録画面に表示されている案件の子チケットのみを絞り込む
+
+        const row_data = this.rowData(this.state.id, this.props.issue_rows, this.props.groupUsers, changes)
+        // console.log("this.state.summary:",this.state.summary);
         // localState.change_dataが空の場合は無条件で要素を追加
         if(this.state.change_data.id.length === 0){
           this.state.change_data.id.push(row_data[change_row]["id"])
@@ -226,7 +509,6 @@ export default class Issue extends Component {
   }
 
   onChange3 = (event, newValue) => {
-    console.log('call onChange3')
     if(this.state.change_data.id.length === 0){
       this.state.change_data.id.push(this.state.id)
       this.state.change_data.key.push("note")
@@ -276,57 +558,125 @@ export default class Issue extends Component {
     // return [...id_filtered_rows, ...id_unfiltered_rows]
   }
 
+  //required check
+  required = value => value === "" ? "この項目は必須入力項目です。" : ""
+  allRequired = form => {
+    return (
+      form.assigned === ""
+    )
+  }
+
   //カラムヘッダー定義
   colHeaders = ["#", "種別", "所属", "氏名",
     '4月' , '5月','6月', '7月', '8月', '9月',
     '10月', '11月', '12月', '1月', '2月', '3月']
+  //カラムヘッダー定義(山積＆作業工数の算出)
+  colHeaders0 = ["種別",
+    '4月' , '5月','6月', '7月', '8月', '9月',
+    '10月', '11月', '12月', '1月', '2月', '3月']
 
-  //カラムデータ定義
+  //カラムデータ定義(要員計画)
   columns = [
-    { data: 'id', editor: false },
-    { data: 'category', editor: false },
-    { data: 'grade', editor: false },
-    { data: 'assigned_name', editor: false },
-    { data: 'es04', type: 'numeric', allowInvalid: false, format: '0.00' },
-    { data: 'es05', type: 'numeric', allowInvalid: false, format: '0.00' },
-    { data: 'es06', type: 'numeric', allowInvalid: false, format: '0.00' },
-    { data: 'es07', type: 'numeric', allowInvalid: false, format: '0.00' },
-    { data: 'es08', type: 'numeric', allowInvalid: false, format: '0.00' },
-    { data: 'es09', type: 'numeric', allowInvalid: false, format: '0.00' },
-    { data: 'es10', type: 'numeric', allowInvalid: false, format: '0.00' },
-    { data: 'es11', type: 'numeric', allowInvalid: false, format: '0.00' },
-    { data: 'es12', type: 'numeric', allowInvalid: false, format: '0.00' },
-    { data: 'es01', type: 'numeric', allowInvalid: false, format: '0.00' },
-    { data: 'es02', type: 'numeric', allowInvalid: false, format: '0.00' },
-    { data: 'es03', type: 'numeric', allowInvalid: false, format: '0.00' }
+    { data: 'id', readOnly: true, width: 40 },
+    { data: 'category', readOnly: true, width: 60 },
+    { data: 'grade', readOnly: true, width: 60 },
+    { data: 'assigned_name', readOnly: true, width: 150 },
+    { data: 'es04', type: 'numeric', allowInvalid: false, format: '0.00', width: 50 },
+    { data: 'es05', type: 'numeric', allowInvalid: false, format: '0.00', width: 50 },
+    { data: 'es06', type: 'numeric', allowInvalid: false, format: '0.00', width: 50 },
+    { data: 'es07', type: 'numeric', allowInvalid: false, format: '0.00', width: 50 },
+    { data: 'es08', type: 'numeric', allowInvalid: false, format: '0.00', width: 50 },
+    { data: 'es09', type: 'numeric', allowInvalid: false, format: '0.00', width: 50 },
+    { data: 'es10', type: 'numeric', allowInvalid: false, format: '0.00', width: 50 },
+    { data: 'es11', type: 'numeric', allowInvalid: false, format: '0.00', width: 50 },
+    { data: 'es12', type: 'numeric', allowInvalid: false, format: '0.00', width: 50 },
+    { data: 'es01', type: 'numeric', allowInvalid: false, format: '0.00', width: 50 },
+    { data: 'es02', type: 'numeric', allowInvalid: false, format: '0.00', width: 50 },
+    { data: 'es03', type: 'numeric', allowInvalid: false, format: '0.00', width: 50 },
+  ]
+
+  //カラムデータ定義(山積＆作業工数の算出)
+  columns0 = [
+    { data: 'category', readOnly: true, width: 310 },
+    { data: 'es04', type: 'numeric', allowInvalid: false, format: '0.00', width: 50 },
+    { data: 'es05', type: 'numeric', allowInvalid: false, format: '0.00', width: 50 },
+    { data: 'es06', type: 'numeric', allowInvalid: false, format: '0.00', width: 50 },
+    { data: 'es07', type: 'numeric', allowInvalid: false, format: '0.00', width: 50 },
+    { data: 'es08', type: 'numeric', allowInvalid: false, format: '0.00', width: 50 },
+    { data: 'es09', type: 'numeric', allowInvalid: false, format: '0.00', width: 50 },
+    { data: 'es10', type: 'numeric', allowInvalid: false, format: '0.00', width: 50 },
+    { data: 'es11', type: 'numeric', allowInvalid: false, format: '0.00', width: 50 },
+    { data: 'es12', type: 'numeric', allowInvalid: false, format: '0.00', width: 50 },
+    { data: 'es01', type: 'numeric', allowInvalid: false, format: '0.00', width: 50 },
+    { data: 'es02', type: 'numeric', allowInvalid: false, format: '0.00', width: 50 },
+    { data: 'es03', type: 'numeric', allowInvalid: false, format: '0.00', width: 50 },
   ]
 
   render() {
-    const actions1 = [
-      <Link to='/issue'>
-        <FlatButton
-          label="Submit"
-          primary={true}
-          keyboardFocused={true}
-          onClick={this.onClick2}
-        />
-      </Link>,
+    // console.log("render start");
+
+    const actionPostIssueSubmit = [
+      <FlatButton
+        label="Submit"
+        primary={true}
+        keyboardFocused={true}
+        onClick={this.onClick2}
+      />
     ]
 
-    const actions2 = [
+    const actionPostIssueConfirm = [
       <FlatButton
         label="Cancel"
-        secondary={true}
-        onClick={this.onClick5}
+        primary={false}
+        keyboardFocused={true}
+        onClick={this.onClickPostIssueCancel}
       />,
-      <Link to={`/issue_edit/${this.state.id}`}>
-        <FlatButton
-          label="Submit"
-          primary={true}
-          keyboardFocused={true}
-          onClick={this.onClick4}
-        />
-      </Link>,
+      <FlatButton
+        label="Confirm"
+        primary={true}
+        keyboardFocused={true}
+        onClick={this.onClick2}
+      />,
+    ]
+
+    const actionSubmit = [
+      <FlatButton
+        label="Cancel"
+        primary={false}
+        onClick={this.onClickCancel}
+      />,
+      <FlatButton
+        label="Submit"
+        primary={true}
+        keyboardFocused={true}
+        onClick={this.onClickSubmit}
+        disabled={this.allRequired(this.state.addMemberForm)}
+      />,
+    ]
+
+    const actionConfirm = [
+      <FlatButton
+        label="Cancel"
+        primary={false}
+        keyboardFocused={true}
+        onClick={this.onClickCancel}
+      />,
+      <FlatButton
+        label="Confirm"
+        primary={true}
+        keyboardFocused={true}
+        onClick={this.onClickConfirm}
+      />,
+    ]
+
+    // <Link to={`/issue`}>
+    const actionOK = [
+      <FlatButton
+        label="OK"
+        primary={true}
+        keyboardFocused={true}
+        onClick={this.onClickOK}
+      />
     ]
 
     return (
@@ -351,25 +701,46 @@ export default class Issue extends Component {
               onChange={this.onChange3}
               />
             <br />
+            <div>　■山積＆予定工数</div>
             <div style={this.styles.hot}>
               <HotTable
-                floatingLabelText={<span style={{fontSize: 16}}>要員計画</span>}
-                root="hot"
-                data={this.rowData(this.state.id, this.props.issue_rows, this.props.groupUsers)}
-                colHeaders={this.colHeaders}
-                columns={this.columns}
+                floatingLabelText={<span style={{fontSize: 16}}>山積＆作業工数の算出</span>}
+                root="hot0"
+                //functionを新たに作る
+                data={this.rowData0(this.state.id, this.props.issue_rows)}
+                colHeaders={this.colHeaders0}
+                columns={this.columns0}
                 columnSorting={true}
-                width="1000"
+                readOnly={true}
+                width="910"
                 stretchH="all"
                 fixedColumnsLeft="3"
                 manualColumnResize={true}
+                fillHandle={false}
+                />
+            </div>
+            <br />
+            <div>　■要員計画</div>
+            <div style={this.styles.hot}>
+              <HotTable
+                floatingLabelText={<span style={{fontSize: 16}}>要員計画</span>}
+                root="hot1"
+                data={this.rowData(this.state.id, this.props.issue_rows, this.props.groupUsers, null)}
+                colHeaders={this.colHeaders}
+                columns={this.columns}
+                columnSorting={true}
+                width="910"
+                stretchH="all"
+                fixedColumnsLeft="3"
+                manualColumnResize={true}
+                fillHandle={false}
                 afterChange={this.onChange2}
                 />
             </div>
             <Link to='/issue'>
               <FlatButton
                 label="Cancel"
-                primary={true}
+                primary={false}
               />
             </Link>
             <FlatButton
@@ -386,27 +757,51 @@ export default class Issue extends Component {
               <ContentAdd />
             </FloatingActionButton>
             <Dialog
-              title="addMember"
-              actions={actions2}
+              title="現在の入力内容を確定しますか?"
+              actions={actionPostIssueConfirm}
               modal={true}
-              open={this.state.addMemberForm.addMemberOpen}
+              open={this.state.status==="postIssueConfirming"}
+            >
+            </Dialog>
+            <Dialog
+              title="addMember"
+              actions={actionSubmit}
+              modal={true}
+              open={this.state.status === "inputing"}
             >
               <SelectField
               floatingLabelText="担当"
               value={this.state.addMemberForm.assigned}
               onChange={this.onChange1}
+              errorText={this.required(this.state.addMemberForm.assigned)}
               >
-                {this.props.groupUsers.map(group_user => <MenuItem value={group_user.id} primaryText={group_user.name} />)}
+                {this.props.groupUsers.map(group_user => <MenuItem key={group_user.id} value={group_user.id} primaryText={group_user.name} />)}
               </SelectField><br />
             </Dialog>
             <Dialog
-              title="Loading..."
-              actions={actions1}
+              title="以下の内容で登録して良いですか?"
+              actions={actionConfirm}
               modal={true}
-              open={this.state.register_processing}
+              open={this.state.status==="confirming"}
             >
-              <p>This is a mock indicator. Please push SUBMIT to close windows.</p>
+              <List>
+                <ListItem style={this.styles.listItem} disabled={true} primaryText='担当'
+                  secondaryText={this.state.addMemberForm.assigned_name} />
+              </List>
+            </Dialog>
+            <Dialog
+              title="更新処理実行中..."
+              modal={true}
+              open={this.state.status === "processing" && this.props.isLoading}
+            >
               <CircularProgress size={80} thickness={7} />
+            </Dialog>
+            <Dialog
+              title="更新処理が完了しました。"
+              actions={actionOK}
+              modal={true}
+              open={this.state.status==="processing" && !this.props.isLoading}
+              >
             </Dialog>
           </div>
         </MuiThemeProvider>

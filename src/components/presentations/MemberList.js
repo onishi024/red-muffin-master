@@ -191,7 +191,6 @@ const MemberList = ({show_hided_issue, issue_rows, selected_group_id, selected_y
     setSelectedMember(rowData1(issue_rows, group_users)[r]['assigned_id'])
   }
 
-
   const hotTable1 = [
     <div style={styles.hot}>
       <HotTable

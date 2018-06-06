@@ -40,7 +40,7 @@ export const getProjects = () =>
   .then(json => json.projects)
 
 export const getIssues = (selected_project_id,selected_offset) =>
-  fetch(url + `issues.json?project_id=` + selected_project_id + `&offset=` + selected_offset + `&limit=10`,
+  fetch(url + `issues.json?project_id=` + selected_project_id + `&offset=` + selected_offset + `&limit=100`,
     {method: 'GET',
      headers: headers})
   .then(response => response.json())
