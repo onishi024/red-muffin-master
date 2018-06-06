@@ -114,32 +114,34 @@ export default class Issue extends Component {
       }
       else {
         // console.log("2行以上の場合")
-        let tmp_result_es04
-        let tmp_result_es05
-        let tmp_result_es06
-        let tmp_result_es07
-        let tmp_result_es08
-        let tmp_result_es09
-        let tmp_result_es10
-        let tmp_result_es11
-        let tmp_result_es12
-        let tmp_result_es01
-        let tmp_result_es02
-        let tmp_result_es03
-        const tmp = Details_Data.reduce((result, current) => {
-          tmp_result_es04 = result.es04 + current.es04
-          tmp_result_es05 = result.es05 + current.es05
-          tmp_result_es06 = result.es06 + current.es06
-          tmp_result_es07 = result.es07 + current.es07
-          tmp_result_es08 = result.es08 + current.es08
-          tmp_result_es09 = result.es09 + current.es09
-          tmp_result_es10 = result.es10 + current.es10
-          tmp_result_es11 = result.es11 + current.es11
-          tmp_result_es12 = result.es12 + current.es12
-          tmp_result_es01 = result.es01 + current.es01
-          tmp_result_es02 = result.es02 + current.es02
-          tmp_result_es03 = result.es03 + current.es03
-        })
+        let tmp_result_es04 = 0.0
+        let tmp_result_es05 = 0.0
+        let tmp_result_es06 = 0.0
+        let tmp_result_es07 = 0.0
+        let tmp_result_es08 = 0.0
+        let tmp_result_es09 = 0.0
+        let tmp_result_es10 = 0.0
+        let tmp_result_es11 = 0.0
+        let tmp_result_es12 = 0.0
+        let tmp_result_es01 = 0.0
+        let tmp_result_es02 = 0.0
+        let tmp_result_es03 = 0.0
+
+        for(let i = 0; i < Details_Data.length; i++) {
+          tmp_result_es04 += Details_Data[i].es04
+          tmp_result_es05 += Details_Data[i].es05
+          tmp_result_es06 += Details_Data[i].es06
+          tmp_result_es07 += Details_Data[i].es07
+          tmp_result_es08 += Details_Data[i].es08
+          tmp_result_es09 += Details_Data[i].es09
+          tmp_result_es10 += Details_Data[i].es10
+          tmp_result_es11 += Details_Data[i].es11
+          tmp_result_es12 += Details_Data[i].es12
+          tmp_result_es01 += Details_Data[i].es01
+          tmp_result_es02 += Details_Data[i].es02
+          tmp_result_es03 += Details_Data[i].es03
+        }
+
         this.setState({summary: {
           id: '合計',
           grade: "",
@@ -205,32 +207,33 @@ export default class Issue extends Component {
       }
       else {
         // console.log("2行以上の場合")
-        let tmp_result_es04
-        let tmp_result_es05
-        let tmp_result_es06
-        let tmp_result_es07
-        let tmp_result_es08
-        let tmp_result_es09
-        let tmp_result_es10
-        let tmp_result_es11
-        let tmp_result_es12
-        let tmp_result_es01
-        let tmp_result_es02
-        let tmp_result_es03
-        const tmp = Details_Data.reduce((result, current) => {
-          tmp_result_es04 = result.es04 + current.es04
-          tmp_result_es05 = result.es05 + current.es05
-          tmp_result_es06 = result.es06 + current.es06
-          tmp_result_es07 = result.es07 + current.es07
-          tmp_result_es08 = result.es08 + current.es08
-          tmp_result_es09 = result.es09 + current.es09
-          tmp_result_es10 = result.es10 + current.es10
-          tmp_result_es11 = result.es11 + current.es11
-          tmp_result_es12 = result.es12 + current.es12
-          tmp_result_es01 = result.es01 + current.es01
-          tmp_result_es02 = result.es02 + current.es02
-          tmp_result_es03 = result.es03 + current.es03
-        })
+        let tmp_result_es04 = 0.0
+        let tmp_result_es05 = 0.0
+        let tmp_result_es06 = 0.0
+        let tmp_result_es07 = 0.0
+        let tmp_result_es08 = 0.0
+        let tmp_result_es09 = 0.0
+        let tmp_result_es10 = 0.0
+        let tmp_result_es11 = 0.0
+        let tmp_result_es12 = 0.0
+        let tmp_result_es01 = 0.0
+        let tmp_result_es02 = 0.0
+        let tmp_result_es03 = 0.0
+
+        for(let i = 0; i < Details_Data.length; i++) {
+          tmp_result_es04 += Details_Data[i].es04
+          tmp_result_es05 += Details_Data[i].es05
+          tmp_result_es06 += Details_Data[i].es06
+          tmp_result_es07 += Details_Data[i].es07
+          tmp_result_es08 += Details_Data[i].es08
+          tmp_result_es09 += Details_Data[i].es09
+          tmp_result_es10 += Details_Data[i].es10
+          tmp_result_es11 += Details_Data[i].es11
+          tmp_result_es12 += Details_Data[i].es12
+          tmp_result_es01 += Details_Data[i].es01
+          tmp_result_es02 += Details_Data[i].es02
+          tmp_result_es03 += Details_Data[i].es03
+        }
         this.state.summary = {
           id: '合計',
           grade: "",
