@@ -281,7 +281,6 @@ export default class Issue extends Component {
     // console.log("copyFlagだ : ", this.state.copyFlag);
     // console.log("changes : ", changes);
 
-
     if(this.state.copyFlag === true || changes !== null) {
       const details_data = this.state.details.map(row => {
         const grade = group_users.filter(group_users => group_users.id === row.assigned_id)[0].grade
@@ -319,34 +318,57 @@ export default class Issue extends Component {
       })
 
       const summary_data = this.summaryData(details_data)
-      const data = details_data.concat(summary_data)
+      // const data = details_data.concat(summary_data)
+      const data = details_data
       this.state.copyFlag = false
       // console.log("this.state.details : ",this.state.details)
       return data
     }
     else {
       // console.log("details : ", this.state.details);
-      return this.state.details.concat(this.state.summary)
+      // return this.state.details.concat(this.state.summary)
+      return this.state.details
     }
   }
 
   rowData0 = (id, issue_rows) => {
-    const guide = JSON.parse(JSON.stringify(issue_rows.filter(row => row.parent === id && row.id === id)))
-    return {
-      category: "山積工数",
-      es04: guide[0].es04,
-      es05: guide[0].es05,
-      es06: guide[0].es06,
-      es07: guide[0].es07,
-      es08: guide[0].es08,
-      es09: guide[0].es09,
-      es10: guide[0].es10,
-      es11: guide[0].es11,
-      es12: guide[0].es12,
-      es01: guide[0].es01,
-      es02: guide[0].es02,
-      es03: guide[0].es03
+    const _piling= JSON.parse(JSON.stringify(issue_rows.filter(row => row.parent === id && row.id === id)))
+    const piling = {
+      id: "山積工数",
+      es04: _piling[0].es04,
+      es05: _piling[0].es05,
+      es06: _piling[0].es06,
+      es07: _piling[0].es07,
+      es08: _piling[0].es08,
+      es09: _piling[0].es09,
+      es10: _piling[0].es10,
+      es11: _piling[0].es11,
+      es12: _piling[0].es12,
+      es01: _piling[0].es01,
+      es02: _piling[0].es02,
+      es03: _piling[0].es03
     }
+    return piling
+  }
+
+  rowData2 = (summary) => {
+    const _plans= JSON.parse(JSON.stringify(summary))
+    const plans = {
+      id: "予定工数",
+      es04: _plans.es04,
+      es05: _plans.es05,
+      es06: _plans.es06,
+      es07: _plans.es07,
+      es08: _plans.es08,
+      es09: _plans.es09,
+      es10: _plans.es10,
+      es11: _plans.es11,
+      es12: _plans.es12,
+      es01: _plans.es01,
+      es02: _plans.es02,
+      es03: _plans.es03
+    }
+    return plans
   }
 
   initInfo = (id,issue_rows) => {
@@ -477,8 +499,11 @@ export default class Issue extends Component {
       // 変更された要素をlocalState.change_dataに保存
       // 画面で同一項目が複数回更新され場合はlocalState.change_dataを上書き
       // console.log("onChange2が呼び出しされた")
-      // console.log("changesとは：",changes)
       for (let i in changes) {
+        if(changes[i][3] === "") {
+          changes[i][3] = 0.0
+          console.log("変換したよ");
+        }
         const change_row = changes[i][0]
         const change_key = changes[i][1]
         const change_value = changes[i][3]
@@ -487,6 +512,8 @@ export default class Issue extends Component {
         const row_data = this.rowData(this.state.id, this.props.issue_rows, this.props.groupUsers, changes)
         // console.log("this.state.summary:",this.state.summary);
         // localState.change_dataが空の場合は無条件で要素を追加
+        console.log("lengthだよ", this.state.change_data.id.length);
+
         if(this.state.change_data.id.length === 0){
           this.state.change_data.id.push(row_data[change_row]["id"])
           this.state.change_data.key.push(change_key)
@@ -600,7 +627,7 @@ export default class Issue extends Component {
 
   //カラムデータ定義(山積＆作業工数の算出)
   columns0 = [
-    { data: 'category', readOnly: true, width: 310 },
+    { data: 'id', readOnly: true, width: 310 },
     { data: 'es04', type: 'numeric', allowInvalid: false, format: '0.00', width: 50 },
     { data: 'es05', type: 'numeric', allowInvalid: false, format: '0.00', width: 50 },
     { data: 'es06', type: 'numeric', allowInvalid: false, format: '0.00', width: 50 },
@@ -709,9 +736,21 @@ export default class Issue extends Component {
               <HotTable
                 floatingLabelText={<span style={{fontSize: 16}}>山積＆作業工数の算出</span>}
                 root="hot0"
-                //functionを新たに作る
                 data={this.rowData0(this.state.id, this.props.issue_rows)}
                 colHeaders={this.colHeaders0}
+                columns={this.columns0}
+                columnSorting={true}
+                readOnly={true}
+                width="910"
+                stretchH="all"
+                fixedColumnsLeft="3"
+                manualColumnResize={true}
+                fillHandle={false}
+                />
+              <HotTable
+                floatingLabelText={<span style={{fontSize: 16}}>山積＆作業工数の算出</span>}
+                root="hot3"
+                data={this.rowData2(this.state.summary)}
                 columns={this.columns0}
                 columnSorting={true}
                 readOnly={true}
@@ -738,6 +777,19 @@ export default class Issue extends Component {
                 manualColumnResize={true}
                 fillHandle={false}
                 afterChange={this.onChange2}
+                />
+              <HotTable
+                floatingLabelText={<span style={{fontSize: 16}}>予定工数</span>}
+                root="hot2"
+                data={this.state.summary}
+                columns={this.columns0}
+                columnSorting={true}
+                readOnly={true}
+                width="910"
+                stretchH="all"
+                fixedColumnsLeft="3"
+                manualColumnResize={true}
+                fillHandle={false}
                 />
             </div>
             <Link to='/issue'>
