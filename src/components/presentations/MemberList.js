@@ -121,16 +121,19 @@ const MemberList = ({show_hided_issue, issue_rows, selected_group_id, selected_y
   }
 
   //カラムヘッダー定義_要員別山積
-  const colHeaders1 = ["#", "種別", "所属", "氏名",
+  const colHeaders1 = ["#", "氏名", "所属", "種別",
     '4月' , '5月','6月', '7月', '8月', '9月',
     '10月', '11月', '12月', '1月', '2月', '3月']
+
+　//カラム幅定義_要員別集計
+  const colwidths1 = [80, 160, 100, 100, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80]
 
   //カラムデータ定義_要員別山積
   const columns1 = [
     { data: 'assigned_id', editor: false, readOnly: true },
+    { data: 'assigned_name', editor: false, readOnly: true },
     { data: 'category', editor: false, readOnly: true },
     { data: 'grade', editor: false, readOnly: true },
-    { data: 'assigned_name', editor: false, readOnly: true },
     { data: 'es04', type: 'numeric', allowInvalid: false, format: '0.00', readOnly: true },
     { data: 'es05', type: 'numeric', allowInvalid: false, format: '0.00', readOnly: true },
     { data: 'es06', type: 'numeric', allowInvalid: false, format: '0.00', readOnly: true },
@@ -149,6 +152,9 @@ const MemberList = ({show_hided_issue, issue_rows, selected_group_id, selected_y
   const colHeaders2 = ["#", "氏名", "案件名",
     '4月' , '5月','6月', '7月', '8月', '9月',
     '10月', '11月', '12月', '1月', '2月', '3月']
+
+  //カラム幅定義_要員別集計
+  const colwidths2 = [80, 160, 560, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80]
 
   //カラムデータ定義_要員別集計
   const columns2 = [
@@ -188,9 +194,11 @@ const MemberList = ({show_hided_issue, issue_rows, selected_group_id, selected_y
   const hotTable1 = [
     <div style={styles.hot}>
       <HotTable
-        root="hot"
+        root="hot1"
         data={rowData1(issue_rows, group_users)}
         colHeaders={colHeaders1}
+        colWidths={colwidths1}
+        width="1400"
         columns={columns1}
         columnSorting={true}
         stretchH="all"
@@ -204,9 +212,11 @@ const MemberList = ({show_hided_issue, issue_rows, selected_group_id, selected_y
   const hotTable2 = [
     <div style={styles.hot}>
       <HotTable
-        root="hot"
+        root="hot2"
         data={rowData2(issue_rows, selected_member)}
         colHeaders={colHeaders2}
+        colWidths={colwidths2}
+        width={1760}
         columns={columns2}
         columnSorting={true}
         stretchH="all"
@@ -224,8 +234,9 @@ const MemberList = ({show_hided_issue, issue_rows, selected_group_id, selected_y
     <MuiThemeProvider>
       <div>
         <div style={styles.path}><Link to={`/`}>Home</Link>> 要員別山積表</div>
-          {hotTable2}
           {hotTable1}
+          <Divider/>
+          {hotTable2}
       </div>
     </MuiThemeProvider>
   )
