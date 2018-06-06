@@ -10,6 +10,7 @@ export default class Issue extends Component {
 
   //constructor
   constructor(props) {
+    console.log("コンストラクター疎通！！！");
     super(props)
     const id = props.match.params.id
     this.state = {
@@ -29,6 +30,7 @@ export default class Issue extends Component {
         id:"",
         grade: "",
         assigned_name: "",
+        assigned_id: "",
         es04: 0.0,
         es05: 0.0,
         es06: 0.0,
@@ -59,103 +61,198 @@ export default class Issue extends Component {
         es02: 0.0,
         es03: 0.0
       },
-      copyFlag: true
+      copyFlag: true,
     }
   }
 
   summaryData = (Details_Data) => {
-    if(Details_Data.length === 0) {
-      // console.log("0行の場合")
-      this.setState({summary: {
-        id: '合計',
-        grade: "",
-        assigned_name: "",
-        es04: 0.0,
-        es05: 0.0,
-        es06: 0.0,
-        es07: 0.0,
-        es08: 0.0,
-        es09: 0.0,
-        es10: 0.0,
-        es11: 0.0,
-        es12: 0.0,
-        es01: 0.0,
-        es02: 0.0,
-        es03: 0.0
-      }})
-      return this.state.summary
-    }
-    else if(Details_Data.length === 1) {
-      // console.log("1行の場合")
-      this.setState({summary: {
-        id: '合計',
-        grade: "",
-        assigned_name: "",
-        es04: Details_Data[0].es04,
-        es05: Details_Data[0].es05,
-        es06: Details_Data[0].es06,
-        es07: Details_Data[0].es07,
-        es08: Details_Data[0].es08,
-        es09: Details_Data[0].es09,
-        es10: Details_Data[0].es10,
-        es11: Details_Data[0].es11,
-        es12: Details_Data[0].es12,
-        es01: Details_Data[0].es01,
-        es02: Details_Data[0].es02,
-        es03: Details_Data[0].es03
-      }})
-      return this.state.summary
+    console.log("Flagだよ : ", this.state.copyFlag);
+    if(this.state.copyFlag === false) {
+      if(Details_Data.length === 0) {
+        // console.log("0行の場合")
+        this.setState({summary: {
+          id: '合計',
+          grade: "",
+          assigned_name: "",
+          es04: 0.0,
+          es05: 0.0,
+          es06: 0.0,
+          es07: 0.0,
+          es08: 0.0,
+          es09: 0.0,
+          es10: 0.0,
+          es11: 0.0,
+          es12: 0.0,
+          es01: 0.0,
+          es02: 0.0,
+          es03: 0.0
+        }})
+        return this.state.summary
+      }
+      else if(Details_Data.length === 1) {
+          // console.log("1行の場合")
+          this.setState({summary: {
+            id: '合計',
+            grade: "",
+            assigned_name: "",
+            es04: Details_Data[0].es04,
+            es05: Details_Data[0].es05,
+            es06: Details_Data[0].es06,
+            es07: Details_Data[0].es07,
+            es08: Details_Data[0].es08,
+            es09: Details_Data[0].es09,
+            es10: Details_Data[0].es10,
+            es11: Details_Data[0].es11,
+            es12: Details_Data[0].es12,
+            es01: Details_Data[0].es01,
+            es02: Details_Data[0].es02,
+            es03: Details_Data[0].es03
+          }})
+          return this.state.summary
+      }
+      else {
+        // console.log("2行以上の場合")
+        let tmp_result_es04
+        let tmp_result_es05
+        let tmp_result_es06
+        let tmp_result_es07
+        let tmp_result_es08
+        let tmp_result_es09
+        let tmp_result_es10
+        let tmp_result_es11
+        let tmp_result_es12
+        let tmp_result_es01
+        let tmp_result_es02
+        let tmp_result_es03
+        const tmp = Details_Data.reduce((result, current) => {
+          tmp_result_es04 = result.es04 + current.es04
+          tmp_result_es05 = result.es05 + current.es05
+          tmp_result_es06 = result.es06 + current.es06
+          tmp_result_es07 = result.es07 + current.es07
+          tmp_result_es08 = result.es08 + current.es08
+          tmp_result_es09 = result.es09 + current.es09
+          tmp_result_es10 = result.es10 + current.es10
+          tmp_result_es11 = result.es11 + current.es11
+          tmp_result_es12 = result.es12 + current.es12
+          tmp_result_es01 = result.es01 + current.es01
+          tmp_result_es02 = result.es02 + current.es02
+          tmp_result_es03 = result.es03 + current.es03
+        })
+        this.setState({summary: {
+          id: '合計',
+          grade: "",
+          assigned_name: "",
+          es04: tmp_result_es04,
+          es05: tmp_result_es05,
+          es06: tmp_result_es06,
+          es07: tmp_result_es07,
+          es08: tmp_result_es08,
+          es09: tmp_result_es09,
+          es10: tmp_result_es10,
+          es11: tmp_result_es11,
+          es12: tmp_result_es12,
+          es01: tmp_result_es01,
+          es02: tmp_result_es02,
+          es03: tmp_result_es03
+        }})
+        return this.state.summary
+      }
     }
     else {
-      // console.log("2行以上の場合")
-      let tmp_result_es04
-      let tmp_result_es05
-      let tmp_result_es06
-      let tmp_result_es07
-      let tmp_result_es08
-      let tmp_result_es09
-      let tmp_result_es10
-      let tmp_result_es11
-      let tmp_result_es12
-      let tmp_result_es01
-      let tmp_result_es02
-      let tmp_result_es03
-      const tmp = Details_Data.reduce((result, current) => {
-        tmp_result_es04 = result.es04 + current.es04
-        tmp_result_es05 = result.es05 + current.es05
-        tmp_result_es06 = result.es06 + current.es06
-        tmp_result_es07 = result.es07 + current.es07
-        tmp_result_es08 = result.es08 + current.es08
-        tmp_result_es09 = result.es09 + current.es09
-        tmp_result_es10 = result.es10 + current.es10
-        tmp_result_es11 = result.es11 + current.es11
-        tmp_result_es12 = result.es12 + current.es12
-        tmp_result_es01 = result.es01 + current.es01
-        tmp_result_es02 = result.es02 + current.es02
-        tmp_result_es03 = result.es03 + current.es03
-      })
-      this.setState({summary: {
-        id: '合計',
-        grade: "",
-        assigned_name: "",
-        es04: tmp_result_es04,
-        es05: tmp_result_es05,
-        es06: tmp_result_es06,
-        es07: tmp_result_es07,
-        es08: tmp_result_es08,
-        es09: tmp_result_es09,
-        es10: tmp_result_es10,
-        es11: tmp_result_es11,
-        es12: tmp_result_es12,
-        es01: tmp_result_es01,
-        es02: tmp_result_es02,
-        es03: tmp_result_es03
-      }})
-      return this.state.summary
+      if(Details_Data.length === 0) {
+        // console.log("0行の場合")
+        this.state.summary = {
+          id: '合計',
+          grade: "",
+          assigned_name: "",
+          es04: 0.0,
+          es05: 0.0,
+          es06: 0.0,
+          es07: 0.0,
+          es08: 0.0,
+          es09: 0.0,
+          es10: 0.0,
+          es11: 0.0,
+          es12: 0.0,
+          es01: 0.0,
+          es02: 0.0,
+          es03: 0.0
+        }
+        return this.state.summary
+      }
+      else if(Details_Data.length === 1) {
+        // console.log("1行の場合")
+        this.state.summary = {
+          id: '合計',
+          grade: "",
+          assigned_name: "",
+          es04: Details_Data[0].es04,
+          es05: Details_Data[0].es05,
+          es06: Details_Data[0].es06,
+          es07: Details_Data[0].es07,
+          es08: Details_Data[0].es08,
+          es09: Details_Data[0].es09,
+          es10: Details_Data[0].es10,
+          es11: Details_Data[0].es11,
+          es12: Details_Data[0].es12,
+          es01: Details_Data[0].es01,
+          es02: Details_Data[0].es02,
+          es03: Details_Data[0].es03
+        }
+        return this.state.summary
+      }
+      else {
+        // console.log("2行以上の場合")
+        let tmp_result_es04
+        let tmp_result_es05
+        let tmp_result_es06
+        let tmp_result_es07
+        let tmp_result_es08
+        let tmp_result_es09
+        let tmp_result_es10
+        let tmp_result_es11
+        let tmp_result_es12
+        let tmp_result_es01
+        let tmp_result_es02
+        let tmp_result_es03
+        const tmp = Details_Data.reduce((result, current) => {
+          tmp_result_es04 = result.es04 + current.es04
+          tmp_result_es05 = result.es05 + current.es05
+          tmp_result_es06 = result.es06 + current.es06
+          tmp_result_es07 = result.es07 + current.es07
+          tmp_result_es08 = result.es08 + current.es08
+          tmp_result_es09 = result.es09 + current.es09
+          tmp_result_es10 = result.es10 + current.es10
+          tmp_result_es11 = result.es11 + current.es11
+          tmp_result_es12 = result.es12 + current.es12
+          tmp_result_es01 = result.es01 + current.es01
+          tmp_result_es02 = result.es02 + current.es02
+          tmp_result_es03 = result.es03 + current.es03
+        })
+        this.state.summary = {
+          id: '合計',
+          grade: "",
+          assigned_name: "",
+          es04: tmp_result_es04,
+          es05: tmp_result_es05,
+          es06: tmp_result_es06,
+          es07: tmp_result_es07,
+          es08: tmp_result_es08,
+          es09: tmp_result_es09,
+          es10: tmp_result_es10,
+          es11: tmp_result_es11,
+          es12: tmp_result_es12,
+          es01: tmp_result_es01,
+          es02: tmp_result_es02,
+          es03: tmp_result_es03
+        }
+        return this.state.summary
+      }
     }
   }
 
   rowData = (id, issue_rows, group_users, changes) => {
+    console.log("rowDataだよ");
     //オブジェクトの値渡し
     console.log("Flag:", this.state.copyFlag);
     if(this.state.copyFlag === true) {
@@ -167,49 +264,81 @@ export default class Issue extends Component {
 
     console.log("this.state : ", this.state.details);
 
+    //編集された場合にローカルステートを更新する
     if(changes !== undefined && changes !== null) {
       eval("this.state.details[" + changes[0][0] + "]." + changes[0][1] + "=" + changes[0][3])
     }
     //編集後の値で明細表示
+    // let details_data
+    // let summary_data
+    console.log("copyFlagだ : ", this.state.copyFlag);
+    console.log("changes : ", changes);
 
-    let details_data
-    let summary_data
 
     if(this.state.copyFlag === true || changes !== null) {
       const details_data = this.state.details.map(row => {
-      const grade = group_users.filter(group_users => group_users.id === row.assigned_id)[0].grade
-      const category = grade.substring(0,1) === 'G' || grade.substring(0,1) === 'M' ? 'プロパー' : 'BP'
-      return {
-        id: row.id,
-        category: category,
-        grade: grade,
-        assigned_name: row.assigned_name,
-        es04: row.es04,
-        es05: row.es05,
-        es06: row.es06,
-        es07: row.es07,
-        es08: row.es08,
-        es09: row.es09,
-        es10: row.es10,
-        es11: row.es11,
-        es12: row.es12,
-        es01: row.es01,
-        es02: row.es02,
-        es03: row.es03
-      }
-    })
+        const grade = group_users.filter(group_users => group_users.id === row.assigned_id)[0].grade
+        const category = grade.substring(0,1) === 'G' || grade.substring(0,1) === 'M' ? 'プロパー' : 'BP'
 
-    const summary_data = this.summaryData(details_data)
-    const data = details_data.concat(summary_data)
-    this.state.copyFlag = false
-    return data
+        console.log("row : ", row);
+        console.log("grade : ", grade);
+        console.log("category : ", category);
+
+        return {
+          id: row.id,
+          category: category,
+          grade: grade,
+          assigned_name: row.assigned_name,
+          assigned_id: row.assigned_id,
+          es04: row.es04,
+          es05: row.es05,
+          es06: row.es06,
+          es07: row.es07,
+          es08: row.es08,
+          es09: row.es09,
+          es10: row.es10,
+          es11: row.es11,
+          es12: row.es12,
+          es01: row.es01,
+          es02: row.es02,
+          es03: row.es03
+        }
+      })
+
+      this.setState({
+        details: [
+          ...details_data,
+        ]
+      })
+
+      const summary_data = this.summaryData(details_data)
+      const data = details_data.concat(summary_data)
+      this.state.copyFlag = false
+      return data
+    }
+    else {
+      console.log("details : ", this.state.details);
+      return this.state.details.concat(this.state.summary)
+    }
   }
-  else {
-    return this.state.details.concat(this.state.summary)
-  }
 
-
-
+  rowData0 = (id, issue_rows) => {
+    const guide = JSON.parse(JSON.stringify(issue_rows.filter(row => row.parent === id && row.id === id)))
+    return {
+      category: "山積工数",
+      es04: guide[0].es04,
+      es05: guide[0].es05,
+      es06: guide[0].es06,
+      es07: guide[0].es07,
+      es08: guide[0].es08,
+      es09: guide[0].es09,
+      es10: guide[0].es10,
+      es11: guide[0].es11,
+      es12: guide[0].es12,
+      es01: guide[0].es01,
+      es02: guide[0].es02,
+      es03: guide[0].es03
+    }
   }
 
   initInfo = (id,issue_rows) => {
@@ -237,7 +366,7 @@ export default class Issue extends Component {
       margin: 12,
       width: 600,
       height: 200,
-      display: 'inline-block',
+      display: 'inline-wblock',
     },
     listItem: {
       height: 2,
@@ -274,8 +403,10 @@ export default class Issue extends Component {
   }
 
   onClick2 = event => {
-    this.setState({copyFlag : true})
-    this.setState({register_processing: false})
+    this.setState({
+      register_processing: false,
+      copyFlag : true
+    })
     this.props.onClickChangeIssueSubmit(this.state.change_data)
   }
 
@@ -408,29 +539,50 @@ export default class Issue extends Component {
     // return [...id_filtered_rows, ...id_unfiltered_rows]
   }
 
-  //カラムヘッダー定義
+  //カラムヘッダー定義(要員計画)
   colHeaders = ["#", "種別", "所属", "氏名",
     '4月' , '5月','6月', '7月', '8月', '9月',
     '10月', '11月', '12月', '1月', '2月', '3月']
+  //カラムヘッダー定義(山積＆作業工数の算出)
+  colHeaders0 = ["種別",
+    '4月' , '5月','6月', '7月', '8月', '9月',
+    '10月', '11月', '12月', '1月', '2月', '3月']
 
-  //カラムデータ定義
+  //カラムデータ定義(要員計画)
   columns = [
-    { data: 'id', editor: false },
-    { data: 'category', editor: false },
-    { data: 'grade', editor: false },
-    { data: 'assigned_name', editor: false },
-    { data: 'es04', type: 'numeric', allowInvalid: false, format: '0.00' },
-    { data: 'es05', type: 'numeric', allowInvalid: false, format: '0.00' },
-    { data: 'es06', type: 'numeric', allowInvalid: false, format: '0.00' },
-    { data: 'es07', type: 'numeric', allowInvalid: false, format: '0.00' },
-    { data: 'es08', type: 'numeric', allowInvalid: false, format: '0.00' },
-    { data: 'es09', type: 'numeric', allowInvalid: false, format: '0.00' },
-    { data: 'es10', type: 'numeric', allowInvalid: false, format: '0.00' },
-    { data: 'es11', type: 'numeric', allowInvalid: false, format: '0.00' },
-    { data: 'es12', type: 'numeric', allowInvalid: false, format: '0.00' },
-    { data: 'es01', type: 'numeric', allowInvalid: false, format: '0.00' },
-    { data: 'es02', type: 'numeric', allowInvalid: false, format: '0.00' },
-    { data: 'es03', type: 'numeric', allowInvalid: false, format: '0.00' }
+    { data: 'id', readOnly: true, width: 40 },
+    { data: 'category', readOnly: true, width: 60 },
+    { data: 'grade', readOnly: true, width: 60 },
+    { data: 'assigned_name', readOnly: true, width: 150 },
+    { data: 'es04', type: 'numeric', allowInvalid: false, format: '0.00', width: 50 },
+    { data: 'es05', type: 'numeric', allowInvalid: false, format: '0.00', width: 50 },
+    { data: 'es06', type: 'numeric', allowInvalid: false, format: '0.00', width: 50 },
+    { data: 'es07', type: 'numeric', allowInvalid: false, format: '0.00', width: 50 },
+    { data: 'es08', type: 'numeric', allowInvalid: false, format: '0.00', width: 50 },
+    { data: 'es09', type: 'numeric', allowInvalid: false, format: '0.00', width: 50 },
+    { data: 'es10', type: 'numeric', allowInvalid: false, format: '0.00', width: 50 },
+    { data: 'es11', type: 'numeric', allowInvalid: false, format: '0.00', width: 50 },
+    { data: 'es12', type: 'numeric', allowInvalid: false, format: '0.00', width: 50 },
+    { data: 'es01', type: 'numeric', allowInvalid: false, format: '0.00', width: 50 },
+    { data: 'es02', type: 'numeric', allowInvalid: false, format: '0.00', width: 50 },
+    { data: 'es03', type: 'numeric', allowInvalid: false, format: '0.00', width: 50 },
+  ]
+
+  //カラムデータ定義(山積＆作業工数の算出)
+  columns0 = [
+    { data: 'category', readOnly: true, width: 310 },
+    { data: 'es04', type: 'numeric', allowInvalid: false, format: '0.00', width: 50 },
+    { data: 'es05', type: 'numeric', allowInvalid: false, format: '0.00', width: 50 },
+    { data: 'es06', type: 'numeric', allowInvalid: false, format: '0.00', width: 50 },
+    { data: 'es07', type: 'numeric', allowInvalid: false, format: '0.00', width: 50 },
+    { data: 'es08', type: 'numeric', allowInvalid: false, format: '0.00', width: 50 },
+    { data: 'es09', type: 'numeric', allowInvalid: false, format: '0.00', width: 50 },
+    { data: 'es10', type: 'numeric', allowInvalid: false, format: '0.00', width: 50 },
+    { data: 'es11', type: 'numeric', allowInvalid: false, format: '0.00', width: 50 },
+    { data: 'es12', type: 'numeric', allowInvalid: false, format: '0.00', width: 50 },
+    { data: 'es01', type: 'numeric', allowInvalid: false, format: '0.00', width: 50 },
+    { data: 'es02', type: 'numeric', allowInvalid: false, format: '0.00', width: 50 },
+    { data: 'es03', type: 'numeric', allowInvalid: false, format: '0.00', width: 50 },
   ]
 
   render() {
@@ -483,18 +635,39 @@ export default class Issue extends Component {
               onChange={this.onChange3}
               />
             <br />
+            <div>　■山積＆予定工数</div>
+            <div style={this.styles.hot}>
+              <HotTable
+                floatingLabelText={<span style={{fontSize: 16}}>山積＆作業工数の算出</span>}
+                root="hot0"
+                //functionを新たに作る
+                data={this.rowData0(this.state.id, this.props.issue_rows)}
+                colHeaders={this.colHeaders0}
+                columns={this.columns0}
+                columnSorting={true}
+                readOnly={true}
+                width="910"
+                stretchH="all"
+                fixedColumnsLeft="3"
+                manualColumnResize={true}
+                fillHandle={false}
+                />
+            </div>
+            <br />
+            <div>　■要員計画</div>
             <div style={this.styles.hot}>
               <HotTable
                 floatingLabelText={<span style={{fontSize: 16}}>要員計画</span>}
-                root="hot"
+                root="hot1"
                 data={this.rowData(this.state.id, this.props.issue_rows, this.props.groupUsers, null)}
                 colHeaders={this.colHeaders}
                 columns={this.columns}
                 columnSorting={true}
-                width="1000"
+                width="910"
                 stretchH="all"
                 fixedColumnsLeft="3"
                 manualColumnResize={true}
+                fillHandle={false}
                 afterChange={this.onChange2}
                 />
             </div>
