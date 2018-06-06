@@ -68,7 +68,7 @@ export default class Issue extends Component {
   }
 
   summaryData = (Details_Data) => {
-    console.log("Flagだよ : ", this.state.copyFlag);
+    // console.log("Flagだよ : ", this.state.copyFlag);
     if(this.state.copyFlag === false) {
       if(Details_Data.length === 0) {
         // console.log("0行の場合")
@@ -255,6 +255,8 @@ export default class Issue extends Component {
 
   rowData = (id, issue_rows, group_users, changes) => {
     console.log("rowDataだよ");
+    console.log("issue_rows : ",issue_rows);
+    console.log("this.state.copyFlag : ",this.state.copyFlag);
     //オブジェクトの値渡し
     // console.log("Flag:", this.state.copyFlag);
     if(this.state.copyFlag === true) {
@@ -273,8 +275,8 @@ export default class Issue extends Component {
     //編集後の値で明細表示
     // let details_data
     // let summary_data
-    console.log("copyFlagだ : ", this.state.copyFlag);
-    console.log("changes : ", changes);
+    // console.log("copyFlagだ : ", this.state.copyFlag);
+    // console.log("changes : ", changes);
 
 
     if(this.state.copyFlag === true || changes !== null) {
@@ -282,9 +284,9 @@ export default class Issue extends Component {
         const grade = group_users.filter(group_users => group_users.id === row.assigned_id)[0].grade
         const category = grade.substring(0,1) === 'G' || grade.substring(0,1) === 'M' ? 'プロパー' : 'BP'
 
-        console.log("row : ", row);
-        console.log("grade : ", grade);
-        console.log("category : ", category);
+        // console.log("row : ", row);
+        // console.log("grade : ", grade);
+        // console.log("category : ", category);
 
         return {
           id: row.id,
@@ -316,10 +318,11 @@ export default class Issue extends Component {
       const summary_data = this.summaryData(details_data)
       const data = details_data.concat(summary_data)
       this.state.copyFlag = false
+      // console.log("this.state.details : ",this.state.details)
       return data
     }
     else {
-      console.log("details : ", this.state.details);
+      // console.log("details : ", this.state.details);
       return this.state.details.concat(this.state.summary)
     }
   }
@@ -407,7 +410,6 @@ export default class Issue extends Component {
   onClick2 = event => {
     this.setState({
       register_processing: false,
-      copyFlag : true,
       status: "processing"
     })
     this.props.onClickChangeIssueSubmit(this.state.change_data)
@@ -421,12 +423,11 @@ export default class Issue extends Component {
     const id_filtered_rows = this.props.issue_rows.filter(row => row.id === this.state.id)
     this.props.onClickAddMemberSubmit(id_filtered_rows[0], this.state.addMemberForm.assigned)
     this.setState({
-      copyFlag : true,
       addMemberForm: {
         assigned: "",
         assigned_name: ""
       },
-      status: "processing"
+      status: "processing",
     })
   }
 
@@ -441,7 +442,6 @@ export default class Issue extends Component {
         assigned_name: ""
       },
       status: "none",
-      copyFlag : true
     })
   }
 
@@ -450,7 +450,11 @@ export default class Issue extends Component {
   }
 
   onClickOK = event => {
-    this.setState({status: "inputting"})
+    this.setState({
+      status: "none",
+      copyFlag : true
+    })
+    this.rowData(this.state.id, this.props.issue_rows, this.props.group_users, null)
   }
 
   onChange1 = (event, key, payload) => {
@@ -558,7 +562,7 @@ export default class Issue extends Component {
   required = value => value === "" ? "この項目は必須入力項目です。" : ""
   allRequired = form => {
     return (
-      form.assigned     === ""
+      form.assigned === ""
     )
   }
 
@@ -609,15 +613,15 @@ export default class Issue extends Component {
   ]
 
   render() {
+    // console.log("render start");
+
     const actionPostIssueSubmit = [
-      <Link to='/issue'>
-        <FlatButton
-          label="Submit"
-          primary={true}
-          keyboardFocused={true}
-          onClick={this.onClick2}
-        />
-      </Link>,
+      <FlatButton
+        label="Submit"
+        primary={true}
+        keyboardFocused={true}
+        onClick={this.onClick2}
+      />
     ]
 
     const actionPostIssueConfirm = [
@@ -638,7 +642,7 @@ export default class Issue extends Component {
     const actionSubmit = [
       <FlatButton
         label="Cancel"
-        secondary={true}
+        primary={false}
         onClick={this.onClickCancel}
       />,
       <FlatButton
@@ -665,15 +669,14 @@ export default class Issue extends Component {
       />,
     ]
 
+    // <Link to={`/issue`}>
     const actionOK = [
-      <Link to={`/issue_edit/${this.state.id}`}>
-        <FlatButton
-          label="OK"
-          primary={true}
-          keyboardFocused={true}
-          onClick={this.onClickOK}
-        />
-      </Link>,
+      <FlatButton
+        label="OK"
+        primary={true}
+        keyboardFocused={true}
+        onClick={this.onClickOK}
+      />
     ]
 
     return (
@@ -737,7 +740,7 @@ export default class Issue extends Component {
             <Link to='/issue'>
               <FlatButton
                 label="Cancel"
-                primary={true}
+                primary={false}
               />
             </Link>
             <FlatButton

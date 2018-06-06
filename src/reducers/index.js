@@ -52,7 +52,8 @@ const reducer = (state = initState, action) => {
     }
     case ActionTypes.SET_ISSUE_ROWS: {
       const issue_rows = action.payload.issue_rows
-      return {...state, issue_rows}
+      const isLoading = false
+      return {...state, issue_rows, isLoading}
     }
     case ActionTypes.SET_ISLOADING: {
       const isLoading = action.payload.bool
