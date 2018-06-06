@@ -6,7 +6,8 @@ const mapStateToProps = (state, ownProps) => ({
   id: ownProps.match.params.id,
   issue_rows: state.reducers.issue_rows,
   issue_cost_rows: state.reducers.issue_cost_rows,
-  groupUsers: state.reducers.groupUsers
+  groupUsers: state.reducers.groupUsers,
+  isLoading: state.reducers.isLoading,
 })
 
 const mapDispatchToProps = dispatch => ({

@@ -118,6 +118,7 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
 
   if (action.type === ActionTypes.REGISTER_ISSUE) {
     console.log("REGISTER_ISSUE START");
+    dispatch(Actions.setIsLoading(true))
     const form = action.payload.form
     const selected_project_id = Number(getState().reducers.selected_project_id)
     const issue = {
@@ -162,12 +163,16 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
     }
     RedmineAPI.postIssue(issue)
     .then(result => {
-      console.log(result)
       dispatch(Actions.getIssueRows())
+    })
+    .then(result => {
+      dispatch(Actions.setIsLoading(false))
     })
   }
 
   if (action.type === ActionTypes.ISSUE_ADD_MEMBER) {
+    console.log("issueAddMember start");
+    dispatch(Actions.setIsLoading(true))
     const assigned = action.payload.assigned
     const selected_project_id = Number(getState().reducers.selected_project_id)
     const issue = {
@@ -213,16 +218,20 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
     }
     RedmineAPI.postIssueMember(issue)
     .then(result => {
-      console.log(result)
+      console.log("issueAddMember start");
       dispatch(Actions.getIssueRows())
+    })
+    .then(result => {
+      dispatch(Actions.setIsLoading(false))
     })
   }
 
   if (action.type === ActionTypes.CHANGE_ISSUE) {
     console.log("CHANGE_ISSUE START");
+    dispatch(Actions.setIsLoading(true))
     const change_data = action.payload.change_data
     const change_rows = []
-    console.log(change_data)
+
     for(let i=0; i<change_data.id.length; i++){
       if(change_rows.length === 0){
         change_rows.push({
@@ -243,8 +252,7 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
         }
       }
     }
-    console.log('promiseの前');
-    console.log(change_rows)
+
     Promise.resolve()
       .then(() => {
         for(let i in change_rows){
@@ -284,14 +292,10 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
         }
       })
       .then(() => dispatch(Actions.getIssueRows()))
+      .then(result => {
+        dispatch(Actions.setIsLoading(false))
+      })
   }
-
-
-  //Loadingを有効化
-  // if ([ActionTypes.REGISTER_ISSUE]
-  //     .includes(action.type)) {
-  //   dispatch(Actions.setLoading(true))
-  // }
 
   next(action)
 }
