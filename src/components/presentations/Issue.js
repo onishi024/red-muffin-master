@@ -10,7 +10,6 @@ export default class Issue extends Component {
 
   //constructor
   constructor(props) {
-    console.log("コンストラクター疎通！！！");
     super(props)
     const id = props.match.params.id
     this.state = {
@@ -68,7 +67,6 @@ export default class Issue extends Component {
   }
 
   summaryData = (Details_Data) => {
-    // console.log("Flagだよ : ", this.state.copyFlag);
     if(this.state.copyFlag === false) {
       if(Details_Data.length === 0) {
         // console.log("0行の場合")
@@ -256,10 +254,10 @@ export default class Issue extends Component {
     }
   }
 
-  rowData = (id, issue_rows, group_users, changes) => {
-    console.log("rowDataだよ");
-    console.log("issue_rows : ",issue_rows);
-    console.log("this.state.copyFlag : ",this.state.copyFlag);
+  rowData = (id, issue_rows, group_users, changes, i) => {
+    // console.log("rowDataだよ");
+    // console.log("issue_rows : ",issue_rows);
+    // console.log("this.state.copyFlag : ",this.state.copyFlag);
     //オブジェクトの値渡し
     // console.log("Flag:", this.state.copyFlag);
     if(this.state.copyFlag === true) {
@@ -273,7 +271,7 @@ export default class Issue extends Component {
 
     //編集された場合にローカルステートを更新する
     if(changes !== undefined && changes !== null) {
-      eval("this.state.details[" + changes[0][0] + "]." + changes[0][1] + "=" + changes[0][3])
+        eval("this.state.details[" + changes[i][0] + "]." + changes[i][1] + "=" + changes[i][3])
     }
     //編集後の値で明細表示
     // let details_data
@@ -479,7 +477,7 @@ export default class Issue extends Component {
       status: "none",
       copyFlag : true
     })
-    this.rowData(this.state.id, this.props.issue_rows, this.props.group_users, null)
+    this.rowData(this.state.id, this.props.issue_rows, this.props.group_users, null, null)
   }
 
   onChange1 = (event, key, payload) => {
@@ -502,17 +500,15 @@ export default class Issue extends Component {
       for (let i in changes) {
         if(changes[i][3] === "") {
           changes[i][3] = 0.0
-          console.log("変換したよ");
         }
         const change_row = changes[i][0]
         const change_key = changes[i][1]
         const change_value = changes[i][3]
         //issue_rows全体から案件登録画面に表示されている案件の子チケットのみを絞り込む
 
-        const row_data = this.rowData(this.state.id, this.props.issue_rows, this.props.groupUsers, changes)
+        const row_data = this.rowData(this.state.id, this.props.issue_rows, this.props.groupUsers, changes, i)
         // console.log("this.state.summary:",this.state.summary);
         // localState.change_dataが空の場合は無条件で要素を追加
-        console.log("lengthだよ", this.state.change_data.id.length);
 
         if(this.state.change_data.id.length === 0){
           this.state.change_data.id.push(row_data[change_row]["id"])
@@ -744,7 +740,7 @@ export default class Issue extends Component {
                 width="910"
                 stretchH="all"
                 fixedColumnsLeft="3"
-                manualColumnResize={true}
+                manualColumnResize={false}
                 fillHandle={false}
                 />
               <HotTable
@@ -757,7 +753,7 @@ export default class Issue extends Component {
                 width="910"
                 stretchH="all"
                 fixedColumnsLeft="3"
-                manualColumnResize={true}
+                manualColumnResize={false}
                 fillHandle={false}
                 />
             </div>
@@ -767,16 +763,17 @@ export default class Issue extends Component {
               <HotTable
                 floatingLabelText={<span style={{fontSize: 16}}>要員計画</span>}
                 root="hot1"
-                data={this.rowData(this.state.id, this.props.issue_rows, this.props.groupUsers, null)}
+                data={this.rowData(this.state.id, this.props.issue_rows, this.props.groupUsers, null, null)}
                 colHeaders={this.colHeaders}
                 columns={this.columns}
                 columnSorting={true}
                 width="910"
                 stretchH="all"
                 fixedColumnsLeft="3"
-                manualColumnResize={true}
+                manualColumnResize={false}
                 fillHandle={false}
                 afterChange={this.onChange2}
+                columnSorting={true}
                 />
               <HotTable
                 floatingLabelText={<span style={{fontSize: 16}}>予定工数</span>}
@@ -788,7 +785,7 @@ export default class Issue extends Component {
                 width="910"
                 stretchH="all"
                 fixedColumnsLeft="3"
-                manualColumnResize={true}
+                manualColumnResize={false}
                 fillHandle={false}
                 />
             </div>
@@ -819,7 +816,7 @@ export default class Issue extends Component {
             >
             </Dialog>
             <Dialog
-              title="addMember"
+              title="要員追加"
               actions={actionSubmit}
               modal={true}
               open={this.state.status === "inputing"}
