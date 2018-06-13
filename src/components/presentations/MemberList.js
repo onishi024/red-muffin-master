@@ -53,8 +53,7 @@ const MemberList = ({show_hided_issue, issue_rows, selected_group_id, selected_y
       let element = result
       if (element.length === 0) {
         result.push({...current})
-        result[0].assigned_id = "集計"
-        result[0].assigned_name = "-"
+        result[0].ankenno = "集計"
         result[0].title = "-  "
       } else {
         element[0].es04 += current.es04
@@ -89,16 +88,15 @@ const MemberList = ({show_hided_issue, issue_rows, selected_group_id, selected_y
   }
 
   //カラムヘッダー定義_要員別山積
-  const colHeaders1 = ["#", "氏名", "所属", "種別",
+  const colHeaders1 = ["氏名", "所属", "種別",
     '4月' , '5月','6月', '7月', '8月', '9月',
     '10月', '11月', '12月', '1月', '2月', '3月']
 
 　//カラム幅定義_要員別集計
-  const colwidths1 = [80, 160, 100, 100, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80]
+  const colwidths1 = [220, 120, 120, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50]
 
   //カラムデータ定義_要員別山積
   const columns1 = [
-    { data: 'assigned_id', editor: false, readOnly: true },
     { data: 'assigned_name', editor: false, readOnly: true },
     { data: 'category', editor: false, readOnly: true },
     { data: 'grade', editor: false, readOnly: true },
@@ -117,17 +115,16 @@ const MemberList = ({show_hided_issue, issue_rows, selected_group_id, selected_y
   ]
 
   //カラムヘッダー定義_要員別集計
-  const colHeaders2 = ["#", "氏名", "案件名",
+  const colHeaders2 = ["案件番号", "案件名",
     '4月' , '5月','6月', '7月', '8月', '9月',
     '10月', '11月', '12月', '1月', '2月', '3月']
 
   //カラム幅定義_要員別集計
-  const colwidths2 = [80, 160, 560, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80]
+  const colwidths2 = [80, 380, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50]
 
   //カラムデータ定義_要員別集計
   const columns2 = [
-    { data: 'assigned_id', editor: false, readOnly: true },
-    { data: 'assigned_name', editor: false, readOnly: true },
+    { data: 'ankenno', editor: false, readOnly: true },
     { data: 'title', editor: false, readOnly: true },
     { data: 'es04', type: 'numeric', allowInvalid: false, format: '0.00', readOnly: true },
     { data: 'es05', type: 'numeric', allowInvalid: false, format: '0.00', readOnly: true },
@@ -154,7 +151,7 @@ const MemberList = ({show_hided_issue, issue_rows, selected_group_id, selected_y
         data={rowData1(issue_rows, group_users)}
         colHeaders={colHeaders1}
         colWidths={colwidths1}
-        width="1400"
+        width="1200"
         columns={columns1}
         columnSorting={true}
         stretchH="all"
@@ -172,16 +169,16 @@ const MemberList = ({show_hided_issue, issue_rows, selected_group_id, selected_y
         data={rowData2(issue_rows, selected_member)}
         colHeaders={colHeaders2}
         colWidths={colwidths2}
-        width={1760}
+        width="1200"
         columns={columns2}
         columnSorting={true}
         stretchH="all"
         manualColumnResize={true}
         fillHandle={false}
-        mergeCells={[
-          {row:0, col:0, rowspan:issue_rows.filter(issue_row => issue_row.assigned_id === selected_member && issue_row.parent !== issue_row.id).length, colspan:1},
-          {row:0, col:1, rowspan:issue_rows.filter(issue_row => issue_row.assigned_id === selected_member && issue_row.parent !== issue_row.id).length, colspan:1}
-        ]}
+        // mergeCells={[
+        //   {row:0, col:0, rowspan:issue_rows.filter(issue_row => issue_row.assigned_id === selected_member && issue_row.parent !== issue_row.id).length, colspan:1},
+        //   {row:0, col:1, rowspan:issue_rows.filter(issue_row => issue_row.assigned_id === selected_member && issue_row.parent !== issue_row.id).length, colspan:1}
+        // ]}
       />
     </div>,
   ]
@@ -190,8 +187,10 @@ const MemberList = ({show_hided_issue, issue_rows, selected_group_id, selected_y
     <MuiThemeProvider>
       <div>
         <div style={styles.path}><Link to={`/`}>Home</Link>> 要員別山積表</div>
+        <div style={styles.path}>要員別集計</div>
           {hotTable1}
           <Divider/>
+        <div style={styles.path}>要員別山積</div>
           {hotTable2}
       </div>
     </MuiThemeProvider>
