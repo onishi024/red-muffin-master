@@ -50,14 +50,15 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
   }
 
   if (action.type === ActionTypes.GET_PROJECTS) {
-    const selected_identifier = getState().reducers.selected_identifier
+    const selected_name = getState().reducers.selected_name
     const selected_year = getState().reducers.selected_year
     RedmineAPI.getProjects()
       .then(_projects => {
         let selected_project_id
         for (let i in _projects) {
-          if(_projects[i].identifier === selected_identifier && _projects[i].custom_fields[0].value === selected_year){
+          if(_projects[i].name === selected_name && _projects[i].custom_fields[0].value === selected_year){
             selected_project_id = _projects[i].id
+            return selected_project_id
           }
         }
         return selected_project_id
@@ -264,16 +265,16 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
           {"id": 18, "value": ""}, //実績05月
           {"id": 19, "value": ""}, //実績06月
           {"id": 20, "value": ""}, //実績07月
-          {"id": 22, "value": ""}, //実績08月
-          {"id": 24, "value": ""}, //実績09月
-          {"id": 25, "value": ""}, //実績10月
-          {"id": 26, "value": ""}, //実績11月
-          {"id": 27, "value": ""}, //実績12月
-          {"id": 28, "value": ""}, //実績01月
-          {"id": 29, "value": ""}, //実績02月
-          {"id": 30, "value": ""}, //実績03月
-          {"id": 16, "value": true},  //表示フラグ
-          {"id": 31, "value": ""}, //備考
+          {"id": 21, "value": ""}, //実績08月
+          {"id": 22, "value": ""}, //実績09月
+          {"id": 23, "value": ""}, //実績10月
+          {"id": 24, "value": ""}, //実績11月
+          {"id": 25, "value": ""}, //実績12月
+          {"id": 26, "value": ""}, //実績01月
+          {"id": 27, "value": ""}, //実績02月
+          {"id": 28, "value": ""}, //実績03月
+          {"id": 16, "value": "1"},  //表示フラグ
+          {"id": 29, "value": ""}, //備考
         ]
       }
     }
@@ -319,23 +320,23 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
           {"id": 18, "value": ""}, //実績05月
           {"id": 19, "value": ""}, //実績06月
           {"id": 20, "value": ""}, //実績07月
-          {"id": 22, "value": ""}, //実績08月
-          {"id": 24, "value": ""}, //実績09月
-          {"id": 25, "value": ""}, //実績10月
-          {"id": 26, "value": ""}, //実績11月
-          {"id": 27, "value": ""}, //実績12月
-          {"id": 28, "value": ""}, //実績01月
-          {"id": 29, "value": ""}, //実績02月
-          {"id": 30, "value": ""}, //実績03月
-          {"id": 16, "value": 0},  //表示フラグ
-          {"id": 31, "value": ""}, //備考
+          {"id": 21, "value": ""}, //実績08月
+          {"id": 22, "value": ""}, //実績09月
+          {"id": 23, "value": ""}, //実績10月
+          {"id": 24, "value": ""}, //実績11月
+          {"id": 25, "value": ""}, //実績12月
+          {"id": 26, "value": ""}, //実績01月
+          {"id": 27, "value": ""}, //実績02月
+          {"id": 28, "value": ""}, //実績03月
+          {"id": 16, "value": "0"},  //表示フラグ
+          {"id": 29, "value": ""}, //備考
         ]
       }
     }
     RedmineAPI.postIssueMember(issue)
     .then(result => {
       console.log("issueAddMember start");
-      dispatch(Actions.getSubIssueRows())
+      dispatch(Actions.getIssueRows())
     })
   }
 
@@ -372,10 +373,7 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
       if (i > change_rows.length - 1 ) {
         // 全レコードをポストしたらループ終了
         console.log("ループ終わり");
-        return (
-          dispatch(Actions.getParentIssueRows()),
-          dispatch(Actions.getSubIssueRows())
-        )
+        return dispatch(Actions.getIssueRows())
       }else{
         console.log("change_rows[i] : ",change_rows[i]);
         const custom_fields = [
@@ -395,15 +393,15 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
           {"id": 18, "value": undefined}, //実績05月
           {"id": 19, "value": undefined}, //実績06月
           {"id": 20, "value": undefined}, //実績07月
-          {"id": 22, "value": undefined}, //実績08月
-          {"id": 24, "value": undefined}, //実績09月
-          {"id": 25, "value": undefined}, //実績10月
-          {"id": 26, "value": undefined}, //実績11月
-          {"id": 27, "value": undefined}, //実績12月
-          {"id": 28, "value": undefined}, //実績01月
-          {"id": 29, "value": undefined}, //実績02月
-          {"id": 30, "value": undefined}, //実績03月
-          {"id": 31, "value": change_rows[i].note !== undefined ? change_rows[i].note : undefined}, //備考
+          {"id": 21, "value": undefined}, //実績08月
+          {"id": 22, "value": undefined}, //実績09月
+          {"id": 23, "value": undefined}, //実績10月
+          {"id": 24, "value": undefined}, //実績11月
+          {"id": 25, "value": undefined}, //実績12月
+          {"id": 26, "value": undefined}, //実績01月
+          {"id": 27, "value": undefined}, //実績02月
+          {"id": 28, "value": undefined}, //実績03月
+          {"id": 29, "value": change_rows[i].note !== undefined ? change_rows[i].note : undefined}, //備考
         ]
         const issue = {
           issue: {

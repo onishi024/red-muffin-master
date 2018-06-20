@@ -33,7 +33,7 @@ export const getUsers = (id) =>
   .then(json => json.user)
 
 export const getProjects = () =>
-  fetch(url + `projects.json`,
+  fetch(url + `projects.json?limit=100`,
     {method: 'GET',
      headers: headers})
   .then(response => response.json())
