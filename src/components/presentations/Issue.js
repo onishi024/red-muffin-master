@@ -284,7 +284,7 @@ export default class Issue extends Component {
         const grade = group_users.filter(group_users => group_users.id === row.assigned_id)[0].grade
         const category = grade.substring(0,1) === 'G' || grade.substring(0,1) === 'M' ? 'プロパー' : 'BP'
 
-        // console.log("row : ", row);
+        console.log("row : ", row);
         // console.log("grade : ", grade);
         // console.log("category : ", category);
 
@@ -492,7 +492,7 @@ export default class Issue extends Component {
     })
   }
 
-  onChange2 = (changes, source) => {
+  onChange2 = (changes, source, row_data) => {
     if(source === 'edit' || source === 'CopyPaste.paste'){
       // 変更された要素をlocalState.change_dataに保存
       // 画面で同一項目が複数回更新され場合はlocalState.change_dataを上書き
@@ -535,6 +535,8 @@ export default class Issue extends Component {
   }
 
   onChange3 = (event, newValue) => {
+    console.log("event : ",event);
+    console.log("newValue : ",newValue);
     if(this.state.change_data.id.length === 0){
       this.state.change_data.id.push(this.state.id)
       this.state.change_data.key.push("note")
@@ -585,11 +587,13 @@ export default class Issue extends Component {
   }
 
   //required check
-  required = value => value === "" ? "この項目は必須入力項目です。" : ""
-  allRequired = form => {
-    return (
-      form.assigned === ""
-    )
+  required = value => {
+    const error_text = value === ""
+                     ? "この項目は必須入力項目です。"
+                     : this.rowData(this.state.id, this.props.issue_rows, this.props.groupUsers, null, null).filter(row => row.assigned_id === value).length >= 1
+                     ? "既に追加されている要員です。"
+                     : ""
+    return error_text
   }
 
   //カラムヘッダー定義
@@ -639,7 +643,7 @@ export default class Issue extends Component {
   ]
 
   render() {
-    // console.log("render start");
+    console.log("render start");
 
     const actionPostIssueSubmit = [
       <FlatButton
@@ -676,7 +680,8 @@ export default class Issue extends Component {
         primary={true}
         keyboardFocused={true}
         onClick={this.onClickSubmit}
-        disabled={this.allRequired(this.state.addMemberForm)}
+        disabled={this.required(this.state.addMemberForm.assigned) !== "" ? true : false}
+        // disabled={this.allRequired(this.state.addMemberForm)}
       />,
     ]
 
@@ -730,21 +735,19 @@ export default class Issue extends Component {
             <div>　■山積＆予定工数</div>
             <div style={this.styles.hot}>
               <HotTable
-                floatingLabelText={<span style={{fontSize: 16}}>山積＆作業工数の算出</span>}
                 root="hot0"
                 data={this.rowData0(this.state.id, this.props.issue_rows)}
                 colHeaders={this.colHeaders0}
                 columns={this.columns0}
                 columnSorting={true}
-                readOnly={true}
                 width="910"
                 stretchH="all"
                 fixedColumnsLeft="3"
                 manualColumnResize={false}
                 fillHandle={false}
+                afterChange={this.onChange4}
                 />
               <HotTable
-                floatingLabelText={<span style={{fontSize: 16}}>山積＆作業工数の算出</span>}
                 root="hot3"
                 data={this.rowData2(this.state.summary)}
                 columns={this.columns0}
@@ -761,7 +764,6 @@ export default class Issue extends Component {
             <div>　■要員計画</div>
             <div style={this.styles.hot}>
               <HotTable
-                floatingLabelText={<span style={{fontSize: 16}}>要員計画</span>}
                 root="hot1"
                 data={this.rowData(this.state.id, this.props.issue_rows, this.props.groupUsers, null, null)}
                 colHeaders={this.colHeaders}
@@ -773,10 +775,8 @@ export default class Issue extends Component {
                 manualColumnResize={false}
                 fillHandle={false}
                 afterChange={this.onChange2}
-                columnSorting={true}
                 />
               <HotTable
-                floatingLabelText={<span style={{fontSize: 16}}>予定工数</span>}
                 root="hot2"
                 data={this.state.summary}
                 columns={this.columns0}

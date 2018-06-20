@@ -94,19 +94,20 @@ const reducer = (state = initState, action) => {
     }
     //IssueList
     case ActionTypes.TOGGLE_HIDE: {
+      console.log("toggle hide dispatch");
       const show_hided_issue = !state.show_hided_issue
       return {...state, show_hided_issue}
     }
     case ActionTypes.TOGGLE_ISSUE_HIDE: {
       const current_id = action.payload.id
       const toggled_bool = action.payload.bool
-      const issue_rows = state.issue_rows.map(issue_row => {
-        if (issue_row.id === current_id) {
-          issue_row.hide = toggled_bool
+      const parent_issue_rows = state.parent_issue_rows.map(parent_issue_row => {
+        if (parent_issue_row.id === current_id) {
+          parent_issue_row.hide = toggled_bool
         }
-        return issue_row
+        return parent_issue_row
       })
-      return {...state, issue_rows, current_id}
+      return {...state, parent_issue_rows, current_id}
     }
     case ActionTypes.ONOFF_SNACKBAR: {
       const snackbar_open = !state.snackbar_open

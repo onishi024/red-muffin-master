@@ -335,7 +335,7 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
     RedmineAPI.postIssueMember(issue)
     .then(result => {
       console.log("issueAddMember start");
-      dispatch(Actions.getIssueRows())
+      dispatch(Actions.getSubIssueRows())
     })
   }
 
@@ -372,7 +372,10 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
       if (i > change_rows.length - 1 ) {
         // 全レコードをポストしたらループ終了
         console.log("ループ終わり");
-        return dispatch(Actions.getIssueRows())
+        return (
+          dispatch(Actions.getParentIssueRows()),
+          dispatch(Actions.getSubIssueRows())
+        )
       }else{
         console.log("change_rows[i] : ",change_rows[i]);
         const custom_fields = [
