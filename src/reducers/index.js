@@ -108,7 +108,7 @@ const reducer = (state = initState, action) => {
         return parent_issue_row
       })
       return {...state, parent_issue_rows, current_id}
-    }
+    } 
     case ActionTypes.ONOFF_SNACKBAR: {
       const snackbar_open = !state.snackbar_open
       return {...state, snackbar_open}
