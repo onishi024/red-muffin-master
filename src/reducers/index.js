@@ -15,6 +15,8 @@ const initState = {
   selected_issue: '0',
   issues: [],
   issue_rows: [],
+  parent_issue_rows: [],
+  sub_issue_rows: [],
   members: [
     {id: "0", name: "未アサイン", grade: "-"}, //id:0は未アサイン固定
     {id: "1", name: "西住みほ", grade: "G3b"},
@@ -47,13 +49,27 @@ const reducer = (state = initState, action) => {
       return {...state, years}
     }
     case ActionTypes.SET_PROJECTS: {
+      console.log("SET_PROJECTS");
       const selected_project_id = action.payload.projects_id
       return {...state, selected_project_id}
     }
     case ActionTypes.SET_ISSUE_ROWS: {
       const issue_rows = action.payload.issue_rows
       const isLoading = false
+      console.log("issue_rows: ",issue_rows)
       return {...state, issue_rows, isLoading}
+    }
+    case ActionTypes.SET_PARENT_ISSUE_ROWS: {
+      const parent_issue_rows = action.payload.issue_rows
+      const isLoading = false
+      console.log("parent_issue_rows: ",parent_issue_rows)
+      return {...state, parent_issue_rows, isLoading}
+    }
+    case ActionTypes.SET_SUB_ISSUE_ROWS: {
+      const sub_issue_rows = action.payload.issue_rows
+      const isLoading = false
+      console.log("sub_issue_rows: ",sub_issue_rows)
+      return {...state, sub_issue_rows, isLoading}
     }
     case ActionTypes.SET_ISLOADING: {
       const isLoading = action.payload.bool

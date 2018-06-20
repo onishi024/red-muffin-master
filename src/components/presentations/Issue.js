@@ -862,17 +862,3 @@ export default class Issue extends Component {
   }
 
 }
-
-// <div style={this.styles.ankenname}>#{this.state.id} : {this.props.issue_rows[0].ankenname}</div>
-
-// cells={cellSetting}
-// afterChange={_onChangeRows}
-
-// <Subheader style={this.styles.subHeader}>案件名</Subheader>
-// <ListItem style={this.styles.listItem} disabled='true' primaryText={this.props.issue_rows[3].title} />
-// <Subheader style={this.styles.subHeader}>案件番号</Subheader>
-// <ListItem style={this.styles.listItem} disabled='true' primaryText={this.props.issue_rows[3].ankenno} />
-// <Subheader style={this.styles.subHeader}>内部管理番号</Subheader>
-// <ListItem style={this.styles.listItem} disabled='true' primaryText={this.props.issue_rows[3].naibukanrino} />
-// <Subheader style={this.styles.subHeader}>主担当</Subheader>
-// <ListItem style={this.styles.listItem} disabled='true' primaryText={this.props.issue_rows[3].assigned} />

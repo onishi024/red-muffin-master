@@ -63,10 +63,15 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
         return selected_project_id
       })
       .then(projects => dispatch(Actions.setProjects(projects)))
-      .then(() => dispatch(Actions.getIssueRows()))
+      .then(() => {
+        dispatch(Actions.getParentIssueRows()),
+        dispatch(Actions.getSubIssueRows())
+      })
+      // .then(() => dispatch(Actions.getIssueRows()))
   }
 
   if (action.type === ActionTypes.GET_ISSUE_ROWS) {
+    console.log("GET_ISSUE_ROWS START");
     let selected_offset = 0
     const selected_project_id = getState().reducers.selected_project_id
     let get = RedmineAPI.getIssues(selected_project_id,selected_offset)
@@ -78,7 +83,6 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
         return dispatch(Actions.setIssueRows(issue_rows))
       }else{
         //レコードが１件以上ある場合、レコードを配列に格納
-        console.log("GET_ISSUE_ROWS START");
         RedmineAPI.getIssues(selected_project_id,selected_offset)
         .then(_issues => {
           selected_offset = selected_offset + _issues.length
@@ -104,13 +108,125 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
               es01: issue.custom_fields[11].value ? parseFloat(issue.custom_fields[11].value) : 0,
               es02: issue.custom_fields[12].value ? parseFloat(issue.custom_fields[12].value) : 0,
               es03: issue.custom_fields[13].value ? parseFloat(issue.custom_fields[13].value) : 0,
-              hide: issue.custom_fields[26].value === "1" ? true : false,
+              hide: issue.custom_fields[26].value || issue.custom_fields[26].value === "1" ? true : false,
               note: issue.custom_fields[27].value
             })
           })
         })
         //繰り返し処理を行う
-        .then (() => kurikaeshi_calc())
+        .then (() => {
+          console.log("GET_ISSUE_ROWS DONE")
+          kurikaeshi_calc()
+        })
+        // .then (() => kurikaeshi_calc())
+      }
+    }
+    kurikaeshi_calc()
+  }
+
+  if (action.type === ActionTypes.GET_PARENT_ISSUE_ROWS) {
+    console.log("GET_PARENT_ISSUE_ROWS START");
+    let selected_offset = 0
+    const selected_project_id = getState().reducers.selected_project_id
+    let get = RedmineAPI.getParentIssues(selected_project_id,selected_offset)
+    let issue_rows = new Array()
+    let return_count = get.length
+    function kurikaeshi_calc(){
+      if (return_count === 0) {
+        //レコードが0件だった場合、データを返す
+        return dispatch(Actions.setParentIssueRows(issue_rows))
+      }else{
+        //レコードが１件以上ある場合、レコードを配列に格納
+        RedmineAPI.getParentIssues(selected_project_id,selected_offset)
+        .then(_issues => {
+          selected_offset = selected_offset + _issues.length
+          return_count = _issues.length
+          _issues.map(issue => {
+            issue_rows.push({
+              id: String(issue.id),
+              ankenno: issue.custom_fields[0].value,
+              naibukanrino: issue.custom_fields[1].value,
+              title: issue.subject,
+              assigned_id: issue.assigned_to ? issue.assigned_to.id : "",
+              assigned_name: issue.assigned_to ? issue.assigned_to.name : "",
+              parent: issue.parent ? String(issue.parent.id) : String(issue.id),
+              es04: issue.custom_fields[2].value  ? parseFloat(issue.custom_fields[2].value)  : 0,
+              es05: issue.custom_fields[3].value  ? parseFloat(issue.custom_fields[3].value)  : 0,
+              es06: issue.custom_fields[4].value  ? parseFloat(issue.custom_fields[4].value)  : 0,
+              es07: issue.custom_fields[5].value  ? parseFloat(issue.custom_fields[5].value)  : 0,
+              es08: issue.custom_fields[6].value  ? parseFloat(issue.custom_fields[6].value)  : 0,
+              es09: issue.custom_fields[7].value  ? parseFloat(issue.custom_fields[7].value)  : 0,
+              es10: issue.custom_fields[8].value  ? parseFloat(issue.custom_fields[8].value)  : 0,
+              es11: issue.custom_fields[9].value  ? parseFloat(issue.custom_fields[9].value)  : 0,
+              es12: issue.custom_fields[10].value ? parseFloat(issue.custom_fields[10].value) : 0,
+              es01: issue.custom_fields[11].value ? parseFloat(issue.custom_fields[11].value) : 0,
+              es02: issue.custom_fields[12].value ? parseFloat(issue.custom_fields[12].value) : 0,
+              es03: issue.custom_fields[13].value ? parseFloat(issue.custom_fields[13].value) : 0,
+              hide: issue.custom_fields[26].value || issue.custom_fields[26].value === "1" ? true : false,
+              note: issue.custom_fields[27].value
+            })
+          })
+        })
+        //繰り返し処理を行う
+        .then (() => {
+          console.log("GET_PARENT_ISSUE_ROWS DONE")
+          kurikaeshi_calc()
+        })
+        // .then (() => kurikaeshi_calc())
+      }
+    }
+    kurikaeshi_calc()
+  }
+
+  if (action.type === ActionTypes.GET_SUB_ISSUE_ROWS) {
+    console.log("GET_SUB_ISSUE_ROWS START");
+    let selected_offset = 0
+    const selected_project_id = getState().reducers.selected_project_id
+    let get = RedmineAPI.getSubIssues(selected_project_id,selected_offset)
+    let issue_rows = new Array()
+    let return_count = get.length
+    function kurikaeshi_calc(){
+      if (return_count === 0) {
+        //レコードが0件だった場合、データを返す
+        return dispatch(Actions.setSubIssueRows(issue_rows))
+      }else{
+        //レコードが１件以上ある場合、レコードを配列に格納
+        RedmineAPI.getSubIssues(selected_project_id,selected_offset)
+        .then(_issues => {
+          selected_offset = selected_offset + _issues.length
+          return_count = _issues.length
+          _issues.map(issue => {
+            issue_rows.push({
+              id: String(issue.id),
+              ankenno: issue.custom_fields[0].value,
+              naibukanrino: issue.custom_fields[1].value,
+              title: issue.subject,
+              assigned_id: issue.assigned_to ? issue.assigned_to.id : "",
+              assigned_name: issue.assigned_to ? issue.assigned_to.name : "",
+              parent: issue.parent ? String(issue.parent.id) : String(issue.id),
+              es04: issue.custom_fields[2].value  ? parseFloat(issue.custom_fields[2].value)  : 0,
+              es05: issue.custom_fields[3].value  ? parseFloat(issue.custom_fields[3].value)  : 0,
+              es06: issue.custom_fields[4].value  ? parseFloat(issue.custom_fields[4].value)  : 0,
+              es07: issue.custom_fields[5].value  ? parseFloat(issue.custom_fields[5].value)  : 0,
+              es08: issue.custom_fields[6].value  ? parseFloat(issue.custom_fields[6].value)  : 0,
+              es09: issue.custom_fields[7].value  ? parseFloat(issue.custom_fields[7].value)  : 0,
+              es10: issue.custom_fields[8].value  ? parseFloat(issue.custom_fields[8].value)  : 0,
+              es11: issue.custom_fields[9].value  ? parseFloat(issue.custom_fields[9].value)  : 0,
+              es12: issue.custom_fields[10].value ? parseFloat(issue.custom_fields[10].value) : 0,
+              es01: issue.custom_fields[11].value ? parseFloat(issue.custom_fields[11].value) : 0,
+              es02: issue.custom_fields[12].value ? parseFloat(issue.custom_fields[12].value) : 0,
+              es03: issue.custom_fields[13].value ? parseFloat(issue.custom_fields[13].value) : 0,
+              hide: issue.custom_fields[26].value || issue.custom_fields[26].value === "1" ? true : false,
+              note: issue.custom_fields[27].value
+            })
+          })
+        })
+        //繰り返し処理を行う
+        .then (() => {
+          console.log("GET_SUB_ISSUE_ROWS DONE")
+          kurikaeshi_calc()
+        })
+        // .then (() => kurikaeshi_calc())
       }
     }
     kurikaeshi_calc()
@@ -156,7 +272,7 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
           {"id": 28, "value": ""}, //実績01月
           {"id": 29, "value": ""}, //実績02月
           {"id": 30, "value": ""}, //実績03月
-          {"id": 16, "value": 1},  //表示フラグ
+          {"id": 16, "value": true},  //表示フラグ
           {"id": 31, "value": ""}, //備考
         ]
       }

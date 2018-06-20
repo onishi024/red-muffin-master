@@ -53,40 +53,23 @@ render(
 )
 
 Promise.resolve()
-    .then(() => {
-        return Promise.all([
-            store.dispatch(Actions.getGroups()),
-            store.dispatch(Actions.getYears())
-        ])
-    })
-    .then(() => {
-        console.log("src/index.js getProjects");
-            store.dispatch(Actions.getProjects())
-    })
-    .then(() => {
-        console.log("src/index.js getGroupUsers");
-            store.dispatch(Actions.getGroupUsers())
-    })
-
-
-// Promise.resolve()
-//     .then(() => {
-//         return Promise.all([
-//             new Promise(function(fulfilled, rejected){
-//               console.log("getGroups")
-//               store.dispatch(Actions.getGroups())
-//             }),
-//             new Promise(function(fulfilled, rejected){
-//               console.log("getYears")
-//               store.dispatch(Actions.getYears())
-//             })
-//         ])
-//     })
-//     .then(() => {
-//         console.log("src/index.js getProjects");
-//         return new Promise(function(fulfilled, rejected){
-//             store.dispatch(Actions.getProjects())
-//         })
-//     })
-// store.dispatch(Actions.getGroups())
-// store.dispatch(Actions.getYears())
+  .then(() => {
+    return Promise.all([
+      store.dispatch(Actions.getGroups()),
+      store.dispatch(Actions.getYears())
+    ])
+  })
+  .then(() => {
+    console.log("src/index.js getProjects");
+      store.dispatch(Actions.getProjects())
+  })
+  .then(() => {
+    console.log("src/index.js getGroupUsers");
+      store.dispatch(Actions.getGroupUsers())
+  })
+  // .then(() => {
+  //   return Promise.all([
+  //     store.dispatch(Actions.getParentIssueRows()),
+  //     store.dispatch(Actions.getSubIssueRows())
+  //   ])
+  // })

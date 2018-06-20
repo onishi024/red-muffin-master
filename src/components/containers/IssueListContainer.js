@@ -5,7 +5,7 @@ import IssueList from '../presentations/IssueList'
 const mapStateToProps = state => ({
   selected_function: state.reducers.selected_function,
   show_hided_issue: state.reducers.show_hided_issue,
-  issue_rows: state.reducers.issue_rows,
+  parent_issue_rows: state.reducers.parent_issue_rows,
   selected_group_id: state.reducers.selected_group_id,
   selected_year: state.reducers.selected_year,
   snackbar_open: state.reducers.snackbar_open,

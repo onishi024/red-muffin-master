@@ -4,7 +4,7 @@ import Issue from '../presentations/Issue'
 
 const mapStateToProps = (state, ownProps) => ({
   id: ownProps.match.params.id,
-  issue_rows: state.reducers.issue_rows,
+  issue_rows: state.reducers.parent_issue_rows.concat(state.reducers.sub_issue_rows),
   issue_cost_rows: state.reducers.issue_cost_rows,
   groupUsers: state.reducers.groupUsers,
   isLoading: state.reducers.isLoading,

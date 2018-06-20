@@ -4,7 +4,7 @@ import MemberList from '../presentations/MemberList'
 
 const mapStateToProps = state => ({
   show_hided_issue: state.reducers.show_hided_issue,
-  issue_rows: state.reducers.issue_rows,
+  issue_rows: state.reducers.sub_issue_rows,
   selected_group_id: state.reducers.selected_group_id,
   selected_year: state.reducers.selected_year,
   current_id: state.reducers.current_id,
