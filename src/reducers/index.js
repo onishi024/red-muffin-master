@@ -94,6 +94,7 @@ const reducer = (state = initState, action) => {
     }
     //IssueList
     case ActionTypes.TOGGLE_HIDE: {
+      console.log("toggle hide dispatch");
       const show_hided_issue = !state.show_hided_issue
       return {...state, show_hided_issue}
     }

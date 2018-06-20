@@ -1,15 +1,16 @@
 import React from 'react'
-import {Divider} from 'material-ui'
+import {Divider, Toggle} from 'material-ui'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import HotTable from 'react-handsontable'
 import { Link } from 'react-router-dom'
 
-const MemberList = ({show_hided_issue, issue_rows, selected_group_id, selected_year, current_id, group_users, assigned_projectlist_open, selected_member,
-                    onoffAssignedProjectList, setSelectedMember
+const MemberList = ({show_hided_issue, parent_issue_rows, sub_issue_rows, selected_group_id, selected_year, current_id, group_users, assigned_projectlist_open, selected_member,
+                    onoffAssignedProjectList, setSelectedMember, onToggleHide
                   }) => {
 
-  const rowData1 = (issue_rows, group_users) => {
-    const _issue_rows = issue_rows.filter(issue_row => issue_row.parent !== issue_row.id)
+  const rowData1 = (sub_issue_rows, group_users) => {
+    //表示対象の絞込み
+    const _issue_rows = sub_issue_rows.filter(issue_row => issue_row.parent !== issue_row.id)
     const sum_rows = _issue_rows.reduce((result, current) => {
       let element = result.filter((p) => p.assigned_id === current.assigned_id)
       if (element.length === 0) {
@@ -45,8 +46,34 @@ const MemberList = ({show_hided_issue, issue_rows, selected_group_id, selected_y
     return sum_rows
   }
 
-  const rowData2 = (issue_rows, selected_member) => {
-    const _issue_rows = issue_rows.filter(issue_row => issue_row.parent !== issue_row.id)
+  const rowData2 = (sub_issue_rows, selected_member) => {
+    //表示対象の絞込み
+    // const hided_parent_issue_rows = show_hided_issue ? parent_issue_rows : parent_issue_rows.filter(issue_row => issue_row.hide === false)
+    // console.log("sub_issue_rows:",sub_issue_rows);
+    // const __issue_rows = sub_issue_rows.map(issue_row => {
+    //   // console.log("hided_parent_issue_rows:",hided_parent_issue_rows);
+    //   // console.log("filtered hided_parent_issue_rows:",hided_parent_issue_rows.filter((parent, issue_row) => parent.id === issue_row.parent));
+    //   const hided = hided_parent_issue_rows.map(parent => {
+    //     if(parent.id === issue_row.parent){
+    //       return true
+    //     } else {
+    //       return false
+    //     }
+    //   },issue_row)
+    //
+    //   if(hided === false){
+    //     return issue_row
+    //   }
+    // }, hided_parent_issue_rows)
+    // console.log("__issue_rows:",__issue_rows);
+    const _issue_rows = sub_issue_rows.filter(issue_row => issue_row.parent !== issue_row.id)
+    const assigned_projects = _issue_rows.filter(issue_row => issue_row.assigned_id === selected_member)
+    return assigned_projects
+  }
+
+  const rowData3 = (sub_issue_rows, selected_member) => {
+    //表示対象の絞込み
+    const _issue_rows = sub_issue_rows.filter(issue_row => issue_row.parent !== issue_row.id)
     const assigned_projects = _issue_rows.filter(issue_row => issue_row.assigned_id === selected_member)
 
     const sum_rows = assigned_projects.reduce((result, current) => {
@@ -71,8 +98,7 @@ const MemberList = ({show_hided_issue, issue_rows, selected_group_id, selected_y
       }
       return result
     },[])
-
-    return assigned_projects.concat(sum_rows)
+    return sum_rows
   }
 
   const styles = {
@@ -81,10 +107,26 @@ const MemberList = ({show_hided_issue, issue_rows, selected_group_id, selected_y
       fontSize: 12,
       color: "#9E9E9E",
     },
+    toggle: {
+      maxWidth: 50,
+      margin: 16,
+      right: 80,
+      // top: 72,
+      bottom: 20,
+      position: "fixed",
+      zIndex: 1,
+    },
     hot: {
       margin: 12,
       fontSize: 12,
-    }
+    },
+    hot2: {
+      fontSize: 12,
+    },
+    hot3: {
+      fontSize: 12,
+      backgroundColor: "#B2EBF2",
+    },
   }
 
   //カラムヘッダー定義_要員別山積
@@ -140,22 +182,39 @@ const MemberList = ({show_hided_issue, issue_rows, selected_group_id, selected_y
     { data: 'es03', type: 'numeric', allowInvalid: false, format: '0.00', readOnly: true }
   ]
 
+  //カラムデータ定義_要員別集計
+  const columns3 = [
+    { data: 'ankenno', editor: false, readOnly: true },
+    { data: 'title', editor: false, readOnly: true },
+    { data: 'es04', type: 'numeric', allowInvalid: false, format: '0.00', readOnly: true },
+    { data: 'es05', type: 'numeric', allowInvalid: false, format: '0.00', readOnly: true },
+    { data: 'es06', type: 'numeric', allowInvalid: false, format: '0.00', readOnly: true },
+    { data: 'es07', type: 'numeric', allowInvalid: false, format: '0.00', readOnly: true },
+    { data: 'es08', type: 'numeric', allowInvalid: false, format: '0.00', readOnly: true },
+    { data: 'es09', type: 'numeric', allowInvalid: false, format: '0.00', readOnly: true },
+    { data: 'es10', type: 'numeric', allowInvalid: false, format: '0.00', readOnly: true },
+    { data: 'es11', type: 'numeric', allowInvalid: false, format: '0.00', readOnly: true },
+    { data: 'es12', type: 'numeric', allowInvalid: false, format: '0.00', readOnly: true },
+    { data: 'es01', type: 'numeric', allowInvalid: false, format: '0.00', readOnly: true },
+    { data: 'es02', type: 'numeric', allowInvalid: false, format: '0.00', readOnly: true },
+    { data: 'es03', type: 'numeric', allowInvalid: false, format: '0.00', readOnly: true }
+  ]
+
   const onSelect = (r) => {
-    setSelectedMember(rowData1(issue_rows, group_users)[r]['assigned_id'])
+    setSelectedMember(rowData1(sub_issue_rows, group_users)[r]['assigned_id'])
   }
 
   const hotTable1 = [
     <div style={styles.hot}>
       <HotTable
         root="hot1"
-        data={rowData1(issue_rows, group_users)}
+        data={rowData1(sub_issue_rows, group_users)}
         colHeaders={colHeaders1}
         colWidths={colwidths1}
         width="1200"
         columns={columns1}
         columnSorting={true}
         stretchH="all"
-        manualColumnResize={true}
         afterSelectionEnd={onSelect}
         fillHandle={false}
       />
@@ -163,23 +222,37 @@ const MemberList = ({show_hided_issue, issue_rows, selected_group_id, selected_y
   ]
 
   const hotTable2 = [
-    <div style={styles.hot}>
+    <div style={styles.hot2}>
       <HotTable
         root="hot2"
-        data={rowData2(issue_rows, selected_member)}
+        data={rowData2(sub_issue_rows, selected_member)}
         colHeaders={colHeaders2}
         colWidths={colwidths2}
         width="1200"
         columns={columns2}
         columnSorting={true}
         stretchH="all"
-        manualColumnResize={true}
         fillHandle={false}
         // mergeCells={[
         //   {row:0, col:0, rowspan:issue_rows.filter(issue_row => issue_row.assigned_id === selected_member && issue_row.parent !== issue_row.id).length, colspan:1},
         //   {row:0, col:1, rowspan:issue_rows.filter(issue_row => issue_row.assigned_id === selected_member && issue_row.parent !== issue_row.id).length, colspan:1}
         // ]}
       />
+    </div>,
+  ]
+
+  const hotTable3 = [
+    <div style={styles.hot2}>
+      <HotTable
+        root="hot3"
+        data={rowData3(sub_issue_rows, selected_member)}
+        colWidths={colwidths2}
+        width="1200"
+        columns={columns3}
+        columnSorting={true}
+        stretchH="all"
+        fillHandle={false}
+        />
     </div>,
   ]
 
@@ -191,8 +264,18 @@ const MemberList = ({show_hided_issue, issue_rows, selected_group_id, selected_y
           {hotTable1}
           <Divider/>
         <div style={styles.path}>要員別山積</div>
+        <div style={styles.hot}>
           {hotTable2}
+          {hotTable3}
+        </div>
       </div>
+      <Toggle
+        style={styles.toggle}
+        thumbStyle={styles.toggle_icon}
+        trackStyle={styles.toggle_icon}
+        toggled={show_hided_issue}
+        onToggle={() => onToggleHide()}
+        title="非表示案件を表示/非表示切り替え" />
     </MuiThemeProvider>
   )
 }
