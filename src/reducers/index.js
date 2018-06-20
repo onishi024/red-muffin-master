@@ -6,25 +6,18 @@ const initState = {
   group_select_open: false,
   groups: [],
   groupUsers: [],
-  selected_group_id: 13,
+  selected_group_id: 158,
   years: [],
-  selected_year: '2017',
-  selected_identifier: 'd',
-  selected_project_id: 4,
+  selected_year: '2018',
+  selected_identifier: 'h2018',
+  selected_name: '基幹保守（債権）',
+  selected_project_id: 25,
   show_hided_issue: true,
   selected_issue: '0',
   issues: [],
   issue_rows: [],
   parent_issue_rows: [],
   sub_issue_rows: [],
-  members: [
-    {id: "0", name: "未アサイン", grade: "-"}, //id:0は未アサイン固定
-    {id: "1", name: "西住みほ", grade: "G3b"},
-    {id: "2", name: "武部沙織", grade: "G3a"},
-    {id: "3", name: "五十鈴華", grade: "G2b"},
-    {id: "4", name: "秋山優花里", grade: "G2a"},
-    {id: "5", name: "冷泉麻子", grade: "G1"},
-  ],
   projects: [],
   snackbar_open: false,
   current_id: 0,
@@ -85,8 +78,8 @@ const reducer = (state = initState, action) => {
       const selected_project = configs.filter( function(item) {
         return item.group_id === selected_group_id
       })
-      const selected_identifier = selected_project[0].identifier
-      return {...state, selected_identifier ,selected_group_id}
+      const selected_name = selected_project[0].name
+      return {...state, selected_name ,selected_group_id}
     }
     case ActionTypes.SELECT_YEAR: {
       const selected_year = action.payload.selected_year
@@ -94,21 +87,20 @@ const reducer = (state = initState, action) => {
     }
     //IssueList
     case ActionTypes.TOGGLE_HIDE: {
-      console.log("toggle hide dispatch");
       const show_hided_issue = !state.show_hided_issue
       return {...state, show_hided_issue}
     }
     case ActionTypes.TOGGLE_ISSUE_HIDE: {
       const current_id = action.payload.id
       const toggled_bool = action.payload.bool
-      const parent_issue_rows = state.parent_issue_rows.map(parent_issue_row => {
-        if (parent_issue_row.id === current_id) {
-          parent_issue_row.hide = toggled_bool
+      const issue_rows = state.issue_rows.map(issue_row => {
+        if (issue_row.id === current_id) {
+          issue_row.hide = toggled_bool
         }
-        return parent_issue_row
+        return issue_row
       })
-      return {...state, parent_issue_rows, current_id}
-    } 
+      return {...state, issue_rows, current_id}
+    }
     case ActionTypes.ONOFF_SNACKBAR: {
       const snackbar_open = !state.snackbar_open
       return {...state, snackbar_open}
