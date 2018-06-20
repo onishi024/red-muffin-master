@@ -1,10 +1,11 @@
 import React from 'react'
-import {Table, TableHeader, TableBody, TableRow, TableHeaderColumn, TableRowColumn,
+import {Table, TableHeader, TableBody, TableFooter, TableRow, TableHeaderColumn, TableRowColumn,
         Toggle, IconButton, FloatingActionButton, Snackbar} from 'material-ui'
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import ModeEdit from 'material-ui/svg-icons/editor/mode-edit';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import { Link } from 'react-router-dom'
+import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
 
 const IssueList = ({selected_function, show_hided_issue, parent_issue_rows, onToggleHide, onToggleIssueHide, onoffSnackBar,
                     getIssue_rows, selected_group_id, selected_year, snackbar_open, current_id}) => {
@@ -27,10 +28,15 @@ const IssueList = ({selected_function, show_hided_issue, parent_issue_rows, onTo
       margin: 16,
       right: 80,
       // top: 72,
-      bottom: 20,
+      bottom: 0,
       position: "fixed",
       zIndex: 1,
     },
+    issue_toggle:{
+      maxWidth: 50,
+      zIndex: 0,
+    },
+
     snackbar: {
       backgroundColor: '#B2EBF2',
     },
@@ -44,9 +50,18 @@ const IssueList = ({selected_function, show_hided_issue, parent_issue_rows, onTo
     marginLeft: 20,
     right: 30,
     // top: 78,
-    bottom: 30,
+    bottom: 9,
     position: "fixed",
     zIndex: 1
+  }
+
+  //ツールバーのスタイル
+  const toolbar_style = {
+    height:58,
+    width: '100%',
+    bottom: 0,
+    position: "fixed"
+
   }
 
   //SVG Icons
@@ -70,18 +85,6 @@ const IssueList = ({selected_function, show_hided_issue, parent_issue_rows, onTo
     <MuiThemeProvider>
       <div>
         <div style={styles.path} ><Link to={`/`}>Home</Link> > 案件一覧</div>
-        <Toggle
-          style={styles.toggle}
-          thumbStyle={styles.toggle_icon}
-          trackStyle={styles.toggle_icon}
-          toggled={show_hided_issue}
-          onToggle={() => onToggleHide()}
-          title="非表示案件を表示/非表示切り替え" />
-        <Link to='/register'>
-          <FloatingActionButton mini={true} style={button_style} title='案件追加'>
-            <ContentAdd />
-          </FloatingActionButton>
-        </Link>
         <Table fixedHeader={true} >
           <TableHeader displaySelectAll={false} adjustForCheckbox={false} >
             <TableRow>
@@ -102,7 +105,7 @@ const IssueList = ({selected_function, show_hided_issue, parent_issue_rows, onTo
                   <TableRowColumn style={{ width: '5%'}}>{issue_row.id}</TableRowColumn>
                   <TableRowColumn style={{ width: '15%'}}>{issue_row.ankenno}</TableRowColumn>
                   <TableRowColumn style={{ width: '15%'}}>{issue_row.naibukanrino}</TableRowColumn>
-                  <TableRowColumn style={{ width: '25%'}}>{issue_row.title}</TableRowColumn>
+                  <TableRowColumn style={{ width: '25%', whiteSpace: 'nomal', wordWrap: 'break-word'}}>{issue_row.title}</TableRowColumn>
                   <TableRowColumn style={{ width: '10%'}}>{issue_row.assigned_name}</TableRowColumn>
                   <TableRowColumn style={{ width: '10%'}}>
                     {
@@ -113,12 +116,16 @@ const IssueList = ({selected_function, show_hided_issue, parent_issue_rows, onTo
                   </TableRowColumn>
                   <TableRowColumn style={{ width: '10%'}}><Link to={`/issue_edit/${issue_row.id}`}><EditIcon /></Link></TableRowColumn>
                   <TableRowColumn boolean='true' style={{ width: '10%'}}>
-                    <Toggle toggled={issue_row.hide} name={issue_row.id} onToggle={(event, value) => _onToggleIssueHide(event, value)}/>
+                    <Toggle style={styles.issue_toggle} toggled={issue_row.hide} name={issue_row.id} onToggle={(event, value) => _onToggleIssueHide(event, value)}/>
                   </TableRowColumn>
                 </TableRow>
               )
             })}
           </TableBody>
+          <TableFooter>
+          <TableRow>
+          </TableRow>
+          </TableFooter>
         </Table>
         <Snackbar
           style={styles.snackbar}
@@ -126,6 +133,22 @@ const IssueList = ({selected_function, show_hided_issue, parent_issue_rows, onTo
           message={'#' + current_id + 'の表示／非表示を切り替えました'}
           autoHideDuration={2000}
         />
+        <Toolbar style={toolbar_style}>
+        <ToolbarGroup>
+          <Toggle
+            style={styles.toggle}
+            thumbStyle={styles.toggle_icon}
+            trackStyle={styles.toggle_icon}
+            toggled={show_hided_issue}
+            onToggle={() => onToggleHide()}
+            title="非表示案件を表示/非表示切り替え" />
+          <Link to='/register'>
+            <FloatingActionButton mini={true} style={button_style} title='案件追加'>
+              <ContentAdd />
+            </FloatingActionButton>
+          </Link>
+        </ToolbarGroup>
+      </Toolbar>
       </div>
     </MuiThemeProvider>
   )
