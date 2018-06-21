@@ -47,10 +47,12 @@ const reducer = (state = initState, action) => {
       return {...state, selected_project_id}
     }
     case ActionTypes.SET_ISSUE_ROWS: {
-      const issue_rows = action.payload.issue_rows
+      const parent_issue_rows = action.payload.parent_issue_rows
+      const sub_issue_rows = action.payload.sub_issue_rows
       const isLoading = false
-      console.log("issue_rows: ",issue_rows)
-      return {...state, issue_rows, isLoading}
+      console.log("parent_issue_rows: ",parent_issue_rows)
+      console.log("sub_issue_rows: ",sub_issue_rows)
+      return {...state, parent_issue_rows, sub_issue_rows, isLoading}
     }
     case ActionTypes.SET_PARENT_ISSUE_ROWS: {
       const parent_issue_rows = action.payload.issue_rows

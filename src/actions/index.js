@@ -58,9 +58,9 @@ export const getSubIssueRows = () => ({
   type: ActionTypes.GET_SUB_ISSUE_ROWS,
 })
 
-export const setIssueRows = issue_rows => ({
+export const setIssueRows = (parent_issue_rows,sub_issue_rows) => ({
   type: ActionTypes.SET_ISSUE_ROWS,
-  payload: {issue_rows}
+  payload: {parent_issue_rows,sub_issue_rows}
 })
 
 export const setParentIssueRows = issue_rows => ({

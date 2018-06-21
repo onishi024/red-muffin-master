@@ -269,15 +269,16 @@ const MemberList = ({show_hided_issue, parent_issue_rows, sub_issue_rows, select
           {hotTable3}
         </div>
       </div>
-      <Toggle
-        style={styles.toggle}
-        thumbStyle={styles.toggle_icon}
-        trackStyle={styles.toggle_icon}
-        toggled={show_hided_issue}
-        onToggle={() => onToggleHide()}
-        title="非表示案件を表示/非表示切り替え" />
     </MuiThemeProvider>
   )
 }
 
 export default MemberList
+
+// <Toggle
+//   style={styles.toggle}
+//   thumbStyle={styles.toggle_icon}
+//   trackStyle={styles.toggle_icon}
+//   toggled={show_hided_issue}
+//   onToggle={() => onToggleHide()}
+//   title="非表示案件を表示/非表示切り替え" />

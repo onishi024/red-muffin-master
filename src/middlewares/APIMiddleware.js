@@ -76,12 +76,13 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
     let selected_offset = 0
     const selected_project_id = getState().reducers.selected_project_id
     let get = RedmineAPI.getIssues(selected_project_id,selected_offset)
-    let issue_rows = new Array()
+    let parent_issue_rows = new Array()
+    let sub_issue_rows = new Array()
     let return_count = get.length
     function kurikaeshi_calc(){
       if (return_count === 0) {
         //レコードが0件だった場合、データを返す
-        return dispatch(Actions.setIssueRows(issue_rows))
+        return dispatch(Actions.setIssueRows(parent_issue_rows,sub_issue_rows))
       }else{
         //レコードが１件以上ある場合、レコードを配列に格納
         RedmineAPI.getIssues(selected_project_id,selected_offset)
@@ -89,29 +90,55 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
           selected_offset = selected_offset + _issues.length
           return_count = _issues.length
           _issues.map(issue => {
-            issue_rows.push({
-              id: String(issue.id),
-              ankenno: issue.custom_fields[0].value,
-              naibukanrino: issue.custom_fields[1].value,
-              title: issue.subject,
-              assigned_id: issue.assigned_to ? issue.assigned_to.id : "",
-              assigned_name: issue.assigned_to ? issue.assigned_to.name : "",
-              parent: issue.parent ? String(issue.parent.id) : String(issue.id),
-              es04: issue.custom_fields[2].value  ? parseFloat(issue.custom_fields[2].value)  : 0,
-              es05: issue.custom_fields[3].value  ? parseFloat(issue.custom_fields[3].value)  : 0,
-              es06: issue.custom_fields[4].value  ? parseFloat(issue.custom_fields[4].value)  : 0,
-              es07: issue.custom_fields[5].value  ? parseFloat(issue.custom_fields[5].value)  : 0,
-              es08: issue.custom_fields[6].value  ? parseFloat(issue.custom_fields[6].value)  : 0,
-              es09: issue.custom_fields[7].value  ? parseFloat(issue.custom_fields[7].value)  : 0,
-              es10: issue.custom_fields[8].value  ? parseFloat(issue.custom_fields[8].value)  : 0,
-              es11: issue.custom_fields[9].value  ? parseFloat(issue.custom_fields[9].value)  : 0,
-              es12: issue.custom_fields[10].value ? parseFloat(issue.custom_fields[10].value) : 0,
-              es01: issue.custom_fields[11].value ? parseFloat(issue.custom_fields[11].value) : 0,
-              es02: issue.custom_fields[12].value ? parseFloat(issue.custom_fields[12].value) : 0,
-              es03: issue.custom_fields[13].value ? parseFloat(issue.custom_fields[13].value) : 0,
-              hide: issue.custom_fields[26].value || issue.custom_fields[26].value === "1" ? true : false,
-              note: issue.custom_fields[27].value
-            })
+            if(issue.parent === undefined){
+              parent_issue_rows.push({
+                id: String(issue.id),
+                ankenno: issue.custom_fields[0].value,
+                naibukanrino: issue.custom_fields[1].value,
+                title: issue.subject,
+                assigned_id: issue.assigned_to ? issue.assigned_to.id : "",
+                assigned_name: issue.assigned_to ? issue.assigned_to.name : "",
+                parent: issue.parent ? String(issue.parent.id) : String(issue.id),
+                es04: issue.custom_fields[2].value  ? parseFloat(issue.custom_fields[2].value)  : 0,
+                es05: issue.custom_fields[3].value  ? parseFloat(issue.custom_fields[3].value)  : 0,
+                es06: issue.custom_fields[4].value  ? parseFloat(issue.custom_fields[4].value)  : 0,
+                es07: issue.custom_fields[5].value  ? parseFloat(issue.custom_fields[5].value)  : 0,
+                es08: issue.custom_fields[6].value  ? parseFloat(issue.custom_fields[6].value)  : 0,
+                es09: issue.custom_fields[7].value  ? parseFloat(issue.custom_fields[7].value)  : 0,
+                es10: issue.custom_fields[8].value  ? parseFloat(issue.custom_fields[8].value)  : 0,
+                es11: issue.custom_fields[9].value  ? parseFloat(issue.custom_fields[9].value)  : 0,
+                es12: issue.custom_fields[10].value ? parseFloat(issue.custom_fields[10].value) : 0,
+                es01: issue.custom_fields[11].value ? parseFloat(issue.custom_fields[11].value) : 0,
+                es02: issue.custom_fields[12].value ? parseFloat(issue.custom_fields[12].value) : 0,
+                es03: issue.custom_fields[13].value ? parseFloat(issue.custom_fields[13].value) : 0,
+                hide: issue.custom_fields[26].value || issue.custom_fields[26].value === "1" ? true : false,
+                note: issue.custom_fields[27].value
+              })
+            }else{
+              sub_issue_rows.push({
+                id: String(issue.id),
+                ankenno: issue.custom_fields[0].value,
+                naibukanrino: issue.custom_fields[1].value,
+                title: issue.subject,
+                assigned_id: issue.assigned_to ? issue.assigned_to.id : "",
+                assigned_name: issue.assigned_to ? issue.assigned_to.name : "",
+                parent: issue.parent ? String(issue.parent.id) : String(issue.id),
+                es04: issue.custom_fields[2].value  ? parseFloat(issue.custom_fields[2].value)  : 0,
+                es05: issue.custom_fields[3].value  ? parseFloat(issue.custom_fields[3].value)  : 0,
+                es06: issue.custom_fields[4].value  ? parseFloat(issue.custom_fields[4].value)  : 0,
+                es07: issue.custom_fields[5].value  ? parseFloat(issue.custom_fields[5].value)  : 0,
+                es08: issue.custom_fields[6].value  ? parseFloat(issue.custom_fields[6].value)  : 0,
+                es09: issue.custom_fields[7].value  ? parseFloat(issue.custom_fields[7].value)  : 0,
+                es10: issue.custom_fields[8].value  ? parseFloat(issue.custom_fields[8].value)  : 0,
+                es11: issue.custom_fields[9].value  ? parseFloat(issue.custom_fields[9].value)  : 0,
+                es12: issue.custom_fields[10].value ? parseFloat(issue.custom_fields[10].value) : 0,
+                es01: issue.custom_fields[11].value ? parseFloat(issue.custom_fields[11].value) : 0,
+                es02: issue.custom_fields[12].value ? parseFloat(issue.custom_fields[12].value) : 0,
+                es03: issue.custom_fields[13].value ? parseFloat(issue.custom_fields[13].value) : 0,
+                hide: issue.custom_fields[26].value || issue.custom_fields[26].value === "1" ? true : false,
+                note: issue.custom_fields[27].value
+              })
+            }
           })
         })
         //繰り返し処理を行う
@@ -369,13 +396,10 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
 
     let i = 0
     function postIssueMemberLoop(){
-      console.log("postIssueMemberLoop start ",i," times");
       if (i > change_rows.length - 1 ) {
         // 全レコードをポストしたらループ終了
-        console.log("ループ終わり");
-        return dispatch(Actions.getSubIssueRows())
+        return dispatch(Actions.getIssueRows())
       }else{
-        console.log("change_rows[i] : ",change_rows[i]);
         const custom_fields = [
           {"id": 4, "value": change_rows[i].es04 !== undefined ? change_rows[i].es04 : undefined},  //見積04月
           {"id": 5, "value": change_rows[i].es05 !== undefined ? change_rows[i].es05 : undefined},  //見積05月

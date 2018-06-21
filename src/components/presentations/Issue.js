@@ -284,7 +284,7 @@ export default class Issue extends Component {
         const grade = group_users.filter(group_users => group_users.id === row.assigned_id)[0].grade
         const category = grade.substring(0,1) === 'G' || grade.substring(0,1) === 'M' ? 'プロパー' : 'BP'
 
-        console.log("row : ", row);
+        // console.log("row : ", row);
         // console.log("grade : ", grade);
         // console.log("category : ", category);
 
@@ -535,8 +535,6 @@ export default class Issue extends Component {
   }
 
   onChange3 = (event, newValue) => {
-    console.log("event : ",event);
-    console.log("newValue : ",newValue);
     if(this.state.change_data.id.length === 0){
       this.state.change_data.id.push(this.state.id)
       this.state.change_data.key.push("note")
@@ -643,7 +641,7 @@ export default class Issue extends Component {
   ]
 
   render() {
-    console.log("render start");
+    // console.log("render start");
 
     const actionPostIssueSubmit = [
       <FlatButton
@@ -728,7 +726,7 @@ export default class Issue extends Component {
               floatingLabelFixed={true}
               floatingLabelText={<span style={{fontSize: 16}}>備考</span>}
               defaultValue={this.state.info[0].note}
-              hintText="The hint text can be as long as you want, it will wrap."
+              hintText="Remarks can be described freely."
               onChange={this.onChange3}
               />
             <br />
@@ -740,6 +738,7 @@ export default class Issue extends Component {
                 colHeaders={this.colHeaders0}
                 columns={this.columns0}
                 columnSorting={true}
+                readOnly={true}
                 width="910"
                 stretchH="all"
                 fixedColumnsLeft="3"
@@ -805,6 +804,7 @@ export default class Issue extends Component {
               mini={true}
               style={this.styles.addMemberButton}
               onClick={this.onClick3}
+              title='要員追加'
             >
               <ContentAdd />
             </FloatingActionButton>
