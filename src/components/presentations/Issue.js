@@ -254,20 +254,22 @@ export default class Issue extends Component {
     }
   }
 
-  rowData = (id, issue_rows, group_users, changes, i) => {
+  rowData = (id, issue_rows, group_users, changes, i, cancel) => {
     // console.log("rowDataだよ");
     // console.log("issue_rows : ",issue_rows);
     // console.log("this.state.copyFlag : ",this.state.copyFlag);
     //オブジェクトの値渡し
     // console.log("Flag:", this.state.copyFlag);
+    if(cancel !== null) {
+      this.state.details = JSON.parse(JSON.stringify(issue_rows.filter(row => row.parent === id && row.id !== id)))
+      this.state.copyFlag = true
+    }
     if(this.state.copyFlag === true) {
       this.state.details = JSON.parse(JSON.stringify(issue_rows.filter(row => row.parent === id && row.id !== id)))
-      // console.log("コピー元：",issue_rows.filter(row => row.parent === id && row.id !== id));
-      // console.log("コピー完了");
+      console.log("コピー元：",issue_rows.filter(row => row.parent === id && row.id !== id));
+      console.log("コピー完了");
     }
     //編集が行われた場合にローカルステート更新
-
-    // console.log("this.state : ", this.state.details);
 
     //編集された場合にローカルステートを更新する
     if(changes !== undefined && changes !== null) {
@@ -422,6 +424,10 @@ export default class Issue extends Component {
       bottom: 30,
       position: "fixed",
       zIndex: 1
+    },
+    Clear:{
+      color: '#FF7F50',
+      // backgroundColor: '#A9A9A9',
     }
   }
 
@@ -440,6 +446,10 @@ export default class Issue extends Component {
 
   onClick3 = event => {
     this.setState({status: "inputing"})
+  }
+
+  onClick4 = event => {
+    const row_data = this.rowData(this.state.id, this.props.issue_rows, this.props.groupUsers, null, null,true)
   }
 
   onClickConfirm = event => {
@@ -477,7 +487,7 @@ export default class Issue extends Component {
       status: "none",
       copyFlag : true
     })
-    this.rowData(this.state.id, this.props.issue_rows, this.props.group_users, null, null)
+    this.rowData(this.state.id, this.props.issue_rows, this.props.group_users, null, null,null)
   }
 
   onChange1 = (event, key, payload) => {
@@ -506,7 +516,7 @@ export default class Issue extends Component {
         const change_value = changes[i][3]
         //issue_rows全体から案件登録画面に表示されている案件の子チケットのみを絞り込む
 
-        const row_data = this.rowData(this.state.id, this.props.issue_rows, this.props.groupUsers, changes, i)
+        const row_data = this.rowData(this.state.id, this.props.issue_rows, this.props.groupUsers, changes, i, null)
         // console.log("this.state.summary:",this.state.summary);
         // localState.change_dataが空の場合は無条件で要素を追加
 
@@ -588,7 +598,7 @@ export default class Issue extends Component {
   required = value => {
     const error_text = value === ""
                      ? "この項目は必須入力項目です。"
-                     : this.rowData(this.state.id, this.props.issue_rows, this.props.groupUsers, null, null).filter(row => row.assigned_id === value).length >= 1
+                     : this.rowData(this.state.id, this.props.issue_rows, this.props.groupUsers, null, null, null).filter(row => row.assigned_id === value).length >= 1
                      ? "既に追加されている要員です。"
                      : ""
     return error_text
@@ -764,7 +774,7 @@ export default class Issue extends Component {
             <div style={this.styles.hot}>
               <HotTable
                 root="hot1"
-                data={this.rowData(this.state.id, this.props.issue_rows, this.props.groupUsers, null, null)}
+                data={this.rowData(this.state.id, this.props.issue_rows, this.props.groupUsers, null, null, null)}
                 colHeaders={this.colHeaders}
                 columns={this.columns}
                 columnSorting={true}
@@ -794,6 +804,11 @@ export default class Issue extends Component {
                 primary={false}
               />
             </Link>
+            <FlatButton
+                label="Clear"
+                style={this.styles.Clear}
+                onClick={this.onClick4}
+            />
             <FlatButton
               label="Submit"
               primary={true}
