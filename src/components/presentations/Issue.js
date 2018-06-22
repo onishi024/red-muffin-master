@@ -260,14 +260,9 @@ export default class Issue extends Component {
     // console.log("this.state.copyFlag : ",this.state.copyFlag);
     //オブジェクトの値渡し
     // console.log("Flag:", this.state.copyFlag);
-    if(cancel !== null) {
+    if(this.state.copyFlag === true || cancel !== null) {
       this.state.details = JSON.parse(JSON.stringify(issue_rows.filter(row => row.parent === id && row.id !== id)))
       this.state.copyFlag = true
-    }
-    if(this.state.copyFlag === true) {
-      this.state.details = JSON.parse(JSON.stringify(issue_rows.filter(row => row.parent === id && row.id !== id)))
-      console.log("コピー元：",issue_rows.filter(row => row.parent === id && row.id !== id));
-      console.log("コピー完了");
     }
     //編集が行われた場合にローカルステート更新
 
