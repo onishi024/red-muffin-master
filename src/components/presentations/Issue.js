@@ -3,6 +3,7 @@ import {FlatButton, Dialog, CircularProgress, FloatingActionButton, SelectField,
         Paper, List, ListItem, TextField} from 'material-ui'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import ContentAdd from 'material-ui/svg-icons/content/add'
+import ContentRemove from 'material-ui/svg-icons/content/remove'
 import HotTable from 'react-handsontable'
 import { Link } from 'react-router-dom'
 
@@ -20,6 +21,12 @@ export default class Issue extends Component {
         assigned: "",
         assigned_name: "",
         addMemberOpen: false,
+      },
+      removeMemberForm: {
+        assigned: "",
+        assigned_name: "",
+        delete_issue: "",
+        removeMemberOpen: false,
       },
       status: "none",
       change_data: {
@@ -415,6 +422,13 @@ export default class Issue extends Component {
     },
     addMemberButton:{
       marginLeft: 20,
+      right: 90,
+      bottom: 30,
+      position: "fixed",
+      zIndex: 1
+    },
+    removeMemberButton:{
+      marginLeft: 20,
       right: 30,
       bottom: 30,
       position: "fixed",
@@ -427,11 +441,11 @@ export default class Issue extends Component {
   }
 
   //SUBMIT
-  onClick1 = event => {
+  onClickPostIssueSubmit = event => {
     this.setState({status: "postIssueConfirming"})
   }
 
-  onClick2 = event => {
+  onClickPostIssueConfirm = event => {
     this.setState({
       register_processing: false,
       status: "processing"
@@ -439,12 +453,28 @@ export default class Issue extends Component {
     this.props.onClickChangeIssueSubmit(this.state.change_data)
   }
 
-  onClick3 = event => {
+  onClickTableClear = event => {
+    const row_data = this.rowData(this.state.id, this.props.issue_rows, this.props.groupUsers, null, null,true)
+  }
+
+  onClickAddMemberOpen = event => {
     this.setState({status: "inputing"})
   }
 
-  onClick4 = event => {
-    const row_data = this.rowData(this.state.id, this.props.issue_rows, this.props.groupUsers, null, null,true)
+  onChangeAddMember = (event, key, payload) => {
+    const id = this.props.groupUsers[key].id
+    const name = this.props.groupUsers[key].name
+    this.setState({
+      addMemberForm: {
+        ...this.state.addMemberForm,
+        assigned: id,
+        assigned_name: name
+      }
+    })
+  }
+
+  onClickSubmit = event => {
+    this.setState({status: "confirming"})
   }
 
   onClickConfirm = event => {
@@ -459,13 +489,55 @@ export default class Issue extends Component {
     })
   }
 
-  onClickSubmit = event => {
-    this.setState({status: "confirming"})
-  }
-
   onClickCancel = event => {
     this.setState({
       addMemberForm: {
+        assigned: "",
+        assigned_name: ""
+      },
+      status: "none",
+    })
+  }
+
+  onClickRemoveMemberOpen = event => {
+    this.setState({status: "removeMemberinputing"})
+  }
+
+  onChangeRemoveMember = (event, key, payload) => {
+    const filtered_issue_rows = this.props.issue_rows.filter(row => row.parent === this.state.id && row.id !== this.state.id)
+    const id = filtered_issue_rows[key].assigned_id
+    const name = filtered_issue_rows[key].assigned_name
+    // const id = this.props.groupUsers[key].id
+    // const name = this.props.groupUsers[key].name
+    this.setState({
+      removeMemberForm: {
+        ...this.state.removeMemberForm,
+        assigned: id,
+        assigned_name: name
+      }
+    })
+  }
+
+  onClickRemoveSubmit = event => {
+    this.setState({status: "removeMemberconfirming"})
+  }
+
+  onClickRemoveConfirm = event => {
+    const filtered_issue_rows = this.props.issue_rows.filter(row => row.parent === this.state.id && row.id !== this.state.id)
+    const delete_id = filtered_issue_rows.filter(row => row.assigned_id === this.state.removeMemberForm.assigned)[0].id
+    this.props.onClickRemoveMemberSubmit(delete_id)
+    this.setState({
+      removeMemberForm: {
+        assigned: "",
+        assigned_name: ""
+      },
+      status: "processing",
+    })
+  }
+
+  onClickRemoveCancel = event => {
+    this.setState({
+      removeMemberForm: {
         assigned: "",
         assigned_name: ""
       },
@@ -485,23 +557,11 @@ export default class Issue extends Component {
     this.rowData(this.state.id, this.props.issue_rows, this.props.group_users, null, null,null)
   }
 
-  onChange1 = (event, key, payload) => {
-    const id = this.props.groupUsers[key].id
-    const name = this.props.groupUsers[key].name
-    this.setState({
-      addMemberForm: {
-        ...this.state.addMemberForm,
-        assigned: id,
-        assigned_name: name
-      }
-    })
-  }
-
-  onChange2 = (changes, source, row_data) => {
+  onChangeTable = (changes, source, row_data) => {
     if(source === 'edit' || source === 'CopyPaste.paste'){
       // 変更された要素をlocalState.change_dataに保存
       // 画面で同一項目が複数回更新され場合はlocalState.change_dataを上書き
-      // console.log("onChange2が呼び出しされた")
+      // console.log("onChangeTableが呼び出しされた")
       for (let i in changes) {
         if(changes[i][3] === "") {
           changes[i][3] = 0.0
@@ -539,7 +599,7 @@ export default class Issue extends Component {
     }
   }
 
-  onChange3 = (event, newValue) => {
+  onChangeRemarks = (event, newValue) => {
     if(this.state.change_data.id.length === 0){
       this.state.change_data.id.push(this.state.id)
       this.state.change_data.key.push("note")
@@ -590,11 +650,20 @@ export default class Issue extends Component {
   }
 
   //required check
-  required = value => {
+  requiredAddMember = value => {
     const error_text = value === ""
                      ? "この項目は必須入力項目です。"
                      : this.rowData(this.state.id, this.props.issue_rows, this.props.groupUsers, null, null, null).filter(row => row.assigned_id === value).length >= 1
                      ? "既に追加されている要員です。"
+                     : ""
+    return error_text
+  }
+
+  requiredRemoveMember = value => {
+    const error_text = value === ""
+                     ? "この項目は必須入力項目です。"
+                     : this.rowData(this.state.id, this.props.issue_rows, this.props.groupUsers, null, null, null).filter(row => row.assigned_id === value).length === 0
+                     ? "追加されていない要員です。"
                      : ""
     return error_text
   }
@@ -648,15 +717,6 @@ export default class Issue extends Component {
   render() {
     // console.log("render start");
 
-    const actionPostIssueSubmit = [
-      <FlatButton
-        label="Submit"
-        primary={true}
-        keyboardFocused={true}
-        onClick={this.onClick2}
-      />
-    ]
-
     const actionPostIssueConfirm = [
       <FlatButton
         label="Cancel"
@@ -668,7 +728,7 @@ export default class Issue extends Component {
         label="Confirm"
         primary={true}
         keyboardFocused={true}
-        onClick={this.onClick2}
+        onClick={this.onClickPostIssueConfirm}
       />,
     ]
 
@@ -683,8 +743,7 @@ export default class Issue extends Component {
         primary={true}
         keyboardFocused={true}
         onClick={this.onClickSubmit}
-        disabled={this.required(this.state.addMemberForm.assigned) !== "" ? true : false}
-        // disabled={this.allRequired(this.state.addMemberForm)}
+        disabled={this.requiredAddMember(this.state.addMemberForm.assigned) !== "" ? true : false}
       />,
     ]
 
@@ -700,6 +759,36 @@ export default class Issue extends Component {
         primary={true}
         keyboardFocused={true}
         onClick={this.onClickConfirm}
+      />,
+    ]
+
+    const actionRemoveSubmit = [
+      <FlatButton
+        label="Cancel"
+        primary={false}
+        onClick={this.onClickRemoveCancel}
+      />,
+      <FlatButton
+        label="Submit"
+        primary={true}
+        keyboardFocused={true}
+        onClick={this.onClickRemoveSubmit}
+        disabled={this.requiredRemoveMember(this.state.removeMemberForm.assigned) !== "" ? true : false}
+      />,
+    ]
+
+    const actionRemoveConfirm = [
+      <FlatButton
+        label="Cancel"
+        primary={false}
+        keyboardFocused={true}
+        onClick={this.onClickRemoveCancel}
+      />,
+      <FlatButton
+        label="Confirm"
+        primary={true}
+        keyboardFocused={true}
+        onClick={this.onClickRemoveConfirm}
       />,
     ]
 
@@ -732,7 +821,7 @@ export default class Issue extends Component {
               floatingLabelText={<span style={{fontSize: 16}}>備考</span>}
               defaultValue={this.state.info[0].note}
               hintText="Remarks can be described freely."
-              onChange={this.onChange3}
+              onChange={this.onChangeRemarks}
               />
             <br />
             <div>　■山積＆予定工数</div>
@@ -749,7 +838,6 @@ export default class Issue extends Component {
                 fixedColumnsLeft="3"
                 manualColumnResize={false}
                 fillHandle={false}
-                afterChange={this.onChange4}
                 />
               <HotTable
                 root="hot3"
@@ -778,7 +866,7 @@ export default class Issue extends Component {
                 fixedColumnsLeft="3"
                 manualColumnResize={false}
                 fillHandle={false}
-                afterChange={this.onChange2}
+                afterChange={this.onChangeTable}
                 />
               <HotTable
                 root="hot2"
@@ -802,21 +890,30 @@ export default class Issue extends Component {
             <FlatButton
                 label="Clear"
                 style={this.styles.Clear}
-                onClick={this.onClick4}
+                onClick={this.onClickTableClear}
             />
             <FlatButton
               label="Submit"
               primary={true}
               keyboardFocused={true}
-              onClick={this.onClick1}
+              onClick={this.onClickPostIssueSubmit}
             />
             <FloatingActionButton
               mini={true}
               style={this.styles.addMemberButton}
-              onClick={this.onClick3}
+              onClick={this.onClickAddMemberOpen}
               title='要員追加'
             >
               <ContentAdd />
+            </FloatingActionButton>
+            <FloatingActionButton
+              mini={true}
+              secondary={true}
+              style={this.styles.removeMemberButton}
+              onClick={this.onClickRemoveMemberOpen}
+              title='要員削除'
+            >
+              <ContentRemove />
             </FloatingActionButton>
             <Dialog
               title="現在の入力内容を確定しますか?"
@@ -834,8 +931,8 @@ export default class Issue extends Component {
               <SelectField
               floatingLabelText="担当"
               value={this.state.addMemberForm.assigned}
-              onChange={this.onChange1}
-              errorText={this.required(this.state.addMemberForm.assigned)}
+              onChange={this.onChangeAddMember}
+              errorText={this.requiredAddMember(this.state.addMemberForm.assigned)}
               >
                 {this.props.groupUsers.map(group_user => <MenuItem key={group_user.id} value={group_user.id} primaryText={group_user.name} />)}
               </SelectField><br />
@@ -865,6 +962,32 @@ export default class Issue extends Component {
               open={this.state.status==="processing" && !this.props.isLoading}
               >
             </Dialog>
+            <Dialog
+              title="要員削除"
+              actions={actionRemoveSubmit}
+              modal={true}
+              open={this.state.status === "removeMemberinputing"}
+            >
+              <SelectField
+              floatingLabelText="担当"
+              value={this.state.removeMemberForm.assigned}
+              onChange={this.onChangeRemoveMember}
+              errorText={this.requiredRemoveMember(this.state.removeMemberForm.assigned)}
+              >
+                {this.props.issue_rows.filter(row => row.parent === this.state.id && row.id !== this.state.id).map(row => <MenuItem key={row.assigned_id} value={row.assigned_id} primaryText={row.assigned_name} />)}
+              </SelectField><br />
+            </Dialog>
+            <Dialog
+              title="以下の要員を削除して良いですか?"
+              actions={actionRemoveConfirm}
+              modal={true}
+              open={this.state.status==="removeMemberconfirming"}
+            >
+              <List>
+                <ListItem style={this.styles.listItem} disabled={true} primaryText='担当'
+                  secondaryText={this.state.removeMemberForm.assigned_name} />
+              </List>
+            </Dialog>
           </div>
         </MuiThemeProvider>
       </div>
@@ -872,3 +995,4 @@ export default class Issue extends Component {
   }
 
 }
+//{this.props.groupUsers.map(group_user => <MenuItem key={group_user.id} value={group_user.id} primaryText={group_user.name} />)}

@@ -440,6 +440,14 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
     postIssueMemberLoop()
   }
 
+  if (action.type === ActionTypes.DELETE_ISSUE) {
+    console.log("DELETE_ISSUE START");
+    dispatch(Actions.setIsLoading(true))
+    const id = action.payload.id
+    RedmineAPI.deleteIssue(id)
+      .then(() => dispatch(Actions.getIssueRows()))
+  }
+
   next(action)
 }
 

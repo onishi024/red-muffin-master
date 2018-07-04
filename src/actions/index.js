@@ -78,6 +78,11 @@ export const setIsLoading = bool => ({
   payload: {bool}
 })
 
+export const deleteIssue = id => ({
+  type: ActionTypes.DELETE_ISSUE,
+  payload: {id}
+})
+
 //Header
 export const onClickAppBar = () => ({
   type: ActionTypes.CLICK_APP_BAR,

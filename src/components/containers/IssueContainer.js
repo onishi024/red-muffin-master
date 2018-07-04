@@ -12,7 +12,8 @@ const mapStateToProps = (state, ownProps) => ({
 
 const mapDispatchToProps = dispatch => ({
   onClickChangeIssueSubmit: change_data => dispatch(Actions.onClickChangeIssueSubmit(change_data)),
-  onClickAddMemberSubmit: (parent_row, assigned) => dispatch(Actions.onClickAddMemberSubmit(parent_row,assigned))
+  onClickAddMemberSubmit: (parent_row, assigned) => dispatch(Actions.onClickAddMemberSubmit(parent_row,assigned)),
+  onClickRemoveMemberSubmit: id => dispatch(Actions.deleteIssue(id))
 })
 
 const IssueContainer = connect(

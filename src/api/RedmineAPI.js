@@ -113,3 +113,17 @@ export const postIssue = issue =>
        return err
      }
    })
+
+ export const deleteIssue = id =>
+   fetch(url + `issues/` + id + `.json`,
+     {method: 'DELETE',
+      headers: headers})
+   .then((res, err) => {
+     if (!err) {
+       console.log("DELETE_ISSUE DONE")
+       return res
+     } else {
+       console.log("DELETE_ISSUE ERROR OCCURED")
+       return err
+     }
+   })
