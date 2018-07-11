@@ -824,7 +824,7 @@ export default class Issue extends Component {
               onChange={this.onChangeRemarks}
               />
             <br />
-            <div>　■山積＆予定工数</div>
+            <div>　■山積＆予定工数0</div>
             <div style={this.styles.hot}>
               <HotTable
                 root="hot0"

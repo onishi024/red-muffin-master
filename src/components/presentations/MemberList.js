@@ -259,7 +259,7 @@ const MemberList = ({show_hided_issue, parent_issue_rows, sub_issue_rows, select
   return(
     <MuiThemeProvider>
       <div>
-        <div style={styles.path}><Link to={`/`}>Home</Link>> 要員別山積表</div>
+        <div style={styles.path}><Link to={`/`}>Home</Link> > 要員別山積表</div>
         <div style={styles.path}>要員別集計</div>
           {hotTable1}
           <Divider/>
