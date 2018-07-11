@@ -9,7 +9,6 @@ const Header = ({app_bar_open, groups, selected_group_id, years, selected_year,
   const style = {
     // position: 'fixed', top: 100,
   }
-  console.log("動いた");
   let _groups_name = "Red Muffin"
   if(window.location.href !== "http://localhost:3000/") {
     for(let i = 0 ; i < groups.length; i++) {
@@ -48,6 +47,7 @@ const Header = ({app_bar_open, groups, selected_group_id, years, selected_year,
             title={_groups_name}
             iconElementRight={<Avatar src="food.svg" />}
             onLeftIconButtonClick={() => onClickAppBar()}
+
             style={style}
           />
         </div>
