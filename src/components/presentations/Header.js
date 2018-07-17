@@ -9,6 +9,14 @@ const Header = ({app_bar_open, groups, selected_group_id, years, selected_year,
   const style = {
     position: 'fixed',
   }
+  let _groups_name = "Red Muffin"
+  if(window.location.href !== "http://localhost:3000/") {
+    for(let i = 0 ; i < groups.length; i++) {
+      if(selected_group_id === groups[i].id) {
+        _groups_name = groups[i].name + " ＠" + selected_year + "年度"
+      }
+    }
+  }
 
   return (
     <div>
@@ -26,7 +34,7 @@ const Header = ({app_bar_open, groups, selected_group_id, years, selected_year,
             </DropDownMenu>
             <Subheader>Business Year</Subheader>
             <DropDownMenu value={selected_year} onChange={(event, index, value) => onClickYear(value)}>
-              {years.map(year => <MenuItem key={year} value={year} primaryText={year+"年"} />)}
+              {years.map(year => <MenuItem key={year} value={year} primaryText={year+"年度"} />)}
             </DropDownMenu>
             <Divider />
             <Subheader>Menu</Subheader>
@@ -36,9 +44,10 @@ const Header = ({app_bar_open, groups, selected_group_id, years, selected_year,
             </Menu>
           </Drawer>
           <AppBar
-            title="Red Muffin"
+            title={_groups_name}
             iconElementRight={<Avatar src="food.svg" />}
             onLeftIconButtonClick={() => onClickAppBar()}
+
             style={style}
           />
         </div>
