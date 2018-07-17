@@ -17,7 +17,7 @@
   },
   "devDependencies": {
     "history": "^4.7.2",
-    "material-ui": "^0.20.0",
+    "material-ui": "^0.20.1",
     "react-handsontable": "^0.3.1",
     "react-redux": "^5.0.6",
     "react-router-redux": "^5.0.0-alpha.9",

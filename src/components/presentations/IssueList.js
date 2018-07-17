@@ -18,7 +18,24 @@ const IssueList = ({selected_function, show_hided_issue, parent_issue_rows, onTo
 
   //非表示toggleのスタイル
   const styles = {
+    table: {
+      overflowY: "scroll",
+      // marginTop: "100px",
+      // paddingTop: "100px",
+      // borderTop: "100px",
+    },
+    tableHeader: {
+      marginTop: "95px",
+      position: "fixed",
+    },
+    tableBody: {
+      marginTop: "155px",
+      position: "fixed",
+    },
     path: {
+      marginTop: "-65px",
+      paddingTop: "65px",
+      position: "fixed",
       margin: 12,
       fontSize: 12,
       color: "#9E9E9E",
@@ -85,7 +102,12 @@ const IssueList = ({selected_function, show_hided_issue, parent_issue_rows, onTo
     <MuiThemeProvider>
       <div>
         <div style={styles.path} ><Link to={`/`}>Home</Link> > 案件一覧</div>
-        <Table fixedHeader={true} >
+        <Table
+          height={window.innerHeight - 222}
+          fixedHeader={true}
+          headerStyle={styles.tableHeader}
+          bodyStyle={styles.tableBody}
+        >
           <TableHeader displaySelectAll={false} adjustForCheckbox={false} >
             <TableRow>
               <TableHeaderColumn style={{ width: '5%'}}>ID</TableHeaderColumn>

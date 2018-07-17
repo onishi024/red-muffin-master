@@ -75,10 +75,9 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
     console.log("GET_ISSUE_ROWS START");
     let selected_offset = 0
     const selected_project_id = getState().reducers.selected_project_id
-    let get = RedmineAPI.getIssues(selected_project_id,selected_offset)
     let parent_issue_rows = new Array()
     let sub_issue_rows = new Array()
-    let return_count = get.length
+    let return_count = 1
     function kurikaeshi_calc(){
       if (return_count === 0) {
         //レコードが0件だった場合、データを返す
@@ -156,9 +155,8 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
     console.log("GET_PARENT_ISSUE_ROWS START");
     let selected_offset = 0
     const selected_project_id = getState().reducers.selected_project_id
-    let get = RedmineAPI.getParentIssues(selected_project_id,selected_offset)
     let issue_rows = new Array()
-    let return_count = get.length
+    let return_count = 1
     function kurikaeshi_calc(){
       if (return_count === 0) {
         //レコードが0件だった場合、データを返す
@@ -210,9 +208,8 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
     console.log("GET_SUB_ISSUE_ROWS START");
     let selected_offset = 0
     const selected_project_id = getState().reducers.selected_project_id
-    let get = RedmineAPI.getSubIssues(selected_project_id,selected_offset)
     let issue_rows = new Array()
-    let return_count = get.length
+    let return_count = 1
     function kurikaeshi_calc(){
       if (return_count === 0) {
         //レコードが0件だった場合、データを返す

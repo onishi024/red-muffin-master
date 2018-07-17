@@ -7,7 +7,7 @@ const Header = ({app_bar_open, groups, selected_group_id, years, selected_year,
                  onClickAppBar, group_select_open, onClickGroup, onClickYear, onClickIssueList}) => {
   //AppBarのスタイル
   const style = {
-    // position: 'fixed', top: 100,
+    position: 'fixed',
   }
 
   return (
