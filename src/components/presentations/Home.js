@@ -1,14 +1,18 @@
 import React from 'react'
+import {AppBar} from 'material-ui'
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
 
 const Home = () => {
   const styles = {
     muffin: {
+      marginTop: "105px",
       backgroundImage: `url("muffin.jpg")`,
       backgroundRepeat: 'no-repeat',
       backgroundAttachment: 'fixed',
-      minHeight: '600px',
+      minHeight: '800px',
       backgroundPosition: 'center',
-      backgroundSize: 'cover'
+      backgroundSize: 'cover',
     },
     muffinText: {
       position: 'absolute',
@@ -49,14 +53,30 @@ const Home = () => {
       width: '400px'
     },
     path: {
-      margin: 12,
-      fontSize: 12,
+      top:0,
+      left:-3,
+      fontSize: 13,
       color: "#9E9E9E",
     }
   }
+  const toolbar_style = {
+
+    height:45,
+    width: '100%',
+    top: 60,
+    left:0,
+    backgroundColor: "#FFFFFF",
+    position: "fixed"
+
+  }
   return(
+    <MuiThemeProvider>
     <div>
-      <div style={styles.path} >Home</div>
+    <Toolbar style={toolbar_style}>
+    <ToolbarGroup>
+    <ToolbarTitle text="Home" style={styles.path}/>
+    </ToolbarGroup>
+  </Toolbar>
         <div style={styles.muffin}></div>
         <div style={styles.muffinText}>
           <h1 style={styles.muffinTitle}>
@@ -83,6 +103,7 @@ const Home = () => {
         </div>
 
     </div>
+    </MuiThemeProvider>
   )
 }
 
