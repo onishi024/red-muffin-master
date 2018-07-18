@@ -1,6 +1,7 @@
 import React from 'react'
 import {Divider, Toggle} from 'material-ui'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
 import HotTable from 'react-handsontable'
 import { Link } from 'react-router-dom'
 
@@ -102,10 +103,27 @@ const MemberList = ({show_hided_issue, parent_issue_rows, sub_issue_rows, select
   }
 
   const styles = {
-    path: {
-      margin: 12,
+    tableName1: {
+      marginTop: "50px",
+      paddingTop: "73px",
+      marginBottom:"-90px",
+      marginLeft:12,
       fontSize: 12,
       color: "#9E9E9E",
+    },
+    tableName2: {
+      marginTop: "-50px",
+      paddingTop: "73px",
+      marginBottom:"-90px",
+      marginLeft:12,
+      fontSize: 12,
+      color: "#9E9E9E",
+    },
+    path: {
+      top:0,
+      left:-3,
+      fontSize: 12,
+      color: "#9E9E9E"
     },
     toggle: {
       maxWidth: 50,
@@ -117,7 +135,9 @@ const MemberList = ({show_hided_issue, parent_issue_rows, sub_issue_rows, select
       zIndex: 1,
     },
     hot: {
-      margin: 12,
+      marginTop: 100,
+      marginBottom: 20,
+      marginLeft: 12,
       fontSize: 12,
     },
     hot2: {
@@ -256,14 +276,30 @@ const MemberList = ({show_hided_issue, parent_issue_rows, sub_issue_rows, select
     </div>,
   ]
 
+  const toolbar_style = {
+
+    height:45,
+    width: '100%',
+    top: 60,
+    left:0,
+    backgroundColor: "#FFFFFF",
+    position: "fixed",
+    zIndex:999
+
+  }
+
   return(
     <MuiThemeProvider>
       <div>
-        <div style={styles.path}><Link to={`/`}>Home</Link> > 要員別山積表</div>
-        <div style={styles.path}>要員別集計</div>
+      <Toolbar style={toolbar_style}>
+      <ToolbarGroup style={styles.path}>
+      <Link to={`/`}>Home</Link> > 要員別山積表
+      </ToolbarGroup>
+    </Toolbar>
+        <div style={styles.tableName1}>要員別集計</div>
           {hotTable1}
           <Divider/>
-        <div style={styles.path}>要員別山積</div>
+        <div style={styles.tableName2}>要員別山積</div>
         <div style={styles.hot}>
           {hotTable2}
           {hotTable3}

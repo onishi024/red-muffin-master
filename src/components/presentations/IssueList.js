@@ -33,12 +33,10 @@ const IssueList = ({selected_function, show_hided_issue, parent_issue_rows, onTo
       position: "fixed",
     },
     path: {
-      marginTop: "-65px",
-      paddingTop: "65px",
-      position: "fixed",
-      margin: 12,
+      top:0,
+      left:-3,
       fontSize: 12,
-      color: "#9E9E9E",
+      color: "#9E9E9E"
     },
     toggle: {
       maxWidth: 50,
@@ -71,9 +69,17 @@ const IssueList = ({selected_function, show_hided_issue, parent_issue_rows, onTo
     position: "fixed",
     zIndex: 1
   }
-
+  const toolbar_style1 = {
+    height:45,
+    width: '100%',
+    top: 60,
+    left:0,
+    backgroundColor: "#FFFFFF",
+    position: "fixed",
+    zIndex:999
+  }
   //ツールバーのスタイル
-  const toolbar_style = {
+  const toolbar_style2 = {
     height:58,
     width: '100%',
     bottom: 0,
@@ -101,7 +107,11 @@ const IssueList = ({selected_function, show_hided_issue, parent_issue_rows, onTo
   return (
     <MuiThemeProvider>
       <div>
-        <div style={styles.path} ><Link to={`/`}>Home</Link> > 案件一覧</div>
+      <Toolbar style={toolbar_style1}>
+      <ToolbarGroup style={styles.path}>
+      <Link to={`/`}>Home</Link> > 案件一覧
+      </ToolbarGroup>
+    </Toolbar>
         <Table
           height={window.innerHeight - 222}
           fixedHeader={true}
@@ -155,7 +165,7 @@ const IssueList = ({selected_function, show_hided_issue, parent_issue_rows, onTo
           message={'#' + current_id + 'の表示／非表示を切り替えました'}
           autoHideDuration={2000}
         />
-        <Toolbar style={toolbar_style}>
+        <Toolbar style={toolbar_style2}>
         <ToolbarGroup>
           <Toggle
             style={styles.toggle}

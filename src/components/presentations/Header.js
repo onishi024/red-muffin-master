@@ -7,7 +7,7 @@ const Header = ({app_bar_open, groups, selected_group_id, years, selected_year,
                  onClickAppBar, group_select_open, onClickGroup, onClickYear, onClickIssueList}) => {
   //AppBarのスタイル
   const style = {
-    position: 'fixed',
+    position: 'fixed', top: 0, left: 0
   }
   let _groups_name = "Red Muffin"
   if(window.location.href !== "http://localhost:3000/") {
