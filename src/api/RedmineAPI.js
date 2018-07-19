@@ -55,9 +55,19 @@ export const getParentIssues = (selected_project_id,selected_offset) =>
      headers: headers})
   .then(response => response.json())
   .then(json => {
-    // console.log("GET ISSUES DONE");
+    console.log("GET PARENT ISSUES DONE");
     return json.issues
   })
+
+export const getParentIssuesCount = (selected_project_id,selected_offset,limit) =>
+fetch(url + `issues.json?project_id=` + selected_project_id + `&offset=` + selected_offset + `&limit=` + limit + `&parent_id=!*`,
+  {method: 'GET',
+    headers: headers})
+.then(response => response.json())
+.then(json => {
+  // console.log("GET ISSUES DONE");
+  return json.total_count
+})
 
 export const getSubIssues = (selected_project_id,selected_offset) =>
   fetch(url + `issues.json?project_id=` + selected_project_id + `&offset=` + selected_offset + `&limit=100&parent_id=*`,
