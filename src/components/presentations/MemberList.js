@@ -1,7 +1,7 @@
 import React from 'react'
-import {Divider, Toggle} from 'material-ui'
+import { Divider } from 'material-ui'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
-import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
+import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar';
 import HotTable from 'react-handsontable'
 import { Link } from 'react-router-dom'
 
@@ -291,11 +291,11 @@ const MemberList = ({show_hided_issue, parent_issue_rows, sub_issue_rows, select
   return(
     <MuiThemeProvider>
       <div>
-      <Toolbar style={toolbar_style}>
-      <ToolbarGroup style={styles.path}>
-      <Link to={`/`}>Home</Link> > 要員別山積表
-      </ToolbarGroup>
-    </Toolbar>
+        <Toolbar style={toolbar_style}>
+          <ToolbarGroup style={styles.path}>
+          <Link to={`/`}>Home</Link> > 要員別山積表
+          </ToolbarGroup>
+        </Toolbar>
         <div style={styles.tableName1}>要員別集計</div>
           {hotTable1}
           <Divider/>

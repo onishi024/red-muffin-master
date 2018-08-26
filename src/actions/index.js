@@ -83,6 +83,15 @@ export const deleteIssue = id => ({
   payload: {id}
 })
 
+export const getTimeEntries = () => ({
+  type: ActionTypes.GET_TIME_ENTRIES
+})
+
+export const setTimeEntries = time_entries => ({
+  type: ActionTypes.SET_TIME_ENTRIES,
+  payload: {time_entries}
+})
+
 //Header
 export const onClickAppBar = () => ({
   type: ActionTypes.CLICK_APP_BAR,

@@ -6,12 +6,12 @@ const initState = {
   group_select_open: false,
   groups: [],
   groupUsers: [],
-  selected_group_id: 153,
+  selected_group_id: 10,
   years: [],
-  selected_year: '2018',
-  selected_identifier: 'c2018',
-  selected_name: '基幹開発3（顧客）',
-  selected_project_id: 20,
+  selected_year: '2017',
+  selected_identifier: 'a',
+  selected_name: '債権開発',
+  selected_project_id: 1,
   show_hided_issue: true,
   selected_issue: '0',
   issues: [],
@@ -23,7 +23,8 @@ const initState = {
   current_id: 0,
   isLoading: false,
   assigned_projectlist_open: false,
-  selected_member: null
+  selected_member: null,
+  time_entries: [],
 }
 
 const reducer = (state = initState, action) => {
@@ -44,6 +45,7 @@ const reducer = (state = initState, action) => {
     case ActionTypes.SET_PROJECTS: {
       console.log("SET_PROJECTS");
       const selected_project_id = action.payload.projects_id
+      console.log(selected_project_id);
       return {...state, selected_project_id}
     }
     case ActionTypes.SET_ISSUE_ROWS: {
@@ -69,6 +71,10 @@ const reducer = (state = initState, action) => {
     case ActionTypes.SET_ISLOADING: {
       const isLoading = action.payload.bool
       return {...state, isLoading}
+    }
+    case ActionTypes.SET_TIME_ENTRIES: {
+      const time_entries = action.payload.time_entries
+      return {...state, time_entries}
     }
     //Header
     case ActionTypes.CLICK_APP_BAR: {
