@@ -46,9 +46,7 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
         return years
       })
       .then(years => years.sort((a, b) => {return a > b ? 1 : -1}))
-      .then(years => {
-        dispatch(Actions.setYears(years))
-      })
+      .then(years => dispatch(Actions.setYears(years)))
   }
 
   if (action.type === ActionTypes.GET_PROJECTS) {
@@ -63,7 +61,6 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
             return selected_project_id
           }
         }
-        console.log(selected_project_id);
         return selected_project_id
       })
       .then(projects => dispatch(Actions.setProjects(projects)))

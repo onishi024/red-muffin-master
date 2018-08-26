@@ -6,12 +6,12 @@ const initState = {
   group_select_open: false,
   groups: [],
   groupUsers: [],
-  selected_group_id: 10,
+  selected_group_id: 153,
   years: [],
-  selected_year: '2017',
-  selected_identifier: 'a',
-  selected_name: '債権開発',
-  selected_project_id: 1,
+  selected_year: '2018',
+  selected_identifier: 'c2018',
+  selected_name: '基幹開発3（顧客）',
+  selected_project_id: 20,
   show_hided_issue: true,
   selected_issue: '0',
   issues: [],
@@ -45,7 +45,6 @@ const reducer = (state = initState, action) => {
     case ActionTypes.SET_PROJECTS: {
       console.log("SET_PROJECTS");
       const selected_project_id = action.payload.projects_id
-      console.log(selected_project_id);
       return {...state, selected_project_id}
     }
     case ActionTypes.SET_ISSUE_ROWS: {
