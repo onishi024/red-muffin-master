@@ -137,3 +137,10 @@ export const postIssue = issue =>
        return err
      }
    })
+
+ export const getTimeEntries = id =>
+   fetch(url + `time_entries.json?project_id=` + id,
+     {method: 'GET',
+      headers: headers})
+   .then(response => response.json())
+   .then(json => json.time_entries)

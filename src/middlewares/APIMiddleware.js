@@ -65,7 +65,7 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
       })
       .then(projects => dispatch(Actions.setProjects(projects)))
       .then(() => {
-        dispatch(Actions.getParentIssueRows()),
+        dispatch(Actions.getParentIssueRows())
         dispatch(Actions.getSubIssueRows())
       })
       // .then(() => dispatch(Actions.getIssueRows()))
@@ -75,8 +75,8 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
     console.log("GET_ISSUE_ROWS START");
     let selected_offset = 0
     const selected_project_id = getState().reducers.selected_project_id
-    let parent_issue_rows = new Array()
-    let sub_issue_rows = new Array()
+    let parent_issue_rows = []
+    let sub_issue_rows = []
     let return_count = 1
     function kurikaeshi_calc(){
       if (return_count === 0) {
@@ -154,7 +154,7 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
   if (action.type === ActionTypes.GET_PARENT_ISSUE_ROWS) {
     console.log("GET_PARENT_ISSUE_ROWS START");
     const selected_project_id = getState().reducers.selected_project_id
-    let issue_rows = new Array()
+    let issue_rows = []
 
     RedmineAPI.getParentIssuesCount(selected_project_id,0,1)
     .then(r => {
@@ -262,7 +262,7 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
     console.log("GET_SUB_ISSUE_ROWS START");
     let selected_offset = 0
     const selected_project_id = getState().reducers.selected_project_id
-    let issue_rows = new Array()
+    let issue_rows = []
     let return_count = 1
     function kurikaeshi_calc(){
       if (return_count === 0) {
@@ -497,6 +497,12 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
     const id = action.payload.id
     RedmineAPI.deleteIssue(id)
       .then(() => dispatch(Actions.getIssueRows()))
+  }
+
+  if (action.type === ActionTypes.GET_TIME_ENTRIES) {
+    console.log("GET_TIME_ENTRIES START")
+    const id = getState().reducers.selected_project_id
+    return RedmineAPI.getTimeEntries(id)
   }
 
   next(action)

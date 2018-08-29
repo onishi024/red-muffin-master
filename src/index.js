@@ -16,6 +16,7 @@ import IssueContainer from './components/containers/IssueContainer'
 import RegisterContainer from './components/containers/RegisterContainer'
 import MemberListContainer from './components/containers/MemberListContainer'
 import MemberContainer from './components/containers/MemberContainer'
+import CalendarContainer from './components/containers/CalendarContainer'
 // import { composeWithDevTools } from 'redux-devtools-extension'
 
 // Create a history of your choosing (we're using a browser history in this case)
@@ -31,6 +32,7 @@ const store = createStore(
     reducers,
     router: routerReducer
   }),
+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
   applyMiddleware(APIMiddleware),
   applyMiddleware(_routerMiddleware),
 )
@@ -46,6 +48,7 @@ render(
         <Route path='/register' component={RegisterContainer} />
         <Route path='/member' component={MemberListContainer} />
         <Route path='/member/:id' component={MemberContainer} />
+        <Route path='/calendar' component={CalendarContainer} />
       </div>
     </ConnectedRouter>
   </Provider>,

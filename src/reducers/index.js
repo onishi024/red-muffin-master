@@ -23,7 +23,8 @@ const initState = {
   current_id: 0,
   isLoading: false,
   assigned_projectlist_open: false,
-  selected_member: null
+  selected_member: null,
+  time_entries: [],
 }
 
 const reducer = (state = initState, action) => {
@@ -69,6 +70,10 @@ const reducer = (state = initState, action) => {
     case ActionTypes.SET_ISLOADING: {
       const isLoading = action.payload.bool
       return {...state, isLoading}
+    }
+    case ActionTypes.SET_TIME_ENTRIES: {
+      const time_entries = action.payload.time_entries
+      return {...state, time_entries}
     }
     //Header
     case ActionTypes.CLICK_APP_BAR: {
