@@ -329,6 +329,44 @@ export default class Issue extends Component {
     else {
       // console.log("details : ", this.state.details);
       // return this.state.details.concat(this.state.summary)
+      //氏名順にソート
+      this.state.details.sort(function(a, b) {
+        if(a.assigned_name > b.assigned_name) {
+          return 1;
+        }
+        else if(a.assigned_name < b.assigned_name) {
+          return -1;
+        }
+        else {
+          return 0;
+        }
+      });
+      //種別＋グレード順にソート
+      this.state.details.sort(function(a, b) {
+        if(a.category < b.category) {
+          return 1;
+        }
+        else if(a.category > b.category) {
+          return -1;
+        }
+        else {
+          if((a.grade === "G3a" && b.grade === "G3b") || (a.grade === "G2a" && b.grade === "G2b")) {
+            return 0;
+          }
+          else if((a.grade === "G3b" && b.grade === "G3a") || (a.grade === "G2b" && b.grade === "G2a")) {
+            return 1;
+          }
+          else if(a.grade < b.grade) {
+            return 1;
+          }
+          else if(a.grade > b.grade) {
+            return -1;
+          }
+          else {
+            return 0;
+          }
+        }
+      });
       return this.state.details
     }
   }
@@ -563,7 +601,7 @@ export default class Issue extends Component {
       // 画面で同一項目が複数回更新され場合はlocalState.change_dataを上書き
       // console.log("onChangeTableが呼び出しされた")
       for (let i in changes) {
-        if(changes[i][3] === "") {
+        if(changes[i][3] === "" || changes[i][3] === "." || changes[i][3] === "," || changes[i][3] === "-") {
           changes[i][3] = 0.0
         }
         const change_row = changes[i][0]
@@ -669,7 +707,7 @@ export default class Issue extends Component {
   }
 
   //カラムヘッダー定義
-  colHeaders = ["#", "種別", "所属", "氏名",
+  colHeaders = ["種別", "グレード/所属", "氏名",
     '4月' , '5月','6月', '7月', '8月', '9月',
     '10月', '11月', '12月', '1月', '2月', '3月']
   //カラムヘッダー定義(山積＆作業工数の算出)
@@ -679,9 +717,9 @@ export default class Issue extends Component {
 
   //カラムデータ定義(要員計画)
   columns = [
-    { data: 'id', readOnly: true, width: 40 },
+    // { data: 'id', readOnly: true, width: 40 },
     { data: 'category', readOnly: true, width: 60 },
-    { data: 'grade', readOnly: true, width: 60 },
+    { data: 'grade', readOnly: true, width: 90 },
     { data: 'assigned_name', readOnly: true, width: 150 },
     { data: 'es04', type: 'numeric', allowInvalid: false, format: '0.00', width: 50 },
     { data: 'es05', type: 'numeric', allowInvalid: false, format: '0.00', width: 50 },
@@ -699,7 +737,7 @@ export default class Issue extends Component {
 
   //カラムデータ定義(山積＆作業工数の算出)
   columns0 = [
-    { data: 'id', readOnly: true, width: 310 },
+    { data: 'id', readOnly: true, width: 300 },
     { data: 'es04', type: 'numeric', allowInvalid: false, format: '0.00', width: 50 },
     { data: 'es05', type: 'numeric', allowInvalid: false, format: '0.00', width: 50 },
     { data: 'es06', type: 'numeric', allowInvalid: false, format: '0.00', width: 50 },
@@ -831,7 +869,7 @@ export default class Issue extends Component {
                 data={this.rowData0(this.state.id, this.props.issue_rows)}
                 colHeaders={this.colHeaders0}
                 columns={this.columns0}
-                columnSorting={true}
+                // columnSorting={true}
                 readOnly={true}
                 width="910"
                 stretchH="all"
@@ -843,7 +881,7 @@ export default class Issue extends Component {
                 root="hot3"
                 data={this.rowData2(this.state.summary)}
                 columns={this.columns0}
-                columnSorting={true}
+                // columnSorting={true}
                 readOnly={true}
                 width="910"
                 stretchH="all"
@@ -860,7 +898,7 @@ export default class Issue extends Component {
                 data={this.rowData(this.state.id, this.props.issue_rows, this.props.groupUsers, null, null, null)}
                 colHeaders={this.colHeaders}
                 columns={this.columns}
-                columnSorting={true}
+                // columnSorting={true}
                 width="910"
                 stretchH="all"
                 fixedColumnsLeft="3"
@@ -872,7 +910,7 @@ export default class Issue extends Component {
                 root="hot2"
                 data={this.state.summary}
                 columns={this.columns0}
-                columnSorting={true}
+                // columnSorting={true}
                 readOnly={true}
                 width="910"
                 stretchH="all"

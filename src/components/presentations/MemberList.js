@@ -42,6 +42,32 @@ const MemberList = ({show_hided_issue, parent_issue_rows, sub_issue_rows, select
         element[0].es02 += current.es02
         element[0].es03 += current.es03
       }
+      //種別＋グレード順にソート
+      result.sort(function(a, b) {
+        if(a.category < b.category) {
+          return 1;
+        }
+        else if(a.category > b.category) {
+          return -1;
+        }
+        else {
+          if((a.grade === "G3a" && b.grade === "G3b") || (a.grade === "G2a" && b.grade === "G2b")) {
+            return 0;
+          }
+          else if((a.grade === "G3b" && b.grade === "G3a") || (a.grade === "G2b" && b.grade === "G2a")) {
+            return 1;
+          }
+          else if(a.grade < b.grade) {
+            return 1;
+          }
+          else if(a.grade > b.grade) {
+            return -1;
+          }
+          else  {
+            return 0;
+          }
+        }
+      });
       return result
     },[])
     return sum_rows
@@ -150,7 +176,7 @@ const MemberList = ({show_hided_issue, parent_issue_rows, sub_issue_rows, select
   }
 
   //カラムヘッダー定義_要員別山積
-  const colHeaders1 = ["氏名", "所属", "種別",
+  const colHeaders1 = ["氏名", "種別", "グレード/所属",
     '4月' , '5月','6月', '7月', '8月', '9月',
     '10月', '11月', '12月', '1月', '2月', '3月']
 
@@ -233,7 +259,7 @@ const MemberList = ({show_hided_issue, parent_issue_rows, sub_issue_rows, select
         colWidths={colwidths1}
         width="1200"
         columns={columns1}
-        columnSorting={true}
+        // columnSorting={true}
         stretchH="all"
         afterSelectionEnd={onSelect}
         fillHandle={false}
