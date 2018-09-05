@@ -422,6 +422,7 @@ export default class Issue extends Component {
       margin: 12,
       fontSize: 12,
       color: "#9E9E9E",
+      marginTop: "75px",
     },
     ankenname: {
       margin: 12,
