@@ -18,13 +18,13 @@ export default class Issue extends Component {
       info: this.initInfo(id, props.issue_rows),
       register_processing: false,
       addMemberForm: {
-        assigned: "",
-        assigned_name: "",
+        assigned: [],
+        assigned_name: [],
         addMemberOpen: false,
       },
       removeMemberForm: {
-        assigned: "",
-        assigned_name: "",
+        assigned: [],
+        assigned_name: [],
         delete_issue: "",
         removeMemberOpen: false,
       },
@@ -262,11 +262,6 @@ export default class Issue extends Component {
   }
 
   rowData = (id, issue_rows, group_users, changes, i, cancel) => {
-    // console.log("rowDataだよ");
-    // console.log("issue_rows : ",issue_rows);
-    // console.log("this.state.copyFlag : ",this.state.copyFlag);
-    //オブジェクトの値渡し
-    // console.log("Flag:", this.state.copyFlag);
     if(this.state.copyFlag === true || cancel !== null) {
       this.state.details = JSON.parse(JSON.stringify(issue_rows.filter(row => row.parent === id && row.id !== id)))
       this.state.copyFlag = true
@@ -278,19 +273,10 @@ export default class Issue extends Component {
         eval("this.state.details[" + changes[i][0] + "]." + changes[i][1] + "=" + changes[i][3])
     }
     //編集後の値で明細表示
-    // let details_data
-    // let summary_data
-    // console.log("copyFlagだ : ", this.state.copyFlag);
-    // console.log("changes : ", changes);
-
     if(this.state.copyFlag === true || changes !== null) {
       const details_data = this.state.details.map(row => {
         const grade = group_users.filter(group_users => group_users.id === row.assigned_id)[0].grade
         const category = grade.substring(0,1) === 'G' || grade.substring(0,1) === 'M' ? 'プロパー' : 'BP'
-
-        // console.log("row : ", row);
-        // console.log("grade : ", grade);
-        // console.log("category : ", category);
 
         return {
           id: row.id,
@@ -323,12 +309,9 @@ export default class Issue extends Component {
       // const data = details_data.concat(summary_data)
       const data = details_data
       this.state.copyFlag = false
-      // console.log("this.state.details : ",this.state.details)
       return data
     }
     else {
-      // console.log("details : ", this.state.details);
-      // return this.state.details.concat(this.state.summary)
       //氏名順にソート
       this.state.details.sort(function(a, b) {
         if(a.assigned_name > b.assigned_name) {
@@ -501,8 +484,18 @@ export default class Issue extends Component {
   }
 
   onChangeAddMember = (event, key, payload) => {
-    const id = this.props.groupUsers[key].id
-    const name = this.props.groupUsers[key].name
+    //multipeの場合、keyはundefined、payloadに配列で情報保持
+    const id = payload
+    let name = []
+    let index = 0
+    for(let i = 0; i < this.props.groupUsers.length; i++) {
+      for(let j = 0; j < payload.length; j++) {
+        if(this.props.groupUsers[i].id === payload[j]) {
+          name[index] = this.props.groupUsers[i].name
+          index++
+        }
+      }
+    }
     this.setState({
       addMemberForm: {
         ...this.state.addMemberForm,
@@ -518,12 +511,14 @@ export default class Issue extends Component {
 
   onClickConfirm = event => {
     const id_filtered_rows = this.props.issue_rows.filter(row => row.id === this.state.id)
-    this.props.onClickAddMemberSubmit(id_filtered_rows[0], this.state.addMemberForm.assigned)
+    for(let i = 0; i < this.state.addMemberForm.assigned.length; i++) {
+      this.props.onClickAddMemberSubmit(id_filtered_rows[0], this.state.addMemberForm.assigned[i])
+    }
     this.setState({
       addMemberForm: {
-        assigned: "",
-        assigned_name: ""
-      },
+      assigned: "",
+      assigned_name: ""
+    },
       status: "processing",
     })
   }
@@ -544,10 +539,18 @@ export default class Issue extends Component {
 
   onChangeRemoveMember = (event, key, payload) => {
     const filtered_issue_rows = this.props.issue_rows.filter(row => row.parent === this.state.id && row.id !== this.state.id)
-    const id = filtered_issue_rows[key].assigned_id
-    const name = filtered_issue_rows[key].assigned_name
-    // const id = this.props.groupUsers[key].id
-    // const name = this.props.groupUsers[key].name
+    //multipeの場合、keyはundefined、payloadに配列で情報保持
+    const id = payload
+    let name = []
+    let index = 0
+    for(let i = 0; i < filtered_issue_rows.length; i++) {
+      for(let j = 0; j < payload.length; j++) {
+        if(filtered_issue_rows[i].assigned_id === payload[j]) {
+          name[index] = filtered_issue_rows[i].assigned_name
+          index++
+        }
+      }
+    }
     this.setState({
       removeMemberForm: {
         ...this.state.removeMemberForm,
@@ -563,8 +566,10 @@ export default class Issue extends Component {
 
   onClickRemoveConfirm = event => {
     const filtered_issue_rows = this.props.issue_rows.filter(row => row.parent === this.state.id && row.id !== this.state.id)
-    const delete_id = filtered_issue_rows.filter(row => row.assigned_id === this.state.removeMemberForm.assigned)[0].id
-    this.props.onClickRemoveMemberSubmit(delete_id)
+    for(let i = 0; i < this.state.removeMemberForm.assigned.length; i++) {
+      const delete_id = filtered_issue_rows.filter(row => row.assigned_id === this.state.removeMemberForm.assigned[i])[0].id
+      this.props.onClickRemoveMemberSubmit(delete_id)
+    }
     this.setState({
       removeMemberForm: {
         assigned: "",
@@ -600,7 +605,6 @@ export default class Issue extends Component {
     if(source === 'edit' || source === 'CopyPaste.paste'){
       // 変更された要素をlocalState.change_dataに保存
       // 画面で同一項目が複数回更新され場合はlocalState.change_dataを上書き
-      // console.log("onChangeTableが呼び出しされた")
       for (let i in changes) {
         if(changes[i][3] === "" || changes[i][3] === "." || changes[i][3] === "," || changes[i][3] === "-") {
           changes[i][3] = 0.0
@@ -611,7 +615,6 @@ export default class Issue extends Component {
         //issue_rows全体から案件登録画面に表示されている案件の子チケットのみを絞り込む
 
         const row_data = this.rowData(this.state.id, this.props.issue_rows, this.props.groupUsers, changes, i, null)
-        // console.log("this.state.summary:",this.state.summary);
         // localState.change_dataが空の場合は無条件で要素を追加
 
         if(this.state.change_data.id.length === 0){
@@ -690,21 +693,20 @@ export default class Issue extends Component {
 
   //required check
   requiredAddMember = value => {
-    const error_text = value === ""
-                     ? "この項目は必須入力項目です。"
-                     : this.rowData(this.state.id, this.props.issue_rows, this.props.groupUsers, null, null, null).filter(row => row.assigned_id === value).length >= 1
-                     ? "既に追加されている要員です。"
-                     : ""
-    return error_text
+    const already = this.rowData(this.state.id, this.props.issue_rows, this.props.groupUsers, null, null, null);
+    if(value.length === 0) return "この項目は必須入力項目です。"
+    for(let i = 0; i < already.length; i++) {
+      for(let j = 0; j < value.length; j++) {
+        if(already[i].assigned_id === value[j])
+          return "既に追加されている要員です。"
+      }
+    }
+    return ""
   }
 
   requiredRemoveMember = value => {
-    const error_text = value === ""
-                     ? "この項目は必須入力項目です。"
-                     : this.rowData(this.state.id, this.props.issue_rows, this.props.groupUsers, null, null, null).filter(row => row.assigned_id === value).length === 0
-                     ? "追加されていない要員です。"
-                     : ""
-    return error_text
+    if(value.length === 0) return "この項目は必須入力項目です。"
+    else return ""
   }
 
   //カラムヘッダー定義
@@ -754,8 +756,6 @@ export default class Issue extends Component {
   ]
 
   render() {
-    // console.log("render start");
-
     const actionPostIssueConfirm = [
       <FlatButton
         label="Cancel"
@@ -968,6 +968,7 @@ export default class Issue extends Component {
               open={this.state.status === "inputing"}
             >
               <SelectField
+              multiple={true}
               floatingLabelText="担当"
               value={this.state.addMemberForm.assigned}
               onChange={this.onChangeAddMember}
@@ -984,7 +985,7 @@ export default class Issue extends Component {
             >
               <List>
                 <ListItem style={this.styles.listItem} disabled={true} primaryText='担当'
-                  secondaryText={this.state.addMemberForm.assigned_name} />
+                  secondaryText={this.state.addMemberForm.assigned_name + " , "} />
               </List>
             </Dialog>
             <Dialog
@@ -1008,6 +1009,7 @@ export default class Issue extends Component {
               open={this.state.status === "removeMemberinputing"}
             >
               <SelectField
+              multiple={true}
               floatingLabelText="担当"
               value={this.state.removeMemberForm.assigned}
               onChange={this.onChangeRemoveMember}
@@ -1024,7 +1026,7 @@ export default class Issue extends Component {
             >
               <List>
                 <ListItem style={this.styles.listItem} disabled={true} primaryText='担当'
-                  secondaryText={this.state.removeMemberForm.assigned_name} />
+                  secondaryText={this.state.removeMemberForm.assigned_name + " , "} />
               </List>
             </Dialog>
           </div>
