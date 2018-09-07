@@ -7,22 +7,50 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import { Link } from 'react-router-dom'
 import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar';
 
-const IssueList = ({selected_function, show_hided_issue, parent_issue_rows, onToggleHide, onToggleIssueHide, onoffSnackBar,
-                    getIssue_rows, selected_group_id, selected_year, snackbar_open, current_id}) => {
+const IssueList = ({selected_function, show_hided_issue, parent_issue_rows, sub_issue_rows, onToggleHide, onToggleIssueHide, 
+                    onoffSnackBar,getIssue_rows, selected_group_id, selected_year, snackbar_open, current_id}) => {
 
 
   //親チケットの絞込み
   // const __issue_rows = issue_rows.filter(issue_row => issue_row.parent === issue_row.id)
+
   //表示対象の絞込み
   const _issue_rows = show_hided_issue ? parent_issue_rows.filter(issue_row => issue_row.hide === true) : parent_issue_rows
+
+  //直近2ヵ月の工数取得用キー生成
+  const today = new Date()
+  const this_month = (today.getMonth() + 1) % 12 ? (today.getMonth() + 1) % 12 : (today.getMonth() + 1)
+  const next_month = (today.getMonth() + 2) % 12 ? (today.getMonth() + 2) % 12 : (today.getMonth() + 2)
+  const this_month_key = this_month > 9 ? 'es' + this_month : 'es0' + this_month
+  const next_month_key = next_month > 9 ? 'es' + next_month : 'es0' + next_month
+
+  //直近2ヵ月の工数サマリを案件一覧表示用オブジェクトに追加
+  const __issue_rows = _issue_rows.map((issue_row) => {
+
+    //案件一覧表示用オブジェクトを新しい変数にコピー
+    const new_issue_row = Object.assign({}, issue_row)
+
+    //山積サマリ
+    new_issue_row.sum_cost = issue_row[this_month_key] + issue_row[next_month_key]
+
+    //親チケットに紐付く子チケットの絞り込み
+    const _sub_issue_rows = sub_issue_rows.filter((issue_row) => {
+      return issue_row.parent === new_issue_row.id
+    })
+
+    //子チケットの予定工数サマリ
+    new_issue_row.sum_actual_cost = _sub_issue_rows.reduce((accumulator,currentValue) => {
+      return accumulator + currentValue[this_month_key] + currentValue[next_month_key]
+    }, 0)
+
+    return new_issue_row
+
+  }, sub_issue_rows)
 
   //非表示toggleのスタイル
   const styles = {
     table: {
       overflowY: "scroll",
-      // marginTop: "100px",
-      // paddingTop: "100px",
-      // borderTop: "100px",
     },
     tableHeader: {
       marginTop: "95px",
@@ -120,32 +148,26 @@ const IssueList = ({selected_function, show_hided_issue, parent_issue_rows, onTo
         >
           <TableHeader displaySelectAll={false} adjustForCheckbox={false} >
             <TableRow>
-              <TableHeaderColumn style={{ width: '5%'}}>ID</TableHeaderColumn>
-              <TableHeaderColumn style={{ width: '15%'}}>案件管理番号</TableHeaderColumn>
-              <TableHeaderColumn style={{ width: '15%'}}>内部管理番号</TableHeaderColumn>
-              <TableHeaderColumn style={{ width: '25%'}}>案件名称</TableHeaderColumn>
+              <TableHeaderColumn style={{ width: '10%'}}>案件管理番号</TableHeaderColumn>
+              <TableHeaderColumn style={{ width: '10%'}}>内部管理番号</TableHeaderColumn>
+              <TableHeaderColumn style={{ width: '30%'}}>案件名称</TableHeaderColumn>
               <TableHeaderColumn style={{ width: '10%'}}>主担当</TableHeaderColumn>
-              <TableHeaderColumn style={{ width: '10%'}}>見積</TableHeaderColumn>
+              <TableHeaderColumn style={{ width: '10%'}}>山積（直近2ヵ月）</TableHeaderColumn>
+              <TableHeaderColumn style={{ width: '10%'}}>予定（直近2ヵ月）</TableHeaderColumn>
               <TableHeaderColumn style={{ width: '10%'}}>詳細</TableHeaderColumn>
               <TableHeaderColumn style={{ width: '10%'}}>表示</TableHeaderColumn>
             </TableRow>
           </TableHeader>
           <TableBody stripedRows={true} displayRowCheckbox={false} >
-            {_issue_rows.map(issue_row => {
+            {__issue_rows.map(issue_row => {
               return (
                 <TableRow key={issue_row.id} >
-                  <TableRowColumn style={{ width: '5%'}}>{issue_row.id}</TableRowColumn>
-                  <TableRowColumn style={{ width: '15%'}}>{issue_row.ankenno}</TableRowColumn>
-                  <TableRowColumn style={{ width: '15%'}}>{issue_row.naibukanrino}</TableRowColumn>
-                  <TableRowColumn style={{ width: '25%', whiteSpace: 'nomal', wordWrap: 'break-word'}}>{issue_row.title}</TableRowColumn>
-                  <TableRowColumn style={{ width: '10%'}}>{issue_row.assigned_name}</TableRowColumn>
-                  <TableRowColumn style={{ width: '10%'}}>
-                    {
-                      ( issue_row.es04 + issue_row.es05 + issue_row.es06 + issue_row.es07 + issue_row.es08 + issue_row.es09
-                        + issue_row.es10 + issue_row.es11 + issue_row.es12 + issue_row.es01 + issue_row.es02 + issue_row.es03
-                      ).toFixed(2)
-                    }
-                  </TableRowColumn>
+                  <TableRowColumn style={{ width: '10%'}}>{issue_row.ankenno}</TableRowColumn>
+                  <TableRowColumn style={{ width: '10%'}}>{issue_row.naibukanrino}</TableRowColumn>
+                  <TableRowColumn style={{ width: '30%', whiteSpace: 'nomal', wordWrap: 'break-word'}}>{issue_row.title}</TableRowColumn>
+                  <TableRowColumn style={{ width: '10%', textAlign: 'center'}}>{issue_row.assigned_name}</TableRowColumn>
+                  <TableRowColumn style={{ width: '10%', textAlign: 'center'}}>{(issue_row.sum_cost).toFixed(2)}</TableRowColumn>
+                  <TableRowColumn style={{ width: '10%', textAlign: 'center'}}>{(issue_row.sum_actual_cost).toFixed(2)}</TableRowColumn>
                   <TableRowColumn style={{ width: '10%'}}><Link to={`/issue_edit/${issue_row.id}`}><EditIcon /></Link></TableRowColumn>
                   <TableRowColumn boolean='true' style={{ width: '10%'}}>
                     <Toggle style={styles.issue_toggle} toggled={issue_row.hide} name={issue_row.id} onToggle={(event, value) => _onToggleIssueHide(event, value)}/>
@@ -189,5 +211,3 @@ const IssueList = ({selected_function, show_hided_issue, parent_issue_rows, onTo
 
 
 export default IssueList
-
-// + parseFloat(issue_row.es01) + parseFloat(issue_row.es02) + parseFloat(issue_row.es03)

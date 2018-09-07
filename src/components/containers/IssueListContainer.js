@@ -6,6 +6,7 @@ const mapStateToProps = state => ({
   selected_function: state.reducers.selected_function,
   show_hided_issue: state.reducers.show_hided_issue,
   parent_issue_rows: state.reducers.parent_issue_rows,
+  sub_issue_rows: state.reducers.sub_issue_rows,
   selected_group_id: state.reducers.selected_group_id,
   selected_year: state.reducers.selected_year,
   snackbar_open: state.reducers.snackbar_open,
