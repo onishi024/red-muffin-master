@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
 import {FlatButton, Dialog, CircularProgress, FloatingActionButton, SelectField, MenuItem,
-        Paper, List, ListItem, TextField} from 'material-ui'
+        Paper, List, ListItem, TextField, IconButton} from 'material-ui'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import ContentAdd from 'material-ui/svg-icons/content/add'
 import ContentRemove from 'material-ui/svg-icons/content/remove'
 import HotTable from 'react-handsontable'
 import { Link } from 'react-router-dom'
+import ModeEdit from 'material-ui/svg-icons/editor/mode-edit';
 
 export default class Issue extends Component {
 
@@ -13,6 +14,7 @@ export default class Issue extends Component {
   constructor(props) {
     super(props)
     const id = props.match.params.id
+    props.getAroundIssueRows(props.issue_rows.filter(row => row.id === props.match.params.id))
     this.state = {
       id: id,
       info: this.initInfo(id, props.issue_rows),
@@ -70,6 +72,7 @@ export default class Issue extends Component {
         es03: 0.0
       },
       copyFlag: true,
+      localBusinessYear: parseFloat(Object.assign(props.selected_year))
     }
   }
 
@@ -262,16 +265,26 @@ export default class Issue extends Component {
   }
 
   rowData = (id, issue_rows, group_users, changes, i, cancel) => {
+
+    const businessYear = String(this.state.localBusinessYear)
+    let new_issue_rows = []
+
+    if(businessYear === this.props.selected_year) {
+      new_issue_rows = issue_rows.filter(row => row.parent === id && row.id !== id)
+    } else {
+      new_issue_rows = this.props.around_issue_rows.filter(row => row.business_year === businessYear && row.parent !== row.id)
+    }
+
     if(this.state.copyFlag === true || cancel !== null) {
-      this.state.details = JSON.parse(JSON.stringify(issue_rows.filter(row => row.parent === id && row.id !== id)))
+      this.state.details = JSON.parse(JSON.stringify(new_issue_rows))
       this.state.copyFlag = true
     }
-    //編集が行われた場合にローカルステート更新
 
     //編集された場合にローカルステートを更新する
     if(changes !== undefined && changes !== null) {
         eval("this.state.details[" + changes[i][0] + "]." + changes[i][1] + "=" + changes[i][3])
     }
+
     //編集後の値で明細表示
     if(this.state.copyFlag === true || changes !== null) {
       const details_data = this.state.details.map(row => {
@@ -355,21 +368,51 @@ export default class Issue extends Component {
   }
 
   rowData0 = (id, issue_rows) => {
-    const _piling= JSON.parse(JSON.stringify(issue_rows.filter(row => row.parent === id && row.id === id)))
-    const piling = {
-      id: "山積工数",
-      es04: _piling[0].es04,
-      es05: _piling[0].es05,
-      es06: _piling[0].es06,
-      es07: _piling[0].es07,
-      es08: _piling[0].es08,
-      es09: _piling[0].es09,
-      es10: _piling[0].es10,
-      es11: _piling[0].es11,
-      es12: _piling[0].es12,
-      es01: _piling[0].es01,
-      es02: _piling[0].es02,
-      es03: _piling[0].es03
+
+    const businessYear = String(this.state.localBusinessYear)
+    let new_issue_rows = []
+
+    if(businessYear === this.props.selected_year) {
+      new_issue_rows = issue_rows.filter(row => row.parent === id && row.id === id)
+    } else {
+      new_issue_rows = this.props.around_issue_rows.filter(row => row.business_year === businessYear && row.parent === row.id)
+    }
+
+    const _piling = JSON.parse(JSON.stringify(new_issue_rows))
+    let piling = {}
+
+    if(_piling.length === 0) {
+      piling = {
+        id: "山積工数　※該当年度のチケット無し",
+        es04: 0,
+        es05: 0,
+        es06: 0,
+        es07: 0,
+        es08: 0,
+        es09: 0,
+        es10: 0,
+        es11: 0,
+        es12: 0,
+        es01: 0,
+        es02: 0,
+        es03: 0
+      }
+    } else {
+      piling = {
+        id: "山積工数",
+        es04: _piling[0].es04,
+        es05: _piling[0].es05,
+        es06: _piling[0].es06,
+        es07: _piling[0].es07,
+        es08: _piling[0].es08,
+        es09: _piling[0].es09,
+        es10: _piling[0].es10,
+        es11: _piling[0].es11,
+        es12: _piling[0].es12,
+        es01: _piling[0].es01,
+        es02: _piling[0].es02,
+        es03: _piling[0].es03
+      }
     }
     return piling
   }
@@ -406,6 +449,11 @@ export default class Issue extends Component {
       fontSize: 12,
       color: "#9E9E9E",
       marginTop: "75px",
+    },
+    lnk: {
+      margin: 12,
+      fontSize: 12,
+      color: "#9E9E9E",
     },
     ankenname: {
       margin: 12,
@@ -459,7 +507,13 @@ export default class Issue extends Component {
     Clear:{
       color: '#FF7F50',
       // backgroundColor: '#A9A9A9',
-    }
+    },
+    PrevYear:{
+      marginLeft: 470,
+    },
+    // NextYear:{
+    //   marginLeft: 60,
+    // }
   }
 
   //SUBMIT
@@ -472,7 +526,7 @@ export default class Issue extends Component {
       register_processing: false,
       status: "processing"
     })
-    this.props.onClickChangeIssueSubmit(this.state.change_data)
+    this.props.onClickChangeIssueSubmit(this.state.change_data, this.props.issue_rows.filter(row => row.id === this.props.match.params.id))
   }
 
   onClickTableClear = event => {
@@ -510,7 +564,8 @@ export default class Issue extends Component {
   }
 
   onClickConfirm = event => {
-    const id_filtered_rows = this.props.issue_rows.filter(row => row.id === this.state.id)
+    const businessYear = String(this.state.localBusinessYear)
+    const id_filtered_rows = this.props.around_issue_rows.filter(row => row.business_year === businessYear && row.parent === row.id)
     for(let i = 0; i < this.state.addMemberForm.assigned.length; i++) {
       this.props.onClickAddMemberSubmit(id_filtered_rows[0], this.state.addMemberForm.assigned[i])
     }
@@ -709,6 +764,14 @@ export default class Issue extends Component {
     else return ""
   }
 
+  onClickUpdateBusinessYear = value => {
+    const newBusinessYear = parseFloat(this.state.localBusinessYear) + value
+    this.setState({
+      copyFlag: true,
+      localBusinessYear: newBusinessYear
+    })
+  }
+
   //カラムヘッダー定義
   colHeaders = ["種別", "グレード/所属", "氏名",
     '4月' , '5月','6月', '7月', '8月', '9月',
@@ -841,6 +904,19 @@ export default class Issue extends Component {
       />
     ]
 
+    //SVG Icons
+    const EditIcon = () => {
+      return (
+        <IconButton tooltip="SVG Icon" >
+          <ModeEdit />
+        </IconButton>
+      )
+    }
+
+    const hot0Data = this.rowData0(this.state.id, this.props.issue_rows)
+
+    const hot1Data = this.rowData(this.state.id, this.props.issue_rows, this.props.groupUsers, null, null, null)
+
     return (
       <div>
         <div style={this.styles.path}><Link to={`/`}>Home</Link> > <Link to={`/issue`}>案件一覧</Link> > 案件情報編集</div>
@@ -863,11 +939,22 @@ export default class Issue extends Component {
               onChange={this.onChangeRemarks}
               />
             <br />
-            <div>　■山積＆予定工数</div>
+            <div>　■山積＆予定工数　＠{this.state.localBusinessYear}年度
+            <FlatButton
+            label="PrevYear"
+            style={this.styles.PrevYear}
+            onClick={() => this.onClickUpdateBusinessYear(-1)}
+            />
+            <FlatButton
+            label="NextYear"
+            style={this.styles.Cancel}
+            onClick={() => this.onClickUpdateBusinessYear(1)}
+            />
+            </div>
             <div style={this.styles.hot}>
               <HotTable
                 root="hot0"
-                data={this.rowData0(this.state.id, this.props.issue_rows)}
+                data={hot0Data}
                 colHeaders={this.colHeaders0}
                 columns={this.columns0}
                 // columnSorting={true}
@@ -892,11 +979,11 @@ export default class Issue extends Component {
                 />
             </div>
             <br />
-            <div>　■要員計画</div>
+            <div>　■要員計画　＠{this.state.localBusinessYear}年度</div>
             <div style={this.styles.hot}>
               <HotTable
                 root="hot1"
-                data={this.rowData(this.state.id, this.props.issue_rows, this.props.groupUsers, null, null, null)}
+                data={hot1Data}
                 colHeaders={this.colHeaders}
                 columns={this.columns}
                 // columnSorting={true}
@@ -1034,6 +1121,4 @@ export default class Issue extends Component {
       </div>
     )
   }
-
 }
-//{this.props.groupUsers.map(group_user => <MenuItem key={group_user.id} value={group_user.id} primaryText={group_user.name} />)}

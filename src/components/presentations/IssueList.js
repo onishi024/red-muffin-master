@@ -7,7 +7,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import { Link } from 'react-router-dom'
 import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar';
 
-const IssueList = ({selected_function, show_hided_issue, parent_issue_rows, sub_issue_rows, onToggleHide, onToggleIssueHide, 
+const IssueList = ({selected_function, show_hided_issue, parent_issue_rows, sub_issue_rows, onToggleHide, onToggleIssueHide,
                     onoffSnackBar,getIssue_rows, selected_group_id, selected_year, snackbar_open, current_id}) => {
 
 
@@ -31,7 +31,8 @@ const IssueList = ({selected_function, show_hided_issue, parent_issue_rows, sub_
     const new_issue_row = Object.assign({}, issue_row)
 
     //山積サマリ
-    new_issue_row.sum_cost = issue_row[this_month_key] + issue_row[next_month_key]
+    new_issue_row.this_month_cost = issue_row[this_month_key]
+    new_issue_row.next_month_cost = issue_row[next_month_key]
 
     //親チケットに紐付く子チケットの絞り込み
     const _sub_issue_rows = sub_issue_rows.filter((issue_row) => {
@@ -39,9 +40,16 @@ const IssueList = ({selected_function, show_hided_issue, parent_issue_rows, sub_
     })
 
     //子チケットの予定工数サマリ
-    new_issue_row.sum_actual_cost = _sub_issue_rows.reduce((accumulator,currentValue) => {
-      return accumulator + currentValue[this_month_key] + currentValue[next_month_key]
+    new_issue_row.this_month_actual_cost = _sub_issue_rows.reduce((accumulator,currentValue) => {
+      return accumulator + currentValue[this_month_key]
     }, 0)
+
+    new_issue_row.next_month_actual_cost = _sub_issue_rows.reduce((accumulator,currentValue) => {
+      return accumulator + currentValue[next_month_key]
+    }, 0)
+
+    new_issue_row.this_month_cost_variance = new_issue_row.this_month_cost - new_issue_row.this_month_actual_cost
+    new_issue_row.next_month_cost_variance = new_issue_row.next_month_cost - new_issue_row.next_month_actual_cost
 
     return new_issue_row
 
@@ -148,28 +156,32 @@ const IssueList = ({selected_function, show_hided_issue, parent_issue_rows, sub_
         >
           <TableHeader displaySelectAll={false} adjustForCheckbox={false} >
             <TableRow>
-              <TableHeaderColumn style={{ width: '10%'}}>案件管理番号</TableHeaderColumn>
+              <TableHeaderColumn style={{ width: '8%'}}>案件管理番号</TableHeaderColumn>
               <TableHeaderColumn style={{ width: '10%'}}>内部管理番号</TableHeaderColumn>
               <TableHeaderColumn style={{ width: '30%'}}>案件名称</TableHeaderColumn>
               <TableHeaderColumn style={{ width: '10%'}}>主担当</TableHeaderColumn>
-              <TableHeaderColumn style={{ width: '10%'}}>山積（直近2ヵ月）</TableHeaderColumn>
-              <TableHeaderColumn style={{ width: '10%'}}>予定（直近2ヵ月）</TableHeaderColumn>
-              <TableHeaderColumn style={{ width: '10%'}}>詳細</TableHeaderColumn>
-              <TableHeaderColumn style={{ width: '10%'}}>表示</TableHeaderColumn>
+              <TableHeaderColumn style={{ width: '5%'}}>山積（当月）</TableHeaderColumn>
+              <TableHeaderColumn style={{ width: '9%'}}>当月差分（山積-予定）</TableHeaderColumn>
+              <TableHeaderColumn style={{ width: '5%'}}>山積（次月）</TableHeaderColumn>
+              <TableHeaderColumn style={{ width: '9%'}}>次月予定（山積-予定）</TableHeaderColumn>
+              <TableHeaderColumn style={{ width: '7%', textAlign: 'center'}}>詳細</TableHeaderColumn>
+              <TableHeaderColumn style={{ width: '7%'}}>表示</TableHeaderColumn>
             </TableRow>
           </TableHeader>
           <TableBody stripedRows={true} displayRowCheckbox={false} >
             {__issue_rows.map(issue_row => {
               return (
                 <TableRow key={issue_row.id} >
-                  <TableRowColumn style={{ width: '10%'}}>{issue_row.ankenno}</TableRowColumn>
+                  <TableRowColumn style={{ width: '8%'}}>{issue_row.ankenno}</TableRowColumn>
                   <TableRowColumn style={{ width: '10%'}}>{issue_row.naibukanrino}</TableRowColumn>
                   <TableRowColumn style={{ width: '30%', whiteSpace: 'nomal', wordWrap: 'break-word'}}>{issue_row.title}</TableRowColumn>
-                  <TableRowColumn style={{ width: '10%', textAlign: 'center'}}>{issue_row.assigned_name}</TableRowColumn>
-                  <TableRowColumn style={{ width: '10%', textAlign: 'center'}}>{(issue_row.sum_cost).toFixed(2)}</TableRowColumn>
-                  <TableRowColumn style={{ width: '10%', textAlign: 'center'}}>{(issue_row.sum_actual_cost).toFixed(2)}</TableRowColumn>
-                  <TableRowColumn style={{ width: '10%'}}><Link to={`/issue_edit/${issue_row.id}`}><EditIcon /></Link></TableRowColumn>
-                  <TableRowColumn boolean='true' style={{ width: '10%'}}>
+                  <TableRowColumn style={{ width: '10%'}}>{issue_row.assigned_name}</TableRowColumn>
+                  <TableRowColumn style={{ width: '7%', textAlign: 'right'}}>{(issue_row.this_month_cost).toFixed(2)}</TableRowColumn>
+                  <TableRowColumn style={{ width: '7%', textAlign: 'right'}}>{(issue_row.this_month_cost_variance).toFixed(2)}</TableRowColumn>
+                  <TableRowColumn style={{ width: '7%', textAlign: 'right'}}>{(issue_row.next_month_cost).toFixed(2)}</TableRowColumn>
+                  <TableRowColumn style={{ width: '7%', textAlign: 'right'}}>{(issue_row.next_month_cost_variance).toFixed(2)}</TableRowColumn>
+                  <TableRowColumn style={{ width: '7%', textAlign: 'right'}}><Link to={`/issue_edit/${issue_row.id}`}><EditIcon /></Link></TableRowColumn>
+                  <TableRowColumn boolean='true' style={{ width: '7%'}}>
                     <Toggle style={styles.issue_toggle} toggled={issue_row.hide} name={issue_row.id} onToggle={(event, value) => _onToggleIssueHide(event, value)}/>
                   </TableRowColumn>
                 </TableRow>

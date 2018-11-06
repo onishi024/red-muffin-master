@@ -6,18 +6,19 @@ const initState = {
   group_select_open: false,
   groups: [],
   groupUsers: [],
-  selected_group_id: 153,
+  selected_group_id: 157,
   years: [],
   selected_year: '2018',
-  selected_identifier: 'c2018',
-  selected_name: '基幹開発3（顧客）',
-  selected_project_id: 20,
+  selected_identifier: 'g2018',
+  selected_name: '基幹保守（顧客）',
+  selected_project_id: 24,
   show_hided_issue: true,
   selected_issue: '0',
   issues: [],
   issue_rows: [],
   parent_issue_rows: [],
   sub_issue_rows: [],
+  around_issue_rows: [],
   projects: [],
   snackbar_open: false,
   current_id: 0,
@@ -67,6 +68,14 @@ const reducer = (state = initState, action) => {
       console.log("sub_issue_rows: ",sub_issue_rows)
       return {...state, sub_issue_rows, isLoading}
     }
+    case ActionTypes.SET_AROUND_ISSUE_ROWS: {
+      const around_issue_rows = action.payload.issue_rows
+      // const isLoading = false
+      console.log("around_issue_rows: ",around_issue_rows)
+      console.log("GET_AROUND_ISSUE_ROWS END")
+      // return {...state, around_issue_rows, isLoading}
+      return {...state, around_issue_rows}
+    }
     case ActionTypes.SET_ISLOADING: {
       const isLoading = action.payload.bool
       return {...state, isLoading}
@@ -89,6 +98,7 @@ const reducer = (state = initState, action) => {
       return {...state, selected_name ,selected_group_id}
     }
     case ActionTypes.SELECT_YEAR: {
+      console.log('SELECT_YEAR START')
       const selected_year = action.payload.selected_year
       return {...state, selected_year}
     }
