@@ -6,12 +6,12 @@ const initState = {
   group_select_open: false,
   groups: [],
   groupUsers: [],
-  selected_group_id: 157,
+  selected_group_id: 153,
   years: [],
   selected_year: '2018',
-  selected_identifier: 'g2018',
-  selected_name: '基幹保守（顧客）',
-  selected_project_id: 24,
+  selected_identifier: 'c2018',
+  selected_name: '基幹開発3（顧客）',
+  selected_project_id: 20,
   show_hided_issue: true,
   selected_issue: '0',
   issues: [],
@@ -26,6 +26,7 @@ const initState = {
   assigned_projectlist_open: false,
   selected_member: null,
   time_entries: [],
+  transition_issue: null,
 }
 
 const reducer = (state = initState, action) => {
@@ -137,6 +138,10 @@ const reducer = (state = initState, action) => {
     case ActionTypes.SELECT_MEMBER: {
       const selected_member = action.payload.assigned_id
       return {...state, selected_member}
+    }
+    case ActionTypes.TRANSITION_ISSUE: {
+      const transition_issue = action.payload.transition_issue
+      return {...state, transition_issue}
     }
 
     //other
