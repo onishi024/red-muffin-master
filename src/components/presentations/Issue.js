@@ -13,6 +13,7 @@ export default class Issue extends Component {
   //constructor
   constructor(props) {
     super(props)
+    console.log("Constructor Start !!!");
     const id = props.match.params.id
     props.getAroundIssueRows(props.issue_rows.filter(row => row.id === props.match.params.id))
     this.state = {
@@ -74,6 +75,7 @@ export default class Issue extends Component {
       copyFlag: true,
       localBusinessYear: parseFloat(Object.assign(props.selected_year))
     }
+    console.log("State : ", this.state);
   }
 
   summaryData = (Details_Data) => {
@@ -265,16 +267,13 @@ export default class Issue extends Component {
   }
 
   rowData = (id, issue_rows, group_users, changes, i, cancel) => {
-
     const businessYear = String(this.state.localBusinessYear)
     let new_issue_rows = []
-
-    if(businessYear === this.props.selected_year) {
+     if(businessYear === this.props.selected_year) {
       new_issue_rows = issue_rows.filter(row => row.parent === id && row.id !== id)
     } else {
       new_issue_rows = this.props.around_issue_rows.filter(row => row.business_year === businessYear && row.parent !== row.id)
     }
-
     if(this.state.copyFlag === true || cancel !== null) {
       this.state.details = JSON.parse(JSON.stringify(new_issue_rows))
       this.state.copyFlag = true
@@ -284,7 +283,6 @@ export default class Issue extends Component {
     if(changes !== undefined && changes !== null) {
         eval("this.state.details[" + changes[i][0] + "]." + changes[i][1] + "=" + changes[i][3])
     }
-
     //編集後の値で明細表示
     if(this.state.copyFlag === true || changes !== null) {
       const details_data = this.state.details.map(row => {
@@ -368,20 +366,16 @@ export default class Issue extends Component {
   }
 
   rowData0 = (id, issue_rows) => {
-
     const businessYear = String(this.state.localBusinessYear)
     let new_issue_rows = []
-
-    if(businessYear === this.props.selected_year) {
+     if(businessYear === this.props.selected_year) {
       new_issue_rows = issue_rows.filter(row => row.parent === id && row.id === id)
     } else {
       new_issue_rows = this.props.around_issue_rows.filter(row => row.business_year === businessYear && row.parent === row.id)
     }
-
-    const _piling = JSON.parse(JSON.stringify(new_issue_rows))
+     const _piling = JSON.parse(JSON.stringify(new_issue_rows))
     let piling = {}
-
-    if(_piling.length === 0) {
+     if(_piling.length === 0) {
       piling = {
         id: "山積工数　※該当年度のチケット無し",
         es04: 0,
@@ -566,9 +560,7 @@ export default class Issue extends Component {
   onClickConfirm = event => {
     const businessYear = String(this.state.localBusinessYear)
     const id_filtered_rows = this.props.around_issue_rows.filter(row => row.business_year === businessYear && row.parent === row.id)
-    for(let i = 0; i < this.state.addMemberForm.assigned.length; i++) {
-      this.props.onClickAddMemberSubmit(id_filtered_rows[0], this.state.addMemberForm.assigned[i])
-    }
+    this.props.onClickAddMemberSubmit(id_filtered_rows[0], this.state.addMemberForm.assigned)
     this.setState({
       addMemberForm: {
       assigned: "",
@@ -621,10 +613,14 @@ export default class Issue extends Component {
 
   onClickRemoveConfirm = event => {
     const filtered_issue_rows = this.props.issue_rows.filter(row => row.parent === this.state.id && row.id !== this.state.id)
+    let delete_id = []
     for(let i = 0; i < this.state.removeMemberForm.assigned.length; i++) {
-      const delete_id = filtered_issue_rows.filter(row => row.assigned_id === this.state.removeMemberForm.assigned[i])[0].id
-      this.props.onClickRemoveMemberSubmit(delete_id)
+      delete_id[i] = filtered_issue_rows.filter(row => row.assigned_id === this.state.removeMemberForm.assigned[i])[0].id
     }
+
+    console.log("delete_id : ", delete_id);
+
+    this.props.onClickRemoveMemberSubmit(delete_id)
     this.setState({
       removeMemberForm: {
         assigned: "",
@@ -903,7 +899,6 @@ export default class Issue extends Component {
         onClick={this.onClickOK}
       />
     ]
-
     //SVG Icons
     const EditIcon = () => {
       return (
@@ -912,9 +907,7 @@ export default class Issue extends Component {
         </IconButton>
       )
     }
-
     const hot0Data = this.rowData0(this.state.id, this.props.issue_rows)
-
     const hot1Data = this.rowData(this.state.id, this.props.issue_rows, this.props.groupUsers, null, null, null)
 
     return (
@@ -1121,4 +1114,6 @@ export default class Issue extends Component {
       </div>
     )
   }
+
 }
+//{this.props.groupUsers.map(group_user => <MenuItem key={group_user.id} value={group_user.id} primaryText={group_user.name} />)}

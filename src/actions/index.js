@@ -77,8 +77,7 @@ export const getAroundIssueRows = issue_rows => ({
   type: ActionTypes.GET_AROUND_ISSUE_ROWS,
   payload: {issue_rows},
 })
-
-export const setAroundIssueRows = issue_rows => ({
+ export const setAroundIssueRows = issue_rows => ({
   type: ActionTypes.SET_AROUND_ISSUE_ROWS,
   payload: {issue_rows}
 })
@@ -164,7 +163,7 @@ export const onClickRegisterConfirm = form => {
 
 //Issue
 export const onClickChangeIssueSubmit = (change_data, starting_issue_row) => {
-  return {
+    return {
     type: ActionTypes.CHANGE_ISSUE,
     payload: {
       change_data, starting_issue_row
@@ -193,5 +192,12 @@ export const setSelectedMember = (assigned_id) => {
   return {
     type: ActionTypes.SELECT_MEMBER,
     payload: {assigned_id}
+  }
+}
+
+export const setTransitionIssue = (transition_issue) => {
+  return {
+    type: ActionTypes.TRANSITION_ISSUE,
+    payload: {transition_issue}
   }
 }

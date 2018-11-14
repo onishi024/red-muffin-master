@@ -37,9 +37,8 @@ export const getIssueBusinessYear = (project_id) =>
     {method: 'GET',
      headers: headers})
   .then(response => response.json())
-  .then(json => json.project)
-
-export const getProjects = () =>
+    .then(json => json.project)
+ export const getProjects = () =>
 fetch(url + `projects.json?limit=100`,
   {method: 'GET',
     headers: headers})
@@ -56,6 +55,16 @@ export const getIssues = (selected_project_id,selected_offset) =>
     return json.issues
   })
 
+export const getAroundIssues = (naibukanrino) =>
+  fetch(url + `issues.json?cf_3=` + naibukanrino,
+    {method: 'GET',
+      headers: headers})
+  .then(response => response.json())
+  .then(json => {
+    console.log("GET AROUND ISSUES DONE");
+    return json.issues
+})
+  
 export const getParentIssues = (selected_project_id,selected_offset) =>
   fetch(url + `issues.json?project_id=` + selected_project_id + `&offset=` + selected_offset + `&limit=100&parent_id=!*`,
     {method: 'GET',
@@ -65,17 +74,6 @@ export const getParentIssues = (selected_project_id,selected_offset) =>
     console.log("GET PARENT ISSUES DONE");
     return json.issues
   })
-
-export const getAroundIssues = (naibukanrino) =>
-fetch(url + `issues.json?cf_3=` + naibukanrino,
-  {method: 'GET',
-    headers: headers})
-.then(response => response.json())
-.then(json => {
-  console.log("GET AROUND ISSUES DONE");
-  return json.issues
-})
-
 
 export const getParentIssuesCount = (selected_project_id,selected_offset,limit) =>
 fetch(url + `issues.json?project_id=` + selected_project_id + `&offset=` + selected_offset + `&limit=` + limit + `&parent_id=!*`,

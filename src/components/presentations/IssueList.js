@@ -1,15 +1,17 @@
 import React from 'react'
-import { Table, TableHeader, TableBody, TableFooter, TableRow, TableHeaderColumn, TableRowColumn,
-         Toggle, IconButton, FloatingActionButton, Snackbar } from 'material-ui'
+import {Table, TableHeader, TableBody, TableFooter, TableRow, TableHeaderColumn, TableRowColumn,
+         Toggle, IconButton, FloatingActionButton, Snackbar} from 'material-ui'
+// import { Table, TableHeader, TableBody, TableFooter, TableRow, TableHeaderColumn, TableRowColumn,
+//          Toggle, IconButton, FloatingActionButton, Snackbar } from 'material-ui'
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import ModeEdit from 'material-ui/svg-icons/editor/mode-edit';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import { Link } from 'react-router-dom'
-import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar';
+import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
+// import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar';
 
 const IssueList = ({selected_function, show_hided_issue, parent_issue_rows, sub_issue_rows, onToggleHide, onToggleIssueHide,
                     onoffSnackBar,getIssue_rows, selected_group_id, selected_year, snackbar_open, current_id}) => {
-
 
   //親チケットの絞込み
   // const __issue_rows = issue_rows.filter(issue_row => issue_row.parent === issue_row.id)
@@ -45,9 +47,8 @@ const IssueList = ({selected_function, show_hided_issue, parent_issue_rows, sub_
     }, 0)
 
     new_issue_row.next_month_actual_cost = _sub_issue_rows.reduce((accumulator,currentValue) => {
-      return accumulator + currentValue[next_month_key]
+     return accumulator + currentValue[next_month_key]
     }, 0)
-
     new_issue_row.this_month_cost_variance = new_issue_row.this_month_cost - new_issue_row.this_month_actual_cost
     new_issue_row.next_month_cost_variance = new_issue_row.next_month_cost - new_issue_row.next_month_actual_cost
 

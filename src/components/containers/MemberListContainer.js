@@ -12,12 +12,14 @@ const mapStateToProps = state => ({
   group_users: state.reducers.groupUsers,
   assigned_projectlist_open: state.reducers.assigned_projectlist_open,
   selected_member: state.reducers.selected_member,
+  transition_issue: state.reducers.transition_issue,
 })
 
 const mapDispatchToProps = dispatch => ({
   onoffAssignedProjectList: () => dispatch(Actions.onoffAssignedProjectList()),
   setSelectedMember: (assigned_id) => dispatch(Actions.setSelectedMember(assigned_id)),
-  onToggleHide: () => dispatch(Actions.onToggleHide())
+  onToggleHide: () => dispatch(Actions.onToggleHide()),
+  setTransitionIssue: (transition_issue) => dispatch(Actions.setTransitionIssue(transition_issue))
 })
 
 const MemberListContainer = connect(

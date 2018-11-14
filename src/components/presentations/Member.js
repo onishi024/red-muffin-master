@@ -1,6 +1,7 @@
 import React from 'react'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import HotTable from 'react-handsontable'
+import { Link } from 'react-router-dom'
 
 const Member = ({issue_rows, selected_member}) => {
   const styles = {
