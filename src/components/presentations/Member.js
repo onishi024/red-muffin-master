@@ -1,7 +1,7 @@
 import React from 'react'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import HotTable from 'react-handsontable'
-import { Link } from 'react-router-dom'
+// import { Link } from 'react-router-dom'
 
 const Member = ({issue_rows, selected_member}) => {
   const styles = {
@@ -49,8 +49,8 @@ const Member = ({issue_rows, selected_member}) => {
       <HotTable
         root="hot"
         data={rowData2(issue_rows, selected_member)}
-        colHeaders={colHeaders2}
-        columns={columns2}
+        // colHeaders={colHeaders2}
+        // columns={columns2}
         columnSorting={true}
         width="1000"
         stretchH="all"
@@ -60,28 +60,28 @@ const Member = ({issue_rows, selected_member}) => {
   ]
 
   //カラムヘッダー定義_要員別集計
-  const colHeaders2 = ["#", "氏名", "案件名",
-    '4月' , '5月','6月', '7月', '8月', '9月',
-    '10月', '11月', '12月', '1月', '2月', '3月']
+  // const colHeaders2 = ["#", "氏名", "案件名",
+  //   '4月' , '5月','6月', '7月', '8月', '9月',
+  //   '10月', '11月', '12月', '1月', '2月', '3月']
 
   //カラムデータ定義_要員別集計
-  const columns2 = [
-    { data: 'assigned_id', editor: false, readOnly: true },
-    { data: 'assigned_name', editor: false, readOnly: true },
-    { data: 'title', editor: false, readOnly: true },
-    { data: 'es04', type: 'numeric', allowInvalid: false, format: '0.00', readOnly: true },
-    { data: 'es05', type: 'numeric', allowInvalid: false, format: '0.00', readOnly: true },
-    { data: 'es06', type: 'numeric', allowInvalid: false, format: '0.00', readOnly: true },
-    { data: 'es07', type: 'numeric', allowInvalid: false, format: '0.00', readOnly: true },
-    { data: 'es08', type: 'numeric', allowInvalid: false, format: '0.00', readOnly: true },
-    { data: 'es09', type: 'numeric', allowInvalid: false, format: '0.00', readOnly: true },
-    { data: 'es10', type: 'numeric', allowInvalid: false, format: '0.00', readOnly: true },
-    { data: 'es11', type: 'numeric', allowInvalid: false, format: '0.00', readOnly: true },
-    { data: 'es12', type: 'numeric', allowInvalid: false, format: '0.00', readOnly: true },
-    { data: 'es01', type: 'numeric', allowInvalid: false, format: '0.00', readOnly: true },
-    { data: 'es02', type: 'numeric', allowInvalid: false, format: '0.00', readOnly: true },
-    { data: 'es03', type: 'numeric', allowInvalid: false, format: '0.00', readOnly: true }
-  ]
+  // const columns2 = [
+  //   { data: 'assigned_id', editor: false, readOnly: true },
+  //   { data: 'assigned_name', editor: false, readOnly: true },
+  //   { data: 'title', editor: false, readOnly: true },
+  //   { data: 'es04', type: 'numeric', allowInvalid: false, format: '0.00', readOnly: true },
+  //   { data: 'es05', type: 'numeric', allowInvalid: false, format: '0.00', readOnly: true },
+  //   { data: 'es06', type: 'numeric', allowInvalid: false, format: '0.00', readOnly: true },
+  //   { data: 'es07', type: 'numeric', allowInvalid: false, format: '0.00', readOnly: true },
+  //   { data: 'es08', type: 'numeric', allowInvalid: false, format: '0.00', readOnly: true },
+  //   { data: 'es09', type: 'numeric', allowInvalid: false, format: '0.00', readOnly: true },
+  //   { data: 'es10', type: 'numeric', allowInvalid: false, format: '0.00', readOnly: true },
+  //   { data: 'es11', type: 'numeric', allowInvalid: false, format: '0.00', readOnly: true },
+  //   { data: 'es12', type: 'numeric', allowInvalid: false, format: '0.00', readOnly: true },
+  //   { data: 'es01', type: 'numeric', allowInvalid: false, format: '0.00', readOnly: true },
+  //   { data: 'es02', type: 'numeric', allowInvalid: false, format: '0.00', readOnly: true },
+  //   { data: 'es03', type: 'numeric', allowInvalid: false, format: '0.00', readOnly: true }
+  // ]
 
   return(
     <MuiThemeProvider>

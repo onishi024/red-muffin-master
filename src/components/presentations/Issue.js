@@ -13,7 +13,6 @@ export default class Issue extends Component {
   //constructor
   constructor(props) {
     super(props)
-    console.log("Constructor Start !!!");
     const id = props.match.params.id
     props.getAroundIssueRows(props.issue_rows.filter(row => row.id === props.match.params.id))
     this.state = {
@@ -73,9 +72,10 @@ export default class Issue extends Component {
         es03: 0.0
       },
       copyFlag: true,
-      localBusinessYear: parseFloat(Object.assign(props.selected_year))
+      localBusinessYear: parseFloat(Object.assign(props.selected_year)),
+      // hot0Data: null
+      hot0Data: this.rowData0(id, this.props.issue_rows, props.selected_year, null, null, null),
     }
-    console.log("State : ", this.state);
   }
 
   summaryData = (Details_Data) => {
@@ -269,7 +269,7 @@ export default class Issue extends Component {
   rowData = (id, issue_rows, group_users, changes, i, cancel) => {
     const businessYear = String(this.state.localBusinessYear)
     let new_issue_rows = []
-     if(businessYear === this.props.selected_year) {
+    if(businessYear === this.props.selected_year) {
       new_issue_rows = issue_rows.filter(row => row.parent === id && row.id !== id)
     } else {
       new_issue_rows = this.props.around_issue_rows.filter(row => row.business_year === businessYear && row.parent !== row.id)
@@ -365,18 +365,47 @@ export default class Issue extends Component {
     }
   }
 
-  rowData0 = (id, issue_rows) => {
-    const businessYear = String(this.state.localBusinessYear)
-    let new_issue_rows = []
-     if(businessYear === this.props.selected_year) {
+  rowData0 = (id, issue_rows, selected_year, changes, i, localBusinessYear) => {
+    let _piling = []
+    if(this.state === undefined) {
+      // 初回描画
+      // メニューバーで選択されている年度のチケットを表示する
+      const businessYear = String(parseFloat(Object.assign(selected_year)))
+
+      let new_issue_rows = []
       new_issue_rows = issue_rows.filter(row => row.parent === id && row.id === id)
-    } else {
-      new_issue_rows = this.props.around_issue_rows.filter(row => row.business_year === businessYear && row.parent === row.id)
+
+      _piling = JSON.parse(JSON.stringify(new_issue_rows))
+
+    }else if(changes !== null) {
+      // 再描画（山積み変更）
+      // 編集された箇所の更新
+      _piling[0] = this.state.hot0Data
+      _piling[0][changes[i][1]] = changes[i][3]
+
+    }else if(localBusinessYear !== null) {
+      // 再描画（年度変更）
+      // localBusinessYearに設定された年度のチケットを表示する
+      const businessYear = localBusinessYear === null ?
+                              String(parseFloat(Object.assign(selected_year))) :
+                              String(localBusinessYear)
+
+      let new_issue_rows = []
+      if(businessYear === this.props.selected_year) {
+        new_issue_rows = issue_rows.filter(row => row.parent === id && row.id === id)
+      } else {
+        new_issue_rows = this.props.around_issue_rows.filter(row => row.business_year === businessYear && row.parent === row.id)
+      }
+
+      _piling = JSON.parse(JSON.stringify(new_issue_rows))
+
+    }else {
+      _piling[0] = this.state.hot0Data
     }
-     const _piling = JSON.parse(JSON.stringify(new_issue_rows))
-    let piling = {}
+
+    let hot0Data = {}
      if(_piling.length === 0) {
-      piling = {
+      hot0Data = {
         id: "山積工数　※該当年度のチケット無し",
         es04: 0,
         es05: 0,
@@ -392,7 +421,7 @@ export default class Issue extends Component {
         es03: 0
       }
     } else {
-      piling = {
+      hot0Data = {
         id: "山積工数",
         es04: _piling[0].es04,
         es05: _piling[0].es05,
@@ -408,7 +437,27 @@ export default class Issue extends Component {
         es03: _piling[0].es03
       }
     }
-    return piling
+    if(changes === null && localBusinessYear === null){
+      return hot0Data
+    } else {
+      this.setState({
+        hot0Data: {
+          id: hot0Data.id,
+          es04: hot0Data.es04,
+          es05: hot0Data.es05,
+          es06: hot0Data.es06,
+          es07: hot0Data.es07,
+          es08: hot0Data.es08,
+          es09: hot0Data.es09,
+          es10: hot0Data.es10,
+          es11: hot0Data.es11,
+          es12: hot0Data.es12,
+          es01: hot0Data.es01,
+          es02: hot0Data.es02,
+          es03: hot0Data.es03
+        }
+      })
+    }
   }
 
   rowData2 = (summary) => {
@@ -427,6 +476,25 @@ export default class Issue extends Component {
       es01: _plans.es01,
       es02: _plans.es02,
       es03: _plans.es03
+    }
+    return plans
+  }
+
+  rowData3 = (r1,r2) => {
+    const plans = {
+      id: "未アサイン（山積 - 予定）",
+      es04: r1.es04 - r2.es04,
+      es05: r1.es05 - r2.es05,
+      es06: r1.es06 - r2.es06,
+      es07: r1.es07 - r2.es07,
+      es08: r1.es08 - r2.es08,
+      es09: r1.es09 - r2.es09,
+      es10: r1.es10 - r2.es10,
+      es11: r1.es11 - r2.es11,
+      es12: r1.es12 - r2.es12,
+      es01: r1.es01 - r2.es01,
+      es02: r1.es02 - r2.es02,
+      es03: r1.es03 - r2.es03
     }
     return plans
   }
@@ -559,7 +627,14 @@ export default class Issue extends Component {
 
   onClickConfirm = event => {
     const businessYear = String(this.state.localBusinessYear)
-    const id_filtered_rows = this.props.around_issue_rows.filter(row => row.business_year === businessYear && row.parent === row.id)
+
+    let id_filtered_rows = []
+    if(businessYear === this.props.selected_year) {
+      id_filtered_rows = this.props.issue_rows.filter(row => row.parent === this.state.id)
+    }else {
+      id_filtered_rows = this.props.around_issue_rows.filter(row => row.business_year === businessYear && row.parent === row.id)
+    }
+
     this.props.onClickAddMemberSubmit(id_filtered_rows[0], this.state.addMemberForm.assigned)
     this.setState({
       addMemberForm: {
@@ -618,8 +693,6 @@ export default class Issue extends Component {
       delete_id[i] = filtered_issue_rows.filter(row => row.assigned_id === this.state.removeMemberForm.assigned[i])[0].id
     }
 
-    console.log("delete_id : ", delete_id);
-
     this.props.onClickRemoveMemberSubmit(delete_id)
     this.setState({
       removeMemberForm: {
@@ -663,53 +736,59 @@ export default class Issue extends Component {
         const change_row = changes[i][0]
         const change_key = changes[i][1]
         const change_value = changes[i][3]
+
         //issue_rows全体から案件登録画面に表示されている案件の子チケットのみを絞り込む
-
         const row_data = this.rowData(this.state.id, this.props.issue_rows, this.props.groupUsers, changes, i, null)
-        // localState.change_dataが空の場合は無条件で要素を追加
 
-        if(this.state.change_data.id.length === 0){
-          this.state.change_data.id.push(row_data[change_row]["id"])
-          this.state.change_data.key.push(change_key)
-          this.state.change_data.value.push(change_value)
-        } else {
-          for(let j=0; j<this.state.change_data.id.length; j++){
-            // idとkeyが既にlocalState.change_dataにあるか判定し、存在する場合はvalueを更新
-            if(this.state.change_data.id[j] === row_data[change_row]["id"] &&
-               this.state.change_data.key[j] === change_key){
-                 this.state.change_data.value[j] = change_value
-                 break
-               }
-            // localState.change_dataを全て検査し、idとkeyが重複しない場合のみ要素を追加する
-            else if(j === this.state.change_data.key.length -1) {
-              this.state.change_data.id.push(row_data[change_row]["id"])
-              this.state.change_data.key.push(change_key)
-              this.state.change_data.value.push(change_value)
-            }
-          }
+        //localState.change_dataを更新
+        this.changeDataUpdate(row_data[change_row]["id"], change_key, change_value)
+      }
+    }
+  }
+
+  onChangeTable2 = (changes, source, row_data) => {
+    if(source === 'edit' || source === 'CopyPaste.paste'){
+      // 変更された要素をlocalState.change_dataに保存
+      // 画面で同一項目が複数回更新され場合はlocalState.change_dataを上書き
+      for (let i in changes) {
+        if(changes[i][3] === "" || changes[i][3] === "." || changes[i][3] === "," || changes[i][3] === "-") {
+          changes[i][3] = 0.0
         }
+        const change_row = changes[i][0]
+        const change_key = changes[i][1]
+        const change_value = changes[i][3]
+
+        //issue_rows全体から案件登録画面に表示されている案件の子チケットのみを絞り込む
+        const row_data = this.rowData0(this.state.id, this.props.issue_rows, this.props.groupUsers, changes, i, null)
+
+        //localState.change_dataを更新
+        this.changeDataUpdate(this.state.id, change_key, change_value)
       }
     }
   }
 
   onChangeRemarks = (event, newValue) => {
+    this.changeDataUpdate(this.state.id, "note", newValue)
+  }
+
+  changeDataUpdate = (id, key, value) => {
     if(this.state.change_data.id.length === 0){
-      this.state.change_data.id.push(this.state.id)
-      this.state.change_data.key.push("note")
-      this.state.change_data.value.push(newValue)
+      this.state.change_data.id.push(id)
+      this.state.change_data.key.push(key)
+      this.state.change_data.value.push(value)
     } else {
       for(let i=0; i<this.state.change_data.id.length; i++){
-        // idとkeyが既にlocalState.change_dataにあるか判定し、存在する場合はvalueを更新
-        if(this.state.change_data.id[i] === this.state.id &&
-           this.state.change_data.key[i] === "note"){
-             this.state.change_data.value[i] = newValue
+        // idとkeyの組み合わせが既にlocalState.change_dataにあるか判定し、存在する場合はvalueを更新
+        if(this.state.change_data.id[i] === id &&
+           this.state.change_data.key[i] === key){
+             this.state.change_data.value[i] = value
              break
            }
         // localState.change_dataを全て検査し、idとkeyが重複しない場合のみ要素を追加する
         else if(i === this.state.change_data.key.length -1) {
-          this.state.change_data.id.push(this.state.id)
-          this.state.change_data.key.push("note")
-          this.state.change_data.value.push(newValue)
+          this.state.change_data.id.push(id)
+          this.state.change_data.key.push(key)
+          this.state.change_data.value.push(value)
         }
       }
     }
@@ -761,10 +840,43 @@ export default class Issue extends Component {
   }
 
   onClickUpdateBusinessYear = value => {
-    const newBusinessYear = parseFloat(this.state.localBusinessYear) + value
+    const oldBusinessYear = this.state.localBusinessYear
+
+    let old_issue_rows = []
+    if(oldBusinessYear === parseFloat(this.props.selected_year)) {
+      old_issue_rows = this.props.issue_rows.filter(row => row.parent === this.state.id)
+    }else {
+      old_issue_rows = this.props.around_issue_rows.filter(row => row.business_year === oldBusinessYear)
+    }
+
+    let change_data = {id: [], key: [], value: []}
+
+    if(old_issue_rows.length !== 0){
+      old_issue_rows.map(row => {
+        let idx = this.state.change_data.id.indexOf(row.id)
+        let new_change_data = this.state.change_data
+
+        while(idx !== -1) {
+          new_change_data.id.splice(idx, 1)
+          new_change_data.key.splice(idx, 1)
+          new_change_data.value.splice(idx, 1)
+          idx = this.state.change_data.id.indexOf(row.id)
+        }
+
+        change_data = new_change_data
+      })
+
+    }
+
+    const newBusinessYear = oldBusinessYear + value
+
+    this.rowData0(this.state.id, this.props.issue_rows, this.props.selected_year, null, null, newBusinessYear)
+
+
     this.setState({
       copyFlag: true,
-      localBusinessYear: newBusinessYear
+      localBusinessYear: newBusinessYear,
+      change_data: change_data
     })
   }
 
@@ -907,8 +1019,10 @@ export default class Issue extends Component {
         </IconButton>
       )
     }
-    const hot0Data = this.rowData0(this.state.id, this.props.issue_rows)
     const hot1Data = this.rowData(this.state.id, this.props.issue_rows, this.props.groupUsers, null, null, null)
+    const hot4Data = this.rowData3(
+                        this.state.hot0Data,
+                        this.rowData2(this.state.summary))
 
     return (
       <div>
@@ -934,30 +1048,32 @@ export default class Issue extends Component {
             <br />
             <div>　■山積＆予定工数　＠{this.state.localBusinessYear}年度
             <FlatButton
-            label="PrevYear"
-            style={this.styles.PrevYear}
-            onClick={() => this.onClickUpdateBusinessYear(-1)}
+              label="PrevYear"
+              style={this.styles.PrevYear}
+              onClick={() => this.onClickUpdateBusinessYear(-1)}
             />
             <FlatButton
-            label="NextYear"
-            style={this.styles.Cancel}
-            onClick={() => this.onClickUpdateBusinessYear(1)}
+              label="NextYear"
+              style={this.styles.Cancel}
+              onClick={() => this.onClickUpdateBusinessYear(1)}
             />
             </div>
             <div style={this.styles.hot}>
               <HotTable
                 root="hot0"
-                data={hot0Data}
+                // data={this.state.hot0Data}
+                data={this.state.hot0Data}
                 colHeaders={this.colHeaders0}
                 columns={this.columns0}
                 // columnSorting={true}
-                readOnly={true}
+                readOnly={this.state.hot0Data.id === "山積工数　※該当年度のチケット無し" ? true : false}
                 width="910"
                 stretchH="all"
                 fixedColumnsLeft="3"
                 manualColumnResize={false}
                 fillHandle={false}
-                />
+                afterChange={this.onChangeTable2}
+              />
               <HotTable
                 root="hot3"
                 data={this.rowData2(this.state.summary)}
@@ -969,7 +1085,19 @@ export default class Issue extends Component {
                 fixedColumnsLeft="3"
                 manualColumnResize={false}
                 fillHandle={false}
-                />
+              />
+              <HotTable
+                root="hot4"
+                data={hot4Data}
+                columns={this.columns0}
+                // columnSorting={true}
+                readOnly={true}
+                width="910"
+                stretchH="all"
+                fixedColumnsLeft="3"
+                manualColumnResize={false}
+                fillHandle={false}
+              />
             </div>
             <br />
             <div>　■要員計画　＠{this.state.localBusinessYear}年度</div>

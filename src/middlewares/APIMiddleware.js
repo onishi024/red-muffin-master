@@ -335,7 +335,8 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
     const selected_project_id = Number(getState().reducers.selected_project_id)
     const issue = {
       issue: {
-        project_id: action.payload.parent_row.project,
+        project_id: selected_project_id,
+        // project_id: action.payload.parent_row.project,
         tracker_id: 1,
         status_id: 1,
         priority_id: 2,

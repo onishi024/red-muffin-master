@@ -357,7 +357,7 @@ const MemberList = ({show_hided_issue, parent_issue_rows, sub_issue_rows, select
         <EditIcon />
         </Link>
         </div>
-        <div style={styles.hot} disabeld={true}>
+        <div style={styles.hot} disabled={true}>
           {hotTable2}
           {hotTable3}
         </div>
