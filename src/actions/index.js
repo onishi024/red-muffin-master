@@ -149,6 +149,41 @@ export const onoffSnackBar = () => {
     payload: {}
   }
 }
+export const filterIssueRows = (event, value) => {
+  return {
+    type: ActionTypes.FILTER_ISSUE_ROWS,
+    payload: {
+      event, value
+    }
+  }
+}
+
+export const filterNaibukanrino = (event, value) => {
+  return {
+    type: ActionTypes.FILTER_NAIBUKANRINO,
+    payload: {
+      event, value
+    }
+  }
+}
+
+export const filterTitle = (event, value) => {
+  return {
+    type: ActionTypes.FILTER_TITLE,
+    payload: {
+      event, value
+    }
+  }
+}
+
+export const filterAssignedName = (event, value) => {
+  return {
+    type: ActionTypes.FILTER_ASSIGNEDNAME,
+    payload: {
+      event, value
+    }
+  }
+}
 
 
 //Register

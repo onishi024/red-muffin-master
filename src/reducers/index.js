@@ -27,6 +27,14 @@ const initState = {
   selected_member: null,
   time_entries: [],
   transition_issue: null,
+  filter_flg: false,
+  filter_flg_naibukanrino: false,
+  filter_flg_title: false,
+  filter_flg_assignedName: false,
+  input_value: null,
+  input_value_naibukanrino: null,
+  input_value_title: null,
+  input_value_assignedName: null,
 }
 
 const reducer = (state = initState, action) => {
@@ -122,6 +130,42 @@ const reducer = (state = initState, action) => {
     case ActionTypes.ONOFF_SNACKBAR: {
       const snackbar_open = !state.snackbar_open
       return {...state, snackbar_open}
+    }
+    case ActionTypes.FILTER_ISSUE_ROWS: {
+      let filter_flg = state.filter_flg
+      let input_value = action.payload.value
+      if(input_value === null){
+      }else{
+          filter_flg = true
+        }
+      return {...state, filter_flg, input_value}
+    }
+    case ActionTypes.FILTER_NAIBUKANRINO: {
+      let filter_flg_naibukanrino = state.filter_flg_naibukanrino
+      let input_value_naibukanrino = action.payload.value
+      if(input_value_naibukanrino === null){
+      }else{
+          filter_flg_naibukanrino = true
+        }
+      return {...state, filter_flg_naibukanrino, input_value_naibukanrino}
+    }
+    case ActionTypes.FILTER_TITLE: {
+      let filter_flg_title = state.filter_flg_title
+      let input_value_title = action.payload.value
+      if(input_value_title === null){
+      }else{
+          filter_flg_title = true
+        }
+      return {...state, filter_flg_title, input_value_title}
+    }
+    case ActionTypes.FILTER_ASSIGNEDNAME: {
+      let filter_flg_assignedName = state.filter_flg_assignedName
+      let input_value_assignedName = action.payload.value
+      if(input_value_assignedName === null){
+      }else{
+          filter_flg_assignedName = true
+        }
+      return {...state, filter_flg_assignedName, input_value_assignedName}
     }
 
     //Issue

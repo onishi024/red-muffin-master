@@ -1,6 +1,6 @@
 import React from 'react'
 import {Table, TableHeader, TableBody, TableFooter, TableRow, TableHeaderColumn, TableRowColumn,
-         Toggle, IconButton, FloatingActionButton, Snackbar} from 'material-ui'
+         Toggle, IconButton, FloatingActionButton, Snackbar, TextField, Card} from 'material-ui'
 // import { Table, TableHeader, TableBody, TableFooter, TableRow, TableHeaderColumn, TableRowColumn,
 //          Toggle, IconButton, FloatingActionButton, Snackbar } from 'material-ui'
 import ContentAdd from 'material-ui/svg-icons/content/add';
@@ -11,13 +11,16 @@ import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui
 // import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar';
 
 const IssueList = ({selected_function, show_hided_issue, parent_issue_rows, sub_issue_rows, onToggleHide, onToggleIssueHide,
-                    onoffSnackBar,getIssue_rows, selected_group_id, selected_year, snackbar_open, current_id}) => {
+                    onoffSnackBar,getIssue_rows, selected_group_id, selected_year, snackbar_open, current_id, filterIssueRows,
+                     filter_flg, input_value, filterNaibukanrino, filter_flg_naibukanrino, input_value_naibukanrino, filterTitle,
+                      filter_flg_title, input_value_title, filterAssignedName, filter_flg_assignedName, input_value_assignedName,}) => {
 
   //親チケットの絞込み
   // const __issue_rows = issue_rows.filter(issue_row => issue_row.parent === issue_row.id)
 
   //表示対象の絞込み
   const _issue_rows = show_hided_issue ? parent_issue_rows.filter(issue_row => issue_row.hide === true) : parent_issue_rows
+
 
   //直近2ヵ月の工数取得用キー生成
   const today = new Date()
@@ -55,6 +58,12 @@ const IssueList = ({selected_function, show_hided_issue, parent_issue_rows, sub_
     return new_issue_row
 
   }, sub_issue_rows)
+
+  //フィルターによる表示対象の絞り込み
+  const ___issue_rows = filter_flg ? __issue_rows.filter((item) => (item.ankenno.toString().indexOf(input_value) >= 0)) : __issue_rows
+  const ____issue_rows = filter_flg_naibukanrino ? ___issue_rows.filter((item) => (item.naibukanrino.toString().indexOf(input_value_naibukanrino) >= 0)) : ___issue_rows
+  const _____issue_rows = filter_flg_title ? ____issue_rows.filter((item) => (item.title.toString().indexOf(input_value_title) >= 0)) : ____issue_rows
+  const ______issue_rows = filter_flg_assignedName ? _____issue_rows.filter((item) => (item.assigned_name.toString().indexOf(input_value_assignedName) >= 0)) : _____issue_rows
 
   //非表示toggleのスタイル
   const styles = {
@@ -121,7 +130,25 @@ const IssueList = ({selected_function, show_hided_issue, parent_issue_rows, sub_
     width: '100%',
     bottom: 0,
     position: "fixed"
+  }
+  //フィルター入力フォームのスタイル
+  const form_styles = {
+    ankenno_field:{
+      maxWidth: 100,
 
+    },
+    naibukanrino_field:{
+      maxWidth: 140,
+
+    },
+    title_field:{
+      fullWidth: true
+
+    },
+    assigned_name_field:{
+      maxWidth: 120,
+
+    },
   }
 
   //SVG Icons
@@ -157,20 +184,20 @@ const IssueList = ({selected_function, show_hided_issue, parent_issue_rows, sub_
         >
           <TableHeader displaySelectAll={false} adjustForCheckbox={false} >
             <TableRow>
-              <TableHeaderColumn style={{ width: '8%'}}>案件管理番号</TableHeaderColumn>
-              <TableHeaderColumn style={{ width: '10%'}}>内部管理番号</TableHeaderColumn>
-              <TableHeaderColumn style={{ width: '30%'}}>案件名称</TableHeaderColumn>
-              <TableHeaderColumn style={{ width: '10%'}}>主担当</TableHeaderColumn>
-              <TableHeaderColumn style={{ width: '5%'}}>山積（当月）</TableHeaderColumn>
-              <TableHeaderColumn style={{ width: '9%'}}>当月差分（山積-予定）</TableHeaderColumn>
-              <TableHeaderColumn style={{ width: '5%'}}>山積（次月）</TableHeaderColumn>
-              <TableHeaderColumn style={{ width: '9%'}}>次月予定（山積-予定）</TableHeaderColumn>
-              <TableHeaderColumn style={{ width: '7%', textAlign: 'center'}}>詳細</TableHeaderColumn>
-              <TableHeaderColumn style={{ width: '7%'}}>表示</TableHeaderColumn>
+              <TableHeaderColumn style={{ width: '8%'}}>案件管理番号<br/><TextField style={form_styles.ankenno_field} hintText="JK1X_XXXXX" hintStyle={{fontSize: "12px"}} onChange={(event, value) => filterIssueRows(event, value)}/></TableHeaderColumn>
+              <TableHeaderColumn style={{ width: '10%'}}>内部管理番号<br/><TextField style={form_styles.naibukanrino_field} hintText="JKMDBNXXXXXXX" hintStyle={{fontSize: "12px"}} onChange={(event, value) => filterNaibukanrino(event, value)}/></TableHeaderColumn>
+              <TableHeaderColumn style={{ width: '30%'}}>案件名称<br/><TextField style={form_styles.title_field} hintText="XXX対応" hintStyle={{fontSize: "12px"}} onChange={(event, value) => filterTitle(event, value)}/></TableHeaderColumn>
+              <TableHeaderColumn style={{ width: '10%'}}>主担当<br/><TextField style={form_styles.assigned_name_field} hintText="田中太郎" hintStyle={{fontSize: "12px"}} onChange={(event, value) => filterAssignedName(event, value)}/></TableHeaderColumn>
+              <TableHeaderColumn style={{ width: '5%'}}>山積（当月）<br/> &nbsp;<br/> &nbsp;<br/> &nbsp;</TableHeaderColumn>
+              <TableHeaderColumn style={{ width: '9%'}}>当月差分（山積-予定）<br/> &nbsp;<br/> &nbsp;<br/> &nbsp;</TableHeaderColumn>
+              <TableHeaderColumn style={{ width: '5%'}}>山積（次月）<br/> &nbsp;<br/> &nbsp;<br/> &nbsp;</TableHeaderColumn>
+              <TableHeaderColumn style={{ width: '9%'}}>次月予定（山積-予定）<br/> &nbsp;<br/> &nbsp;<br/> &nbsp;</TableHeaderColumn>
+              <TableHeaderColumn style={{ width: '7%', textAlign: 'center'}}>詳細<br/> &nbsp;<br/> &nbsp;<br/> &nbsp;</TableHeaderColumn>
+              <TableHeaderColumn style={{ width: '7%'}}>表示<br/> &nbsp;<br/> &nbsp;<br/> &nbsp;</TableHeaderColumn>
             </TableRow>
           </TableHeader>
           <TableBody stripedRows={true} displayRowCheckbox={false} >
-            {__issue_rows.map(issue_row => {
+            {______issue_rows.map(issue_row => {
               return (
                 <TableRow key={issue_row.id} >
                   <TableRowColumn style={{ width: '8%'}}>{issue_row.ankenno}</TableRowColumn>
