@@ -210,52 +210,6 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
       //   dispatch(Actions.setParentIssueRows(issue_rows))
       // })
     })
-
-    // function kurikaeshi_calc(){
-    //   if (return_count === 0) {
-    //     //レコードが0件だった場合、データを返す
-    //     return dispatch(Actions.setParentIssueRows(issue_rows))
-    //   }else{
-    //     //レコードが１件以上ある場合、レコードを配列に格納
-    //     RedmineAPI.getParentIssues(selected_project_id,selected_offset)
-    //     .then(_issues => {
-    //       selected_offset = selected_offset + _issues.length
-    //       return_count = _issues.length
-    //       _issues.map(issue => {
-    //         issue_rows.push({
-    //           id: String(issue.id),
-    //           ankenno: issue.custom_fields[0].value,
-    //           naibukanrino: issue.custom_fields[1].value,
-    //           title: issue.subject,
-    //           assigned_id: issue.assigned_to ? issue.assigned_to.id : "",
-    //           assigned_name: issue.assigned_to ? issue.assigned_to.name : "",
-    //           parent: issue.parent ? String(issue.parent.id) : String(issue.id),
-    //           es04: issue.custom_fields[2].value  ? parseFloat(issue.custom_fields[2].value)  : 0,
-    //           es05: issue.custom_fields[3].value  ? parseFloat(issue.custom_fields[3].value)  : 0,
-    //           es06: issue.custom_fields[4].value  ? parseFloat(issue.custom_fields[4].value)  : 0,
-    //           es07: issue.custom_fields[5].value  ? parseFloat(issue.custom_fields[5].value)  : 0,
-    //           es08: issue.custom_fields[6].value  ? parseFloat(issue.custom_fields[6].value)  : 0,
-    //           es09: issue.custom_fields[7].value  ? parseFloat(issue.custom_fields[7].value)  : 0,
-    //           es10: issue.custom_fields[8].value  ? parseFloat(issue.custom_fields[8].value)  : 0,
-    //           es11: issue.custom_fields[9].value  ? parseFloat(issue.custom_fields[9].value)  : 0,
-    //           es12: issue.custom_fields[10].value ? parseFloat(issue.custom_fields[10].value) : 0,
-    //           es01: issue.custom_fields[11].value ? parseFloat(issue.custom_fields[11].value) : 0,
-    //           es02: issue.custom_fields[12].value ? parseFloat(issue.custom_fields[12].value) : 0,
-    //           es03: issue.custom_fields[13].value ? parseFloat(issue.custom_fields[13].value) : 0,
-    //           hide: issue.custom_fields[26].value || issue.custom_fields[26].value === "1" ? true : false,
-    //           note: issue.custom_fields[27].value
-    //         })
-    //       })
-    //     })
-    //     //繰り返し処理を行う
-    //     .then (() => {
-    //       console.log("GET_PARENT_ISSUE_ROWS DONE")
-    //       kurikaeshi_calc()
-    //     })
-    //     // .then (() => kurikaeshi_calc())
-    //   }
-    // }
-    // kurikaeshi_calc()
   }
 
   if (action.type === ActionTypes.GET_SUB_ISSUE_ROWS) {
@@ -311,6 +265,69 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
     kurikaeshi_calc()
   }
 
+  if (action.type === ActionTypes.GET_AROUND_ISSUE_ROWS) {
+    console.log("GET_AROUND_ISSUE_ROWS START")
+    const naibukanrino = action.payload.issue_rows[0].naibukanrino
+     if(naibukanrino === ""){
+      console.log("GET_AROUND_ISSUE_ROWS END")
+      dispatch(Actions.setAroundIssueRows([]))
+      return null
+    }
+     let counter = 0
+    let around_issue_rows = []
+     function getIssuesBusinessYearLoop() {
+      RedmineAPI.getIssueBusinessYear(around_issue_rows[counter].project)
+      .then(_project => {
+        around_issue_rows[counter].business_year = _project.custom_fields[0].value
+      })
+      .then( () => {
+        counter++
+        return counter
+      })
+      .then(counter => {
+        if(counter < around_issue_rows.length){
+          getIssuesBusinessYearLoop()
+        } else {
+          dispatch(Actions.setAroundIssueRows(around_issue_rows))
+        }
+      })
+    }
+     RedmineAPI.getAroundIssues(naibukanrino)
+    .then(_issues => {
+      console.log("_issues",_issues);
+      _issues.map(issue => {
+        around_issue_rows.push({
+          id: String(issue.id),
+          project: String(issue.project.id),
+          ankenno: issue.custom_fields[0].value,
+          naibukanrino: issue.custom_fields[1].value,
+          title: issue.subject,
+          assigned_id: issue.assigned_to ? issue.assigned_to.id : "",
+          assigned_name: issue.assigned_to ? issue.assigned_to.name : "",
+          parent: issue.parent ? String(issue.parent.id) : String(issue.id),
+          es04: issue.custom_fields[2].value  ? parseFloat(issue.custom_fields[2].value)  : 0,
+          es05: issue.custom_fields[3].value  ? parseFloat(issue.custom_fields[3].value)  : 0,
+          es06: issue.custom_fields[4].value  ? parseFloat(issue.custom_fields[4].value)  : 0,
+          es07: issue.custom_fields[5].value  ? parseFloat(issue.custom_fields[5].value)  : 0,
+          es08: issue.custom_fields[6].value  ? parseFloat(issue.custom_fields[6].value)  : 0,
+          es09: issue.custom_fields[7].value  ? parseFloat(issue.custom_fields[7].value)  : 0,
+          es10: issue.custom_fields[8].value  ? parseFloat(issue.custom_fields[8].value)  : 0,
+          es11: issue.custom_fields[9].value  ? parseFloat(issue.custom_fields[9].value)  : 0,
+          es12: issue.custom_fields[10].value ? parseFloat(issue.custom_fields[10].value) : 0,
+          es01: issue.custom_fields[11].value ? parseFloat(issue.custom_fields[11].value) : 0,
+          es02: issue.custom_fields[12].value ? parseFloat(issue.custom_fields[12].value) : 0,
+          es03: issue.custom_fields[13].value ? parseFloat(issue.custom_fields[13].value) : 0,
+          hide: issue.custom_fields[26].value || issue.custom_fields[26].value === "1" ? true : false,
+          note: issue.custom_fields[27].value,
+          business_year: ""
+        })
+      })
+    })
+    .then(() => {
+      getIssuesBusinessYearLoop()
+    })
+  }
+
   if (action.type === ActionTypes.REGISTER_ISSUE) {
     console.log("REGISTER_ISSUE START");
     dispatch(Actions.setIsLoading(true))
@@ -319,6 +336,7 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
     const issue = {
       issue: {
         project_id: selected_project_id,
+        // project_id: action.payload.parent_row.project,
         tracker_id: 1,
         status_id: 1,
         priority_id: 2,
@@ -370,58 +388,69 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
     dispatch(Actions.setIsLoading(true))
     const assigned = action.payload.assigned
     const selected_project_id = Number(getState().reducers.selected_project_id)
-    const issue = {
-      issue: {
-        project_id: selected_project_id,
-        tracker_id: 1,
-        status_id: 1,
-        priority_id: 2,
-        subject: action.payload.parent_row.title,
-        assigned_to_id: assigned,
-        parent_issue_id: action.payload.parent_row.id,
-        custom_fields: [
-          {"id": 2, "value": action.payload.parent_row.ankenno}, //案件番号
-          {"id": 3, "value": action.payload.parent_row.naibukanrino},　//内部管理番号
-          {"id": 4, "value": ""},  //見積04月
-          {"id": 5, "value": ""},  //見積05月
-          {"id": 6, "value": ""},  //見積06月
-          {"id": 7, "value": ""},  //見積07月
-          {"id": 8, "value": ""},  //見積08月
-          {"id": 9, "value": ""},  //見積09月
-          {"id": 10, "value": ""}, //見積10月
-          {"id": 11, "value": ""}, //見積11月
-          {"id": 12, "value": ""}, //見積12月
-          {"id": 13, "value": ""}, //見積01月
-          {"id": 14, "value": ""}, //見積02月
-          {"id": 15, "value": ""}, //見積03月
-          {"id": 17, "value": ""}, //実績04月
-          {"id": 18, "value": ""}, //実績05月
-          {"id": 19, "value": ""}, //実績06月
-          {"id": 20, "value": ""}, //実績07月
-          {"id": 21, "value": ""}, //実績08月
-          {"id": 22, "value": ""}, //実績09月
-          {"id": 23, "value": ""}, //実績10月
-          {"id": 24, "value": ""}, //実績11月
-          {"id": 25, "value": ""}, //実績12月
-          {"id": 26, "value": ""}, //実績01月
-          {"id": 27, "value": ""}, //実績02月
-          {"id": 28, "value": ""}, //実績03月
-          {"id": 16, "value": "0"},  //表示フラグ
-          {"id": 29, "value": ""}, //備考
-        ]
+    let loopCount = 0
+    let issue = []
+    function loop() {
+      if(loopCount === assigned.length) {
+        dispatch(Actions.getSubIssueRows())
+      }
+      else {
+        issue = {
+          issue: {
+            project_id: selected_project_id,
+            tracker_id: 1,
+            status_id: 1,
+            priority_id: 2,
+            subject: action.payload.parent_row.title,
+            assigned_to_id: assigned[loopCount],
+            parent_issue_id: action.payload.parent_row.id,
+            custom_fields: [
+              {"id": 2, "value": action.payload.parent_row.ankenno}, //案件番号
+              {"id": 3, "value": action.payload.parent_row.naibukanrino},　//内部管理番号
+              {"id": 4, "value": ""},  //見積04月
+              {"id": 5, "value": ""},  //見積05月
+              {"id": 6, "value": ""},  //見積06月
+              {"id": 7, "value": ""},  //見積07月
+              {"id": 8, "value": ""},  //見積08月
+              {"id": 9, "value": ""},  //見積09月
+              {"id": 10, "value": ""}, //見積10月
+              {"id": 11, "value": ""}, //見積11月
+              {"id": 12, "value": ""}, //見積12月
+              {"id": 13, "value": ""}, //見積01月
+              {"id": 14, "value": ""}, //見積02月
+              {"id": 15, "value": ""}, //見積03月
+              {"id": 17, "value": ""}, //実績04月
+              {"id": 18, "value": ""}, //実績05月
+              {"id": 19, "value": ""}, //実績06月
+              {"id": 20, "value": ""}, //実績07月
+              {"id": 21, "value": ""}, //実績08月
+              {"id": 22, "value": ""}, //実績09月
+              {"id": 23, "value": ""}, //実績10月
+              {"id": 24, "value": ""}, //実績11月
+              {"id": 25, "value": ""}, //実績12月
+              {"id": 26, "value": ""}, //実績01月
+              {"id": 27, "value": ""}, //実績02月
+              {"id": 28, "value": ""}, //実績03月
+              {"id": 16, "value": "0"},  //表示フラグ
+              {"id": 29, "value": ""}, //備考
+            ]
+          }
+        }
+        RedmineAPI.postIssueMember(issue)
+        .then(() => {
+          loopCount++;
+          loop()
+        })
       }
     }
-    RedmineAPI.postIssueMember(issue)
-    .then(result => {
-      console.log("issueAddMember start");
-      dispatch(Actions.getSubIssueRows())
-    })
+    loop()
   }
 
   if (action.type === ActionTypes.CHANGE_ISSUE) {
     console.log("CHANGE_ISSUE START");
     dispatch(Actions.setIsLoading(true))
     const change_data = action.payload.change_data
+    const starting_issue_row = action.payload.starting_issue_row
     const change_rows = []
 
     for(let i=0; i<change_data.id.length; i++){
@@ -449,6 +478,7 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
     function postIssueMemberLoop(){
       if (i > change_rows.length - 1 ) {
         // 全レコードをポストしたらループ終了
+        dispatch(Actions.getAroundIssueRows(starting_issue_row))
         return dispatch(Actions.getIssueRows())
       }else{
         const custom_fields = [
@@ -495,8 +525,20 @@ const APIMiddleware = ({dispatch, getState}) => next => action => {
     console.log("DELETE_ISSUE START");
     dispatch(Actions.setIsLoading(true))
     const id = action.payload.id
-    RedmineAPI.deleteIssue(id)
-      .then(() => dispatch(Actions.getIssueRows()))
+    let loopCount = 0
+    function loop() {
+      if(loopCount === id.length) {
+        dispatch(Actions.getSubIssueRows())
+      }
+      else {
+        RedmineAPI.deleteIssue(id[loopCount])
+        .then(() => {
+          loopCount++;
+          loop()
+        })
+      }
+    }
+    loop()
   }
 
   if (action.type === ActionTypes.GET_TIME_ENTRIES) {

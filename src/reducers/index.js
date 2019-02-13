@@ -18,6 +18,7 @@ const initState = {
   issue_rows: [],
   parent_issue_rows: [],
   sub_issue_rows: [],
+  around_issue_rows: [],
   projects: [],
   snackbar_open: false,
   current_id: 0,
@@ -25,6 +26,15 @@ const initState = {
   assigned_projectlist_open: false,
   selected_member: null,
   time_entries: [],
+  transition_issue: null,
+  filter_flg: false,
+  filter_flg_naibukanrino: false,
+  filter_flg_title: false,
+  filter_flg_assignedName: false,
+  input_value: null,
+  input_value_naibukanrino: null,
+  input_value_title: null,
+  input_value_assignedName: null,
 }
 
 const reducer = (state = initState, action) => {
@@ -67,6 +77,14 @@ const reducer = (state = initState, action) => {
       console.log("sub_issue_rows: ",sub_issue_rows)
       return {...state, sub_issue_rows, isLoading}
     }
+    case ActionTypes.SET_AROUND_ISSUE_ROWS: {
+      const around_issue_rows = action.payload.issue_rows
+      // const isLoading = false
+      console.log("around_issue_rows: ",around_issue_rows)
+      console.log("GET_AROUND_ISSUE_ROWS END")
+      // return {...state, around_issue_rows, isLoading}
+      return {...state, around_issue_rows}
+    }
     case ActionTypes.SET_ISLOADING: {
       const isLoading = action.payload.bool
       return {...state, isLoading}
@@ -89,6 +107,7 @@ const reducer = (state = initState, action) => {
       return {...state, selected_name ,selected_group_id}
     }
     case ActionTypes.SELECT_YEAR: {
+      console.log('SELECT_YEAR START')
       const selected_year = action.payload.selected_year
       return {...state, selected_year}
     }
@@ -112,6 +131,42 @@ const reducer = (state = initState, action) => {
       const snackbar_open = !state.snackbar_open
       return {...state, snackbar_open}
     }
+    case ActionTypes.FILTER_ISSUE_ROWS: {
+      let filter_flg = state.filter_flg
+      let input_value = action.payload.value
+      if(input_value === null){
+      }else{
+          filter_flg = true
+        }
+      return {...state, filter_flg, input_value}
+    }
+    case ActionTypes.FILTER_NAIBUKANRINO: {
+      let filter_flg_naibukanrino = state.filter_flg_naibukanrino
+      let input_value_naibukanrino = action.payload.value
+      if(input_value_naibukanrino === null){
+      }else{
+          filter_flg_naibukanrino = true
+        }
+      return {...state, filter_flg_naibukanrino, input_value_naibukanrino}
+    }
+    case ActionTypes.FILTER_TITLE: {
+      let filter_flg_title = state.filter_flg_title
+      let input_value_title = action.payload.value
+      if(input_value_title === null){
+      }else{
+          filter_flg_title = true
+        }
+      return {...state, filter_flg_title, input_value_title}
+    }
+    case ActionTypes.FILTER_ASSIGNEDNAME: {
+      let filter_flg_assignedName = state.filter_flg_assignedName
+      let input_value_assignedName = action.payload.value
+      if(input_value_assignedName === null){
+      }else{
+          filter_flg_assignedName = true
+        }
+      return {...state, filter_flg_assignedName, input_value_assignedName}
+    }
 
     //Issue
     case ActionTypes.CHANGE_ISSUE: {
@@ -127,6 +182,10 @@ const reducer = (state = initState, action) => {
     case ActionTypes.SELECT_MEMBER: {
       const selected_member = action.payload.assigned_id
       return {...state, selected_member}
+    }
+    case ActionTypes.TRANSITION_ISSUE: {
+      const transition_issue = action.payload.transition_issue
+      return {...state, transition_issue}
     }
 
     //other

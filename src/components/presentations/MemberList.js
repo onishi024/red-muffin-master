@@ -1,14 +1,18 @@
 import React from 'react'
-import { Divider } from 'material-ui'
+import {Divider, Toggle, FlatButton} from 'material-ui'
+// import { Divider } from 'material-ui'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
-import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar';
+import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
+// import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar';
 import HotTable from 'react-handsontable'
 import { Link } from 'react-router-dom'
+import {Table, TableHeader, TableBody, TableFooter, TableRow, TableHeaderColumn, TableRowColumn,
+         IconButton, FloatingActionButton, Snackbar} from 'material-ui'
+import ModeEdit from 'material-ui/svg-icons/editor/mode-edit';
 
 const MemberList = ({show_hided_issue, parent_issue_rows, sub_issue_rows, selected_group_id, selected_year, current_id, group_users, assigned_projectlist_open, selected_member,
-                    onoffAssignedProjectList, setSelectedMember, onToggleHide
+                    onoffAssignedProjectList, setSelectedMember, onToggleHidem, setTransitionIssue, transition_issue
                   }) => {
-
   const rowData1 = (sub_issue_rows, group_users) => {
     //表示対象の絞込み
     const _issue_rows = sub_issue_rows.filter(issue_row => issue_row.parent !== issue_row.id)
@@ -42,6 +46,32 @@ const MemberList = ({show_hided_issue, parent_issue_rows, sub_issue_rows, select
         element[0].es02 += current.es02
         element[0].es03 += current.es03
       }
+      //種別＋グレード順にソート
+      result.sort(function(a, b) {
+        if(a.category < b.category) {
+          return 1;
+        }
+        else if(a.category > b.category) {
+          return -1;
+        }
+        else {
+          if((a.grade === "G3a" && b.grade === "G3b") || (a.grade === "G2a" && b.grade === "G2b")) {
+            return 0;
+          }
+          else if((a.grade === "G3b" && b.grade === "G3a") || (a.grade === "G2b" && b.grade === "G2a")) {
+            return 1;
+          }
+          else if(a.grade < b.grade) {
+            return 1;
+          }
+          else if(a.grade > b.grade) {
+            return -1;
+          }
+          else  {
+            return 0;
+          }
+        }
+      });
       return result
     },[])
     return sum_rows
@@ -101,7 +131,6 @@ const MemberList = ({show_hided_issue, parent_issue_rows, sub_issue_rows, select
     },[])
     return sum_rows
   }
-
   const styles = {
     tableName1: {
       marginTop: "50px",
@@ -147,10 +176,17 @@ const MemberList = ({show_hided_issue, parent_issue_rows, sub_issue_rows, select
       fontSize: 12,
       backgroundColor: "#B2EBF2",
     },
+    float: {
+      marginTop: "-15px",
+      paddingTop: "73px",
+      marginBottom:"-90px",
+      marginLeft:1160,
+      // position: "fixed"
+    },
   }
 
-  //カラムヘッダー定義_要員別山積
-  const colHeaders1 = ["氏名", "所属", "種別",
+  //カラムヘッダー定義_要員別集計
+  const colHeaders1 = ["氏名", "種別", "グレード/所属",
     '4月' , '5月','6月', '7月', '8月', '9月',
     '10月', '11月', '12月', '1月', '2月', '3月']
 
@@ -176,7 +212,7 @@ const MemberList = ({show_hided_issue, parent_issue_rows, sub_issue_rows, select
     { data: 'es03', type: 'numeric', allowInvalid: false, format: '0.00', readOnly: true }
   ]
 
-  //カラムヘッダー定義_要員別集計
+  //カラムヘッダー定義_要員別山積
   const colHeaders2 = ["案件番号", "案件名",
     '4月' , '5月','6月', '7月', '8月', '9月',
     '10月', '11月', '12月', '1月', '2月', '3月']
@@ -187,7 +223,7 @@ const MemberList = ({show_hided_issue, parent_issue_rows, sub_issue_rows, select
   //カラムデータ定義_要員別集計
   const columns2 = [
     { data: 'ankenno', editor: false, readOnly: true },
-    { data: 'title', editor: false, readOnly: true },
+    { data: 'title', editor: false, readOnly: true, },
     { data: 'es04', type: 'numeric', allowInvalid: false, format: '0.00', readOnly: true },
     { data: 'es05', type: 'numeric', allowInvalid: false, format: '0.00', readOnly: true },
     { data: 'es06', type: 'numeric', allowInvalid: false, format: '0.00', readOnly: true },
@@ -222,6 +258,24 @@ const MemberList = ({show_hided_issue, parent_issue_rows, sub_issue_rows, select
 
   const onSelect = (r) => {
     setSelectedMember(rowData1(sub_issue_rows, group_users)[r]['assigned_id'])
+    setTransitionIssue(null)
+  }
+
+  const selectCell = (row, column, row2, column2, selectionLayerLevel) => {
+    if(selected_member !==  null) {
+      let transitionId = (row2 - row === 0) ? rowData2(sub_issue_rows, selected_member)[row]['parent'] : null
+      setTransitionIssue(transitionId)
+    }
+  }
+
+  const EditIcon = () => {
+    return (
+      <IconButton
+        tooltip="SVG Icon"
+        disabled={transition_issue !== null ? false : true}>
+      <ModeEdit />
+      </IconButton>
+    )
   }
 
   const hotTable1 = [
@@ -233,7 +287,7 @@ const MemberList = ({show_hided_issue, parent_issue_rows, sub_issue_rows, select
         colWidths={colwidths1}
         width="1200"
         columns={columns1}
-        columnSorting={true}
+        // columnSorting={true}
         stretchH="all"
         afterSelectionEnd={onSelect}
         fillHandle={false}
@@ -253,10 +307,7 @@ const MemberList = ({show_hided_issue, parent_issue_rows, sub_issue_rows, select
         columnSorting={true}
         stretchH="all"
         fillHandle={false}
-        // mergeCells={[
-        //   {row:0, col:0, rowspan:issue_rows.filter(issue_row => issue_row.assigned_id === selected_member && issue_row.parent !== issue_row.id).length, colspan:1},
-        //   {row:0, col:1, rowspan:issue_rows.filter(issue_row => issue_row.assigned_id === selected_member && issue_row.parent !== issue_row.id).length, colspan:1}
-        // ]}
+        afterSelectionEnd={selectCell}
       />
     </div>,
   ]
@@ -300,7 +351,13 @@ const MemberList = ({show_hided_issue, parent_issue_rows, sub_issue_rows, select
           {hotTable1}
           <Divider/>
         <div style={styles.tableName2}>要員別山積</div>
-        <div style={styles.hot}>
+
+        <div style={styles.float}>
+        <Link to={transition_issue !== null ? `/issue_edit/${transition_issue}` : `/member`}>
+        <EditIcon />
+        </Link>
+        </div>
+        <div style={styles.hot} disabled={true}>
           {hotTable2}
           {hotTable3}
         </div>

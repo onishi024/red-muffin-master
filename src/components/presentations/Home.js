@@ -1,6 +1,9 @@
 import React from 'react'
+// import {AppBar} from 'material-ui'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import {Toolbar, ToolbarGroup, ToolbarTitle} from 'material-ui/Toolbar';
+// import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
+// import {Toolbar, ToolbarGroup, ToolbarTitle} from 'material-ui/Toolbar';
 
 const Home = () => {
   const styles = {

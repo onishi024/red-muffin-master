@@ -24,6 +24,7 @@ export default class Register extends Component {
       margin: 12,
       fontSize: 12,
       color: "#9E9E9E",
+      marginTop: "74px",
     },
   }
 

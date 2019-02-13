@@ -50,17 +50,13 @@ export const getIssueRows = () => ({
   type: ActionTypes.GET_ISSUE_ROWS,
 })
 
-export const getParentIssueRows = () => ({
-  type: ActionTypes.GET_PARENT_ISSUE_ROWS,
-})
-
-export const getSubIssueRows = () => ({
-  type: ActionTypes.GET_SUB_ISSUE_ROWS,
-})
-
 export const setIssueRows = (parent_issue_rows,sub_issue_rows) => ({
   type: ActionTypes.SET_ISSUE_ROWS,
   payload: {parent_issue_rows,sub_issue_rows}
+})
+
+export const getParentIssueRows = () => ({
+  type: ActionTypes.GET_PARENT_ISSUE_ROWS,
 })
 
 export const setParentIssueRows = issue_rows => ({
@@ -68,8 +64,21 @@ export const setParentIssueRows = issue_rows => ({
   payload: {issue_rows}
 })
 
+export const getSubIssueRows = () => ({
+  type: ActionTypes.GET_SUB_ISSUE_ROWS,
+})
+
 export const setSubIssueRows = issue_rows => ({
   type: ActionTypes.SET_SUB_ISSUE_ROWS,
+  payload: {issue_rows}
+})
+
+export const getAroundIssueRows = issue_rows => ({
+  type: ActionTypes.GET_AROUND_ISSUE_ROWS,
+  payload: {issue_rows},
+})
+ export const setAroundIssueRows = issue_rows => ({
+  type: ActionTypes.SET_AROUND_ISSUE_ROWS,
   payload: {issue_rows}
 })
 
@@ -140,6 +149,41 @@ export const onoffSnackBar = () => {
     payload: {}
   }
 }
+export const filterIssueRows = (event, value) => {
+  return {
+    type: ActionTypes.FILTER_ISSUE_ROWS,
+    payload: {
+      event, value
+    }
+  }
+}
+
+export const filterNaibukanrino = (event, value) => {
+  return {
+    type: ActionTypes.FILTER_NAIBUKANRINO,
+    payload: {
+      event, value
+    }
+  }
+}
+
+export const filterTitle = (event, value) => {
+  return {
+    type: ActionTypes.FILTER_TITLE,
+    payload: {
+      event, value
+    }
+  }
+}
+
+export const filterAssignedName = (event, value) => {
+  return {
+    type: ActionTypes.FILTER_ASSIGNEDNAME,
+    payload: {
+      event, value
+    }
+  }
+}
 
 
 //Register
@@ -153,11 +197,11 @@ export const onClickRegisterConfirm = form => {
 }
 
 //Issue
-export const onClickChangeIssueSubmit = change_data => {
-  return {
+export const onClickChangeIssueSubmit = (change_data, starting_issue_row) => {
+    return {
     type: ActionTypes.CHANGE_ISSUE,
     payload: {
-      change_data
+      change_data, starting_issue_row
     }
   }
 }
@@ -183,5 +227,12 @@ export const setSelectedMember = (assigned_id) => {
   return {
     type: ActionTypes.SELECT_MEMBER,
     payload: {assigned_id}
+  }
+}
+
+export const setTransitionIssue = (transition_issue) => {
+  return {
+    type: ActionTypes.TRANSITION_ISSUE,
+    payload: {transition_issue}
   }
 }
